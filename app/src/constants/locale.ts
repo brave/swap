@@ -5,5 +5,11 @@
 
 export const locale: Record<string, string> = {
   braveSwap: 'Swap',
-  braveSwapReviewOrder: 'Review order'
+  braveSwapReviewOrder: 'Review order',
+  braveSwapSelectToken: 'Select token',
+  braveSwapHalf: 'Half',
+  braveSwapMax: 'Max',
+  braveSwapEnterAnAmount: 'Enter an amount',
+  braveSwapFindingPrice: 'Finding best price for you',
+  braveSwapBalance: 'Balance:'
 }

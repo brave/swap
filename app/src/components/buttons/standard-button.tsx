@@ -52,9 +52,18 @@ const Button = styled.button<StandardButtonStyleProps>`
   --horizontal-margin: ${(p) => p.horizontalMargin ?? 0}px;
   width: ${(p) => p.buttonWidth === 'dynamic' ? 'unset' : '100%'};
   padding: 18px;
-  background-color: ${(p) => p.buttonType === 'secondary' ? 'transparent' : p.disabled ? '#DADCE8' : '#4C54D2'};
+  background-color: ${(p) => p.buttonStyle === 'square' ? '#E9E9F4' : p.buttonType === 'secondary' ? 'transparent' : '#4C54D2'};
   border-radius: ${(p) => p.buttonStyle === 'square' ? '0px' : '48px'};
-  color: ${(p) => p.buttonType === 'secondary' ? '#212529' : '#FFFFFF'};
+  color: ${(p) => p.buttonType === 'secondary' || p.buttonStyle === 'square' ? '#212529' : '#FFFFFF'};
   margin: var(--vertical-margin) var(--horizontal-margin);
   border: ${(p) => p.buttonType === 'secondary' ? '1px solid #AEB1C2' : 'none'};
+  font-size: ${(p) => p.buttonStyle === 'square' ? '14px' : '16px'};
+  &:hover {
+    background-color: ${(p) => p.buttonStyle === 'square' ? '#4C54D2' : '#353DAB'};
+    color: #FFFFFF;
+  }
+  :disabled {
+    background-color: #DADCE8;
+    color: #FFFFFF;
+  }
 `

@@ -14,7 +14,7 @@ interface Props extends BoxStyleProps {
   children?: React.ReactNode
 }
 
-export const Box = (props: Props) => {
+export const SwapSectionBox = (props: Props) => {
   const { boxType, children } = props
   return (
     <Wrapper
@@ -31,8 +31,7 @@ const Wrapper = styled.div<BoxStyleProps>`
   background-color: ${(p) => p.boxType === 'secondary' ? '#FFFFFF' : '#F5F6FC'}; 
   width: 100%;
   border-radius: 16px;
-  padding: 14px 24px;
-  margin-bottom: ${(p) => p.boxType === 'secondary' ? '0px' : '8px'};
+  padding: 14px 24px 14px 12px;
   border: ${(p) => p.boxType === 'secondary' ? '1px solid #E9E9F4' : 'none'};
-  min-height: ${(p) => p.boxType === 'secondary' ? '88px' : '114px'};
+  height: ${(p) => p.boxType === 'secondary' ? '88px' : '114px'};
 `

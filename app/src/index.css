@@ -8,7 +8,7 @@ default values here to prevent code duplication in styled components */
 
 /* ToDo: Update hardcoded colors once new Brave-UI is installed.  */
 
-@import url('https://fonts.googleapis.com/css?family=Poppins');
+@import url('https://fonts.googleapis.com/css?family=Poppins|Poppins:300,400,500,600,700');
 
 :root {
   font-family: 'Poppins';
@@ -46,17 +46,64 @@ body {
 }
 
 button {
+  display: flex;
   font-family: inherit;
   cursor: pointer;
   border: none;
   outline: none;
   background: none;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   line-height: 20px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  color: #212529;
 }
 button:disabled {
   cursor: not-allowed;
+}
+
+input {
+  font-family: inherit;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  outline: none;
+  background-image: none;
+  box-shadow: none;
+  border: none;
+  color: #212529;
+  padding: 0px;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  background-color: transparent;
+  letter-spacing: 0.02em;
+}
+
+input::placeholder {
+  color: #212529;
+}
+
+input:focus {
+  outline: none;
+}
+
+::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield !important;
+}
+
+span {
+  color: #212529;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -66,8 +113,5 @@ button:disabled {
   }
   a:hover {
     color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
   }
 }

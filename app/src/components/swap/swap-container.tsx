@@ -4,6 +4,8 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 import React from 'react';
+
+// Styled Components
 import styled from 'styled-components';
 
 interface Props {
