@@ -26,7 +26,7 @@ interface Props {
   getLocale: (key: string) => string
   getTokenBalance: (token: BlockchainToken) => string
   selectedNetwork: NetworkInfo
-  selectedToken: BlockchainToken | undefined
+  disabledToken: BlockchainToken | undefined
   tokenList: BlockchainToken[]
   isConnected: boolean
   selectingFromOrTo: 'from' | 'to'
@@ -38,7 +38,7 @@ export const SelectTokenModal = (props: Props) => {
     onSelectToken,
     getLocale,
     getTokenBalance,
-    selectedToken,
+    disabledToken,
     tokenList,
     selectedNetwork,
     isConnected,
@@ -49,30 +49,23 @@ export const SelectTokenModal = (props: Props) => {
   const [hideTokensWithZeroBalances, setHideTokensWithZeroBalances] = React.useState<boolean>(true)
   const [searchValue, setSearchValue] = React.useState<string>('')
 
-  // Effects
-  React.useEffect(() => {
-    if (selectingFromOrTo === 'to') {
-      setHideTokensWithZeroBalances(false)
-    }
-  }, [selectingFromOrTo])
-
   // Methods
   const toggleHideTokensWithZerorBalances = React.useCallback(() => {
-    setHideTokensWithZeroBalances(!hideTokensWithZeroBalances)
-  }, [hideTokensWithZeroBalances])
+    setHideTokensWithZeroBalances(prev => !prev)
+  }, [])
 
   const handleOnSearchChanged = React.useCallback((value: string) => {
     setSearchValue(value)
   }, [])
 
   // Memos
-  const buttonText = React.useMemo((): string => {
+  const buttonText: string = React.useMemo(() => {
     return hideTokensWithZeroBalances
       ? getLocale('braveSwapShowTokensWithZeroBalances')
       : getLocale('braveSwapHideTokensWithZeroBalances')
   }, [hideTokensWithZeroBalances])
 
-  const filteredTokenListBySearch = React.useMemo((): BlockchainToken[] => {
+  const filteredTokenListBySearch: BlockchainToken[] = React.useMemo(() => {
     if (searchValue === '') {
       return tokenList
     }
@@ -82,11 +75,11 @@ export const SelectTokenModal = (props: Props) => {
     )
   }, [tokenList, searchValue])
 
-  const tokenListWithBalances = React.useMemo((): BlockchainToken[] => {
+  const tokenListWithBalances: BlockchainToken[] = React.useMemo(() => {
     return filteredTokenListBySearch.filter((token: BlockchainToken) => Number(getTokenBalance(token)) > 0)
   }, [filteredTokenListBySearch, hideTokensWithZeroBalances])
 
-  const filteredTokenList = React.useMemo((): BlockchainToken[] => {
+  const filteredTokenList: BlockchainToken[] = React.useMemo(() => {
     if (tokenListWithBalances.length === 0 || !isConnected) {
       return filteredTokenListBySearch
     }
@@ -98,14 +91,21 @@ export const SelectTokenModal = (props: Props) => {
     filteredTokenListBySearch,
     hideTokensWithZeroBalances,
     tokenListWithBalances,
-    selectingFromOrTo,
     isConnected
   ])
 
-  const showZeroBalanceButton = React.useMemo((): boolean => {
+  const showZeroBalanceButton: boolean = React.useMemo(() => {
     return tokenListWithBalances.length !== 0 && isConnected
-  }, [tokenListWithBalances, isConnected, selectingFromOrTo])
+  }, [tokenListWithBalances, isConnected])
 
+  // Effects
+  React.useEffect(() => {
+    if (selectingFromOrTo === 'to') {
+      setHideTokensWithZeroBalances(false)
+    }
+  }, [selectingFromOrTo])
+
+  // render
   return (
     <Modal
       modalHeight={hideTokensWithZeroBalances ? 'standard' : 'full'}
@@ -154,10 +154,9 @@ export const SelectTokenModal = (props: Props) => {
             balance={getTokenBalance(token)}
             isConnected={isConnected}
             token={token}
-            disabled={
-              selectedToken ?
-                selectedToken.contractAddress === token.contractAddress :
-                false
+            disabled={disabledToken
+              ? disabledToken.contractAddress === token.contractAddress
+              : false
             }
           />
         )}
