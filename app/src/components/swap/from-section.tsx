@@ -3,6 +3,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
+import * as React from 'react'
+
 // Types
 import { BlockchainToken } from '../../constants/types'
 
@@ -17,7 +19,6 @@ import { Row, Column, HorizontalDivider, Text } from '../shared.styles'
 interface Props {
   getLocale: (key: string) => string
   onClickSelectToken: () => void
-  onClickPresetAmount: (preset: 'half' | 'max') => void
   onInputChange: (value: string) => void
   inputValue: string
   hasInputError: boolean
@@ -31,7 +32,6 @@ export const FromSection = (props: Props) => {
     token,
     getLocale,
     onClickSelectToken,
-    onClickPresetAmount,
     onInputChange,
     hasInputError,
     inputValue,
@@ -39,6 +39,19 @@ export const FromSection = (props: Props) => {
     fiatValue
   } = props
 
+  // methods
+  const onClickHalfPreset = () => {
+    const balance = tokenBalance ?? 0
+    const value = balance / 2
+    onInputChange(value.toString())
+  }
+  
+  const onClickMaxPreset = () => {
+    const value = tokenBalance ?? 0
+    onInputChange(value.toString())
+  }
+
+  // render
   return (
     <SwapSectionBox
       boxType='primary'
@@ -63,11 +76,11 @@ export const FromSection = (props: Props) => {
               />
               <PresetButton
                 buttonText={getLocale('braveSwapHalf')}
-                onClick={() => onClickPresetAmount('half')}
+                onClick={onClickHalfPreset}
               />
               <PresetButton
                 buttonText={getLocale('braveSwapMax')}
-                onClick={() => onClickPresetAmount('max')}
+                onClick={onClickMaxPreset}
               />
             </Row>
           }

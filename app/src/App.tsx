@@ -41,8 +41,7 @@ function App () {
   const [fromAmount, setFromAmount] = React.useState<string>('')
   const [toAmount, setToAmount] = React.useState<string>('')
   const [isFetchingQuote, setIsFetchingQuote] = React.useState<boolean>(false)
-  const [showSelectTokenModal, setShowSelectTokenModal] = React.useState<boolean>(false)
-  const [selectingFromOrTo, setSelectingFromOrTo] = React.useState<'from' | 'to'>('from')
+  const [selectingFromOrTo, setSelectingFromOrTo] = React.useState<'from' | 'to' | undefined>(undefined)
 
   // Methods
   const handleOnSetFromAmount = React.useCallback((value: string) => {
@@ -61,19 +60,6 @@ function App () {
     return mockTokenBalances[token.contractAddress] ?? '0'
   }, [mockTokenBalances])
 
-  // Needed to add this memo here to be declared before onClickPresetAmount
-  const fromTokenBalance = React.useMemo((): number => {
-    if (fromToken) {
-      return Number(getTokenBalance(fromToken))
-    }
-    return 0
-  }, [fromToken])
-
-  const onClickPresetAmount = React.useCallback((key: 'half' | 'max') => {
-    const value = key === 'half' ? fromTokenBalance / 2 : fromTokenBalance
-    setFromAmount(value.toString())
-  }, [fromTokenBalance])
-
   const onClickFlipSwapTokens = React.useCallback(() => {
     setFromToken(toToken)
     setToToken(fromToken)
@@ -88,24 +74,41 @@ function App () {
     // Todo: Add logic here to review order
   }, [])
 
-  const onOpenSelectToken = React.useCallback((id: 'to' | 'from') => () => {
-    setSelectingFromOrTo(id)
-    setShowSelectTokenModal(true)
+  const hideSelectTokenModal = React.useCallback(() => {
+    setSelectingFromOrTo(undefined) // hide modal
   }, [])
 
-  const onSelectToken = React.useCallback((token: BlockchainToken) => {
-    if (selectingFromOrTo === 'from') {
-      setFromToken(token)
-      setShowSelectTokenModal(false)
-      return
-    }
+  const onSelectToToken = React.useCallback((token: BlockchainToken) => {
     setToToken(token)
-    setShowSelectTokenModal(false)
-  }, [selectingFromOrTo])
+    hideSelectTokenModal()
+  }, [hideSelectTokenModal])
 
-  const onHideShowSelectTokenModal = React.useCallback(() => {
-    setShowSelectTokenModal(false)
-  }, [])
+  const onSelectFromToken = React.useCallback((token: BlockchainToken) => {
+    setFromToken(token)
+    hideSelectTokenModal()
+  }, [hideSelectTokenModal])
+
+  // Memos
+  const fromTokenBalance: number = React.useMemo(() => {
+    if (fromToken) {
+      return Number(getTokenBalance(fromToken))
+    }
+    return 0
+  }, [fromToken])
+  
+  const fiatValue: string | undefined = React.useMemo(() => {
+    if (fromAmount && price) {
+      return (price * Number(fromAmount)).toString()
+    }
+    return undefined
+  }, [price, fromAmount])
+
+  const insufficientBalance: boolean = React.useMemo(() => {
+    if (fromAmount && fromTokenBalance !== undefined) {
+      return Number(fromAmount) > fromTokenBalance
+    }
+    return false
+  }, [fromTokenBalance, fromAmount])
 
   // Effects
   React.useEffect(() => {
@@ -121,28 +124,7 @@ function App () {
     setToAmount('')
   }, [toToken, fromToken, fromAmount, rate])
 
-  // Memos
-  const fiatValue = React.useMemo((): string | undefined => {
-    if (fromAmount && price) {
-      return (price * Number(fromAmount)).toString()
-    }
-    return undefined
-  }, [price, fromAmount])
-
-  const insufficientBalance = React.useMemo((): boolean => {
-    if (fromAmount && fromTokenBalance !== undefined) {
-      return Number(fromAmount) > fromTokenBalance
-    }
-    return false
-  }, [fromTokenBalance, fromAmount])
-
-  const selectedToken = React.useMemo((): BlockchainToken | undefined => {
-    if (selectingFromOrTo === 'from') {
-      return toToken
-    }
-    return fromToken
-  }, [fromToken, toToken, selectingFromOrTo])
-
+  // render
   return (
     <>
       <SwapContainer>
@@ -164,10 +146,9 @@ function App () {
         </Row>
         <FromSection
           getLocale={getLocale}
-          onClickPresetAmount={onClickPresetAmount}
           onInputChange={handleOnSetFromAmount}
           inputValue={fromAmount}
-          onClickSelectToken={onOpenSelectToken('from')}
+          onClickSelectToken={() => setSelectingFromOrTo('from')}
           token={fromToken}
           tokenBalance={fromTokenBalance}
           hasInputError={insufficientBalance}
@@ -176,7 +157,7 @@ function App () {
         <FlipTokensButton onClick={onClickFlipSwapTokens} />
         <ToSection
           getLocale={getLocale}
-          onClickSelectToken={onOpenSelectToken('to')}
+          onClickSelectToken={() => setSelectingFromOrTo('to')}
           token={toToken}
           inputValue={toAmount}
           onInputChange={handleOnSetToAmount}
@@ -193,11 +174,17 @@ function App () {
           disabled={true}
         />
       </SwapContainer>
-      {showSelectTokenModal &&
+      {selectingFromOrTo &&
         <SelectTokenModal
-          onClose={onHideShowSelectTokenModal}
-          onSelectToken={onSelectToken}
-          selectedToken={selectedToken}
+          onClose={hideSelectTokenModal}
+          onSelectToken={selectingFromOrTo === 'from'
+            ? onSelectFromToken
+            : onSelectToToken
+          }
+          disabledToken={selectingFromOrTo === 'from'
+            ? toToken 
+            : fromToken
+          }
           tokenList={mockEthereumTokens}
           selectedNetwork={mockEthereumNetwork}
           getLocale={getLocale}
