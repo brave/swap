@@ -32,8 +32,8 @@ export const IconButton = (props: Props) => {
 
 // ToDo: Update hardcoded colors once new Brave-UI is installed.
 const Button = styled.button<IconButtonStyleProps>`
-  height: ${(p) => p.size ? p.size : '16px'};
-  width: ${(p) => p.size ? p.size : '16px'};
+  height: ${(p) => p.size ? p.size : 16}px;
+  width: ${(p) => p.size ? p.size : 16}px;
   background-color: #495057;
   -webkit-mask-image: url(${(p) => p.icon});
   mask-image: url(${(p) => p.icon});
