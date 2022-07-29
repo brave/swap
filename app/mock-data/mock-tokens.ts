@@ -7,68 +7,178 @@
 import { BlockchainToken } from '../src/constants/types'
 
 // Icons
-import { BATIconUrl, ETHIconUrl, BNBIconUrl, SOLIconUrl } from '../src/assets/asset-icons'
+import {
+  BATIconUrl,
+  ETHIconUrl,
+  BNBIconUrl,
+  SOLIconUrl,
+  USDCIconUrl,
+  SUSHIIconUrl,
+  MATICIconUrl,
+  ONEINCHIconUrl,
+  USDTIconUrl,
+  ZEROXBTCIconUrl
+} from '../src/assets/asset-icons'
+
+export const mockEthereumToken = {
+  contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  name: 'Ethereum',
+  symbol: 'ETH',
+  logo: ETHIconUrl,
+  isErc20: false,
+  isErc721: false,
+  decimals: 18,
+  visible: true,
+  tokenId: '',
+  coingeckoId: '',
+  coin: 60,
+  chainId: '0x1'
+}
+
+export const mockBasicAttentionToken = {
+  contractAddress: '0x1',
+  name: 'Basic Attention Token',
+  symbol: 'BAT',
+  logo: BATIconUrl,
+  isErc20: true,
+  isErc721: false,
+  decimals: 18,
+  visible: true,
+  tokenId: '',
+  coingeckoId: '',
+  coin: 60,
+  chainId: '0x1'
+}
+
+export const mockWrappedBinanceCoinToken = {
+  contractAddress: '0x2',
+  name: 'Wrapped Binance Coin',
+  symbol: 'BNB',
+  logo: BNBIconUrl,
+  isErc20: true,
+  isErc721: false,
+  decimals: 18,
+  visible: true,
+  tokenId: '',
+  coingeckoId: '',
+  coin: 60,
+  chainId: '0x1'
+}
+
+export const mockWrappedSolanaToken = {
+  contractAddress: '0x3',
+  name: 'Wrapped Solana',
+  symbol: 'SOL',
+  logo: SOLIconUrl,
+  isErc20: true,
+  isErc721: false,
+  decimals: 18,
+  visible: true,
+  tokenId: '',
+  coingeckoId: '',
+  coin: 60,
+  chainId: '0x1'
+}
+
+export const mockUSDCToken = {
+  contractAddress: '0x4',
+  name: 'USD Coin',
+  symbol: 'USDC',
+  logo: USDCIconUrl,
+  isErc20: true,
+  isErc721: false,
+  decimals: 18,
+  visible: true,
+  tokenId: '',
+  coingeckoId: '',
+  coin: 60,
+  chainId: '0x1'
+}
+
+export const mockSUSHIToken = {
+  contractAddress: '0x5',
+  name: 'Sushi',
+  symbol: 'SUSHI',
+  logo: SUSHIIconUrl,
+  isErc20: true,
+  isErc721: false,
+  decimals: 18,
+  visible: true,
+  tokenId: '',
+  coingeckoId: '',
+  coin: 60,
+  chainId: '0x1'
+}
+
+export const mockUSDTToken = {
+  contractAddress: '0x6',
+  name: 'Tether USD',
+  symbol: 'USDT',
+  logo: USDTIconUrl,
+  isErc20: true,
+  isErc721: false,
+  decimals: 18,
+  visible: true,
+  tokenId: '',
+  coingeckoId: '',
+  coin: 60,
+  chainId: '0x1'
+}
+
+export const mockMATICToken = {
+  contractAddress: '0x7',
+  name: 'Polygon',
+  symbol: 'MATIC',
+  logo: MATICIconUrl,
+  isErc20: true,
+  isErc721: false,
+  decimals: 18,
+  visible: true,
+  tokenId: '',
+  coingeckoId: '',
+  coin: 60,
+  chainId: '0x1'
+}
+
+export const mock0XBTCToken = {
+  contractAddress: '0x8',
+  name: '0xBitcoin',
+  symbol: '0xBTC',
+  logo: ZEROXBTCIconUrl,
+  isErc20: true,
+  isErc721: false,
+  decimals: 18,
+  visible: true,
+  tokenId: '',
+  coingeckoId: '',
+  coin: 60,
+  chainId: '0x1'
+}
+
+export const mock1INCHToken = {
+  contractAddress: '0x9',
+  name: '1inch',
+  symbol: '1INCH',
+  logo: ONEINCHIconUrl,
+  isErc20: true,
+  isErc721: false,
+  decimals: 18,
+  visible: true,
+  tokenId: '',
+  coingeckoId: '',
+  coin: 60,
+  chainId: '0x1'
+}
 
 export const mockEthereumTokens: BlockchainToken[] = [
-  {
-    contractAddress: '',
-    name: 'Ethereum',
-    symbol: 'ETH',
-    logo: ETHIconUrl,
-    isErc20: false,
-    isErc721: false,
-    decimals: 18,
-    visible: true,
-    tokenId: '',
-    coingeckoId: '',
-    coin: 60,
-    chainId: '0x1'
-  },
-  {
-    contractAddress: '0x1',
-    name: 'Basic Attention Token',
-    symbol: 'BAT',
-    logo: BATIconUrl,
-    isErc20: true,
-    isErc721: false,
-    decimals: 18,
-    visible: true,
-    tokenId: '',
-    coingeckoId: '',
-    coin: 60,
-    chainId: '0x1'
-  },
-  {
-    contractAddress: '0x2',
-    name: 'Wrapped Binance Coin',
-    symbol: 'BNB',
-    logo: BNBIconUrl,
-    isErc20: true,
-    isErc721: false,
-    decimals: 18,
-    visible: true,
-    tokenId: '',
-    coingeckoId: '',
-    coin: 60,
-    chainId: '0x1'
-  },
-  {
-    contractAddress: '0x3',
-    name: 'Wrapped Solana',
-    symbol: 'SOL',
-    logo: SOLIconUrl,
-    isErc20: true,
-    isErc721: false,
-    decimals: 18,
-    visible: true,
-    tokenId: '',
-    coingeckoId: '',
-    coin: 60,
-    chainId: '0x1'
-  }
+  mockEthereumToken,
+  mockBasicAttentionToken,
+  mockWrappedBinanceCoinToken,
+  mockWrappedSolanaToken,
+  mockUSDCToken,
+  mockSUSHIToken,
+  mockUSDTToken,
+  mockMATICToken,
+  mock0XBTCToken,
+  mock1INCHToken
 ]
-
-export const mockEthereumToken = mockEthereumTokens[0]
-export const mockBasicAttentionToken = mockEthereumTokens[1]
-export const mockWrappedBinanceCoinToken = mockEthereumTokens[2]
-export const mockWrappedSolanaToken = mockEthereumTokens[3]

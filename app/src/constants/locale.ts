@@ -11,5 +11,9 @@ export const locale: Record<string, string> = {
   braveSwapMax: 'Max',
   braveSwapEnterAnAmount: 'Enter an amount',
   braveSwapFindingPrice: 'Finding best price for you',
-  braveSwapBalance: 'Balance:'
+  braveSwapBalance: 'Balance:',
+  braveSwapSelectAToken: 'Select a token to swap',
+  braveSwapShowTokensWithZeroBalances: 'Show tokens with no balance',
+  braveSwapHideTokensWithZeroBalances: 'Hide zero balance',
+  braveSwapSearchToken: 'Search token by name'
 }

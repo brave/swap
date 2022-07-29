@@ -3,12 +3,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
-import { FromSection } from './from-section'
-import { ToSection } from './to-section'
-import { SwapContainer } from './swap-container'
-
-export {
-  SwapContainer,
-  FromSection,
-  ToSection
-}
+export { FromSection } from './from-section'
+export { ToSection } from './to-section'
+export { SwapContainer } from './swap-container'
+export { SelectTokenModal } from './select-token-modal'
+export { SearchWithNetworkSelector } from './search-with-network-selector'

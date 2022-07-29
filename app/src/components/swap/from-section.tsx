@@ -8,7 +8,7 @@ import { BlockchainToken } from '../../constants/types'
 
 // Components
 import { SwapSectionBox } from '../boxes'
-import { SelectTokenButton, PresetButton } from '../buttons'
+import { SelectTokenOrNetworkButton, PresetButton } from '../buttons'
 import { SwapInput } from '../inputs'
 
 // Styled Components
@@ -47,10 +47,11 @@ export const FromSection = (props: Props) => {
         rowWidth='full'
       >
         <Row>
-          <SelectTokenButton
+          <SelectTokenOrNetworkButton
             onClick={onClickSelectToken}
             getLocale={getLocale}
-            token={token}
+            icon={token?.logo}
+            text={token?.symbol}
             buttonType='primary'
           />
           {token &&
@@ -80,7 +81,7 @@ export const FromSection = (props: Props) => {
               textColor={hasInputError ? 'error' : 'text02'}
               maintainHeight={true}
             >
-              {tokenBalance ? `${getLocale('braveSwapBalance')} ${tokenBalance}` : ''}
+              {tokenBalance !== undefined ? `${getLocale('braveSwapBalance')} ${tokenBalance}` : ''}
             </Text>
           }
           <SwapInput

@@ -8,7 +8,7 @@ import { BlockchainToken } from '../../constants/types'
 
 // Components
 import { SwapSectionBox } from '../boxes'
-import { SelectTokenButton } from '../buttons'
+import { SelectTokenOrNetworkButton } from '../buttons'
 import { SwapInput } from '../inputs'
 
 // Styled Components
@@ -44,10 +44,11 @@ export const ToSection = (props: Props) => {
       <Row
         rowWidth='full'
       >
-        <SelectTokenButton
+        <SelectTokenOrNetworkButton
           getLocale={getLocale}
           onClick={onClickSelectToken}
-          token={token}
+          icon={token?.logo}
+          text={token?.symbol}
           buttonType='secondary'
         />
         <Column

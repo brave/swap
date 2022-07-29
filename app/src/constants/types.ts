@@ -17,3 +17,15 @@ export type BlockchainToken = {
   chainId: string
   coin: number
 }
+
+export type NetworkInfo = {
+  chainId: string
+  chainName: string
+  blockExplorerUrls: string[]
+  iconUrls: string[]
+  rpcUrls: string[]
+  symbol: string
+  symbolName: string
+  decimals: number
+  coin: number
+}

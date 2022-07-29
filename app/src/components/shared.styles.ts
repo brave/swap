@@ -78,6 +78,18 @@ export const HorizontalDivider = styled.div<{
   margin-right: ${(p) => p.marginRight ?? 0}px;
 `
 
+export const VerticalDivider = styled.div<{
+  width?: number
+  marginTop?: number
+  marginBottom?: number
+}>`
+  width: ${(p) => p.width ? `${p.width}px` : '100%'};
+  background-color: #E9E9F4;
+  height: 2px;
+  margin-top: ${(p) => p.marginTop ?? 0}px;
+  margin-bottom: ${(p) => p.marginBottom ?? 0}px;
+`
+
 export const Icon = styled.div<{
   size: number
   icon: string
