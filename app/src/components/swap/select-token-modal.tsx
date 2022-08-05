@@ -3,8 +3,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 
 // Types
 import { BlockchainToken, NetworkInfo } from '../../constants/types'
@@ -46,12 +46,13 @@ export const SelectTokenModal = (props: Props) => {
   } = props
 
   // State
-  const [hideTokensWithZeroBalances, setHideTokensWithZeroBalances] = React.useState<boolean>(true)
+  const [hideTokensWithZeroBalances, setHideTokensWithZeroBalances] =
+    React.useState<boolean>(true)
   const [searchValue, setSearchValue] = React.useState<string>('')
 
   // Methods
   const toggleHideTokensWithZerorBalances = React.useCallback(() => {
-    setHideTokensWithZeroBalances(prev => !prev)
+    setHideTokensWithZeroBalances((prev) => !prev)
   }, [])
 
   const handleOnSearchChanged = React.useCallback((value: string) => {
@@ -69,14 +70,17 @@ export const SelectTokenModal = (props: Props) => {
     if (searchValue === '') {
       return tokenList
     }
-    return tokenList.filter((token: BlockchainToken) =>
-      token.name.toLowerCase().startsWith(searchValue.toLowerCase()) ||
-      token.symbol.toLowerCase().startsWith(searchValue.toLowerCase())
+    return tokenList.filter(
+      (token: BlockchainToken) =>
+        token.name.toLowerCase().startsWith(searchValue.toLowerCase()) ||
+        token.symbol.toLowerCase().startsWith(searchValue.toLowerCase())
     )
   }, [tokenList, searchValue])
 
   const tokenListWithBalances: BlockchainToken[] = React.useMemo(() => {
-    return filteredTokenListBySearch.filter((token: BlockchainToken) => Number(getTokenBalance(token)) > 0)
+    return filteredTokenListBySearch.filter(
+      (token: BlockchainToken) => Number(getTokenBalance(token)) > 0
+    )
   }, [filteredTokenListBySearch, hideTokensWithZeroBalances])
 
   const filteredTokenList: BlockchainToken[] = React.useMemo(() => {
@@ -107,31 +111,14 @@ export const SelectTokenModal = (props: Props) => {
 
   // render
   return (
-    <Modal
-      modalHeight={hideTokensWithZeroBalances ? 'standard' : 'full'}
-    >
-      <Row
-        rowWidth='full'
-        horizontalPadding={24}
-        verticalPadding={20}
-      >
-        <Text
-          textSize='18px'
-          isBold={true}
-        >
+    <Modal modalHeight={hideTokensWithZeroBalances ? 'standard' : 'full'}>
+      <Row rowWidth='full' horizontalPadding={24} verticalPadding={20}>
+        <Text textSize='18px' isBold={true}>
           {getLocale('braveSwapSelectAToken')}
         </Text>
-        <IconButton
-          icon={CloseIcon}
-          onClick={onClose}
-          size={20}
-        />
+        <IconButton icon={CloseIcon} onClick={onClose} size={20} />
       </Row>
-      <Row
-        rowWidth='full'
-        horizontalPadding={20}
-        marginBottom={16}
-      >
+      <Row rowWidth='full' horizontalPadding={20} marginBottom={16}>
         <SearchWithNetworkSelector
           getLocale={getLocale}
           onSearchChanged={handleOnSearchChanged}
@@ -147,21 +134,22 @@ export const SelectTokenModal = (props: Props) => {
         verticalAlign='flex-start'
         verticalPadding={8}
       >
-        {filteredTokenList.map((token) =>
+        {filteredTokenList.map((token) => (
           <TokenListButton
             key={token.contractAddress}
             onClick={onSelectToken}
             balance={getTokenBalance(token)}
             isConnected={isConnected}
             token={token}
-            disabled={disabledToken
-              ? disabledToken.contractAddress === token.contractAddress
-              : false
+            disabled={
+              disabledToken
+                ? disabledToken.contractAddress === token.contractAddress
+                : false
             }
           />
-        )}
+        ))}
       </ScrollContainer>
-      {showZeroBalanceButton &&
+      {showZeroBalanceButton && (
         <Button
           buttonText={buttonText}
           onClick={toggleHideTokensWithZerorBalances}
@@ -170,7 +158,7 @@ export const SelectTokenModal = (props: Props) => {
           horizontalMargin={0}
           verticalMargin={0}
         />
-      }
+      )}
     </Modal>
   )
 }
@@ -180,8 +168,8 @@ const Modal = styled(StandardModal)`
 `
 
 const Button = styled(StandardButton)`
-  margin: auto;
   align-self: flex-end;
+  margin: auto;
 `
 
 const ScrollContainer = styled(Column)`

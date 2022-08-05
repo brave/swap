@@ -3,7 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 interface StandardButtonStyleProps {
   buttonStyle?: 'round' | 'square'
@@ -46,24 +46,45 @@ export const StandardButton = (props: Props) => {
   )
 }
 
-// ToDo: Update hardcoded colors once new Brave-UI is installed.
 const Button = styled.button<StandardButtonStyleProps>`
+  --button-background: ${(p) =>
+    p.buttonStyle === 'square'
+      ? p.theme.color.legacy.divider01
+      : p.buttonType === 'secondary'
+      ? 'transparent'
+      : p.theme.color.legacy.interactive05};
+  --button-background-hover: ${(p) =>
+    p.buttonStyle === 'square'
+      ? p.theme.color.legacy.interactive05
+      : p.theme.color.legacy.interactive04};
+  --button-color-disabled: ${(p) => p.theme.color.white};
   --vertical-margin: ${(p) => p.verticalMargin ?? 0}px;
   --horizontal-margin: ${(p) => p.horizontalMargin ?? 0}px;
-  width: ${(p) => p.buttonWidth === 'dynamic' ? 'unset' : '100%'};
-  padding: 18px;
-  background-color: ${(p) => p.buttonStyle === 'square' ? '#E9E9F4' : p.buttonType === 'secondary' ? 'transparent' : '#4C54D2'};
-  border-radius: ${(p) => p.buttonStyle === 'square' ? '0px' : '48px'};
-  color: ${(p) => p.buttonType === 'secondary' || p.buttonStyle === 'square' ? '#212529' : '#FFFFFF'};
+  @media (prefers-color-scheme: dark) {
+    // #677078 does not exist in design system
+    --button-color-disabled: #677078;
+  }
+
+  background-color: var(--button-background);
+  border-radius: ${(p) => (p.buttonStyle === 'square' ? '0px' : '48px')};
+  border: ${(p) =>
+    p.buttonType === 'secondary'
+      ? `1px solid ${p.theme.color.legacy.interactive08}`
+      : 'none'};
+  color: ${(p) =>
+    p.buttonType === 'secondary' || p.buttonStyle === 'square'
+      ? p.theme.color.legacy.text02
+      : p.theme.color.white};
+  font-size: ${(p) => (p.buttonStyle === 'square' ? '14px' : '16px')};
   margin: var(--vertical-margin) var(--horizontal-margin);
-  border: ${(p) => p.buttonType === 'secondary' ? '1px solid #AEB1C2' : 'none'};
-  font-size: ${(p) => p.buttonStyle === 'square' ? '14px' : '16px'};
-  &:hover {
-    background-color: ${(p) => p.buttonStyle === 'square' ? '#4C54D2' : '#353DAB'};
-    color: #FFFFFF;
+  padding: 18px;
+  width: ${(p) => (p.buttonWidth === 'dynamic' ? 'unset' : '100%')};
+  &:hover:not([disabled]) {
+    background-color: var(--button-background-hover);
+    color: ${(p) => p.theme.color.white};
   }
   :disabled {
-    background-color: #DADCE8;
-    color: #FFFFFF;
+    background-color: ${(p) => p.theme.color.legacy.disabled};
+    color: var(--button-color-disabled);
   }
 `

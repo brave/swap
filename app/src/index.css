@@ -6,15 +6,14 @@
 /* This file will be a work in progress, but the goal is to set as much
 default values here to prevent code duplication in styled components */
 
-/* ToDo: Update hardcoded colors once new Brave-UI is installed.  */
-
 @import url('https://fonts.googleapis.com/css?family=Poppins|Poppins:300,400,500,600,700');
+@import '@brave/leo/build/css/variables.css';
 
 :root {
   font-family: 'Poppins';
   color-scheme: light dark;
-  background-color: #F8F9FA;
-  color: #212529;
+  background-color: var(--color-legacy-background1);
+  color: var(--color-legacy-text1);
   font-weight: 400;
   font-size: 18px;
   line-height: 20px;
@@ -30,7 +29,6 @@ div {
 
 a {
   font-weight: 500;
-  color: #646cff;
   text-decoration: inherit;
 }
 
@@ -58,7 +56,7 @@ button {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  color: #212529;
+  color: var(--color-legacy-text1);
 }
 button:disabled {
   cursor: not-allowed;
@@ -73,7 +71,7 @@ input {
   background-image: none;
   box-shadow: none;
   border: none;
-  color: #212529;
+  color: var(--color-legacy-text1);
   padding: 0px;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
@@ -82,7 +80,7 @@ input {
 }
 
 input::placeholder {
-  color: #212529;
+  color: var(--color-legacy-text1);
 }
 
 input:focus {
@@ -98,20 +96,16 @@ input:focus {
   margin: 0;
 }
 
-input[type=number] {
+input[type='number'] {
   -moz-appearance: textfield !important;
 }
 
 span {
-  color: #212529;
+  color: var(--color-legacy-text1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    color: #213547;
-    background-color: #17171F;
-  }
-  a:hover {
-    color: #747bff;
+    background-color: var(--color-legacy-background2);
   }
 }

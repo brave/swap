@@ -3,8 +3,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 
 // Types
 import { NetworkInfo } from '../../constants/types'
@@ -45,10 +45,7 @@ export const SearchWithNetworkSelector = (props: Props) => {
         onChange={onSearchChanged}
         value={searchValue}
       />
-      <HorizontalDivider
-        marginRight={8}
-        height={24}
-      />
+      <HorizontalDivider marginRight={8} height={24} />
       <SelectTokenOrNetworkButton
         icon={selectedNetwork.iconUrls[0]}
         getLocale={getLocale}
@@ -61,14 +58,13 @@ export const SearchWithNetworkSelector = (props: Props) => {
   )
 }
 
-// ToDo: Update hardcoded colors once new Brave-UI is installed.
 const Wrapper = styled.div`
-  box-sizing: border-box;
-  justify-content: center;
-  background-color: #FFFFFF; 
-  width: 100%;
-  border: 1px solid #DADCE8;
+  background-color: ${(p) => p.theme.color.legacy.background01};
+  border: 1px solid ${(p) => p.theme.color.legacy.disabled};
   border-radius: 4px;
-  padding: 4px 8px 4px 12px;
+  box-sizing: border-box;
   flex-direction: row;
+  justify-content: center;
+  padding: 4px 8px 4px 12px;
+  width: 100%;
 `
