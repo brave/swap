@@ -4,7 +4,7 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 import React from 'react'
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 // Types
 import { BlockchainToken } from '../../constants/types'
@@ -21,76 +21,57 @@ interface Props {
 }
 
 export const TokenListButton = (props: Props) => {
-  const {
-    onClick,
-    token,
-    balance,
-    disabled,
-    isConnected
-  } = props
+  const { onClick, token, balance, disabled, isConnected } = props
 
   const onSelectToken = React.useCallback(() => {
     onClick(token)
   }, [token, onClick])
 
   return (
-    <Button
-      onClick={onSelectToken}
-      disabled={disabled}
-    >
+    <Button onClick={onSelectToken} disabled={disabled}>
       <Row>
         <TokenIcon src={token.logo} />
-        <Column
-          horizontalAlign='flex-start'
-        >
-          <Text
-            isBold={true}
-            textColor='text01'
-            textSize='14px'
-          >
+        <Column horizontalAlign='flex-start'>
+          <Text isBold={true} textColor='text01' textSize='14px'>
             {token.name}
           </Text>
-          <Text
-            textColor='text03'
-            textSize='14px'
-          >
+          <Text textColor='text03' textSize='14px'>
             {token.symbol}
           </Text>
         </Column>
       </Row>
-      {isConnected &&
-        <Text
-          isBold={true}
-          textColor='text01'
-          textSize='14px'
-        >
+      {isConnected && (
+        <Text isBold={true} textColor='text01' textSize='14px'>
           {balance} {token.symbol}
         </Text>
-      }
+      )}
     </Button>
   )
 }
 
-// ToDo: Update hardcoded colors once new Brave-UI is installed.
 const Button = styled.button`
-  width: 100%;
-  white-space: nowrap;
-  background-color: #FFFFFF;
-  justify-content: space-between;
+  --button-shadow: 0px 0px 10px rgba(79, 79, 79, 0.1);
+  @media (prefers-color-scheme: dark) {
+    --button-shadow: 0px 0px 16px rgba(0, 0, 0, 0.36);
+  }
+  background-color: ${(p) => p.theme.color.legacy.background01};
   border-radius: 8px;
+  justify-content: space-between;
   padding: 16px 8px;
+  white-space: nowrap;
+  width: 100%;
   :disabled {
     opacity: 0.3;
   }
   &:hover:not([disabled]) {
-    box-shadow: 0px 0px 10px rgba(79, 79, 79, 0.1);
+    box-shadow: var(--button-shadow);
     z-index: 20px;
     position: relative;
   }
 `
 
 const TokenIcon = styled.img`
-  width: 40px;
-  height: 40px;
   margin-right: 12px;
+  height: 40px;
+  width: 40px;
 `

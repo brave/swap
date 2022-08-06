@@ -1,0 +1,17 @@
+{
+  "prettier.singleQuote": true,
+  "prettier.useTabs": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.semi": false,
+  "prettier.trailingComma": "none",
+  "prettier.jsxSingleQuote": true,
+  "eslint.format.enable": true,
+  "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+  "typescript.format.insertSpaceBeforeFunctionParenthesis": true,
+  "editor.detectIndentation": false,
+  "editor.tabSize": 2,
+  "prettier.tabWidth": 2,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "security.workspace.trust.untrustedFiles": "open",
+  "editor.formatOnSave": true
+}

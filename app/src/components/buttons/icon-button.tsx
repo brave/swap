@@ -3,7 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 interface IconButtonStyleProps {
   size?: number
@@ -15,27 +15,16 @@ interface Props extends IconButtonStyleProps {
 }
 
 export const IconButton = (props: Props) => {
-  const {
-    icon,
-    onClick,
-    size
-  } = props
+  const { icon, onClick, size } = props
 
-  return (
-    <Button
-      onClick={onClick}
-      icon={icon}
-      size={size}
-    />
-  )
+  return <Button onClick={onClick} icon={icon} size={size} />
 }
 
-// ToDo: Update hardcoded colors once new Brave-UI is installed.
 const Button = styled.button<IconButtonStyleProps>`
-  height: ${(p) => p.size ? p.size : 16}px;
-  width: ${(p) => p.size ? p.size : 16}px;
-  background-color: #495057;
-  -webkit-mask-image: url(${(p) => p.icon});
+  background-color: ${(p) => p.theme.color.legacy.text02};
+  height: ${(p) => (p.size ? p.size : 16)}px;
   mask-image: url(${(p) => p.icon});
   mask-size: contain;
+  width: ${(p) => (p.size ? p.size : 16)}px;
+  -webkit-mask-image: url(${(p) => p.icon});
 `

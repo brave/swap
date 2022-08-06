@@ -4,7 +4,7 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 import React from 'react'
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 // Assets
 import CaratDownIcon from '../../assets/carat-down-icon.svg'
@@ -27,15 +27,8 @@ interface Props extends SelectTokenButtonStyleProps {
 }
 
 export const SelectTokenOrNetworkButton = (props: Props) => {
-  const {
-    onClick,
-    getLocale,
-    buttonType,
-    buttonSize,
-    icon,
-    text,
-    disabled
-  } = props
+  const { onClick, getLocale, buttonType, buttonSize, icon, text, disabled } =
+    props
 
   // Memos
   const needsMorePadding = React.useMemo((): boolean => {
@@ -54,12 +47,7 @@ export const SelectTokenOrNetworkButton = (props: Props) => {
       disabled={disabled}
     >
       <Row>
-        {text && icon &&
-          <ButtonImage
-            src={icon}
-            buttonSize={buttonSize}
-          />
-        }
+        {text && icon && <ButtonImage src={icon} buttonSize={buttonSize} />}
         <Text
           isBold={text !== undefined}
           textColor={text ? 'text01' : 'text03'}
@@ -68,41 +56,51 @@ export const SelectTokenOrNetworkButton = (props: Props) => {
           {text ?? getLocale('braveSwapSelectToken')}
         </Text>
       </Row>
-      {buttonSize !== 'small' &&
-        <HorizontalSpacer size={8} />
-      }
-      <ButtonIcon
-        size={12}
-        icon={CaratDownIcon}
-      />
+      {buttonSize !== 'small' && <HorizontalSpacer size={8} />}
+      <ButtonIcon size={12} icon={CaratDownIcon} />
     </Button>
   )
 }
 
-// ToDo: Update hardcoded colors once new Brave-UI is installed.
 const Button = styled.button<SelectTokenButtonStyleProps>`
-  white-space: nowrap;
-  --big-padding: 10px ${(p) => p.moreRightPadding ? 12 : 10}px 10px 12px;
+  /* Variables */
+  --big-padding: 10px ${(p) => (p.moreRightPadding ? 12 : 10)}px 10px 12px;
+  --button-background-hover: ${(p) =>
+    p.buttonType === 'secondary' || p.buttonSize === 'small'
+      ? p.theme.color.secondary10
+      : 'rgba(255, 255, 255, 0.6)'};
+  // This RGBA value does not exist in the design system
+  @media (prefers-color-scheme: dark) {
+    --button-background-hover: ${(p) =>
+      p.buttonType === 'secondary' || p.buttonSize === 'small'
+        ? p.theme.color.legacy.background02
+        : p.theme.color.legacy.background01};
+  }
   --small-padding: 4px 12px 4px 4px;
+
+  /* Styles */
   background-color: transparent;
   border-radius: 100px;
-  width :${(p) => p.buttonSize === 'small' ? '140px' : 'unset'};
-  justify-content: ${(p) => p.buttonSize === 'small' ? 'space-between' : 'center'};
-  padding: ${(p) => p.buttonSize === 'small' ? 'var(--small-padding)' : 'var(--big-padding)'};
+  justify-content: ${(p) =>
+    p.buttonSize === 'small' ? 'space-between' : 'center'};
+  padding: ${(p) =>
+    p.buttonSize === 'small' ? 'var(--small-padding)' : 'var(--big-padding)'};
+  white-space: nowrap;
+  width: ${(p) => (p.buttonSize === 'small' ? '140px' : 'unset')};
   :disabled {
     opacity: 0.3;
   }
   &:hover:not([disabled]) {
-    background-color: ${(p) => p.buttonType === 'secondary' || p.buttonSize === 'small' ? '#F5F6FC' : 'rgba(255, 255, 255, 0.6)'};
+    background-color: var(--button-background-hover);
   }
 `
 
 const ButtonIcon = styled(Icon)`
-  background-color: #212529;
+  background-color: ${(p) => p.theme.color.legacy.text01};
 `
 
 const ButtonImage = styled.img<SelectTokenButtonStyleProps>`
-  width: ${(p) => p.buttonSize === 'small' ? 24 : 40}px;
-  height: ${(p) => p.buttonSize === 'small' ? 24 : 40}px;
+  height: ${(p) => (p.buttonSize === 'small' ? 24 : 40)}px;
   margin-right: 8px;
+  width: ${(p) => (p.buttonSize === 'small' ? 24 : 40)}px;
 `

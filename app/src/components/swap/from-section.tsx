@@ -3,8 +3,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
-import * as React from 'react'
-
 // Types
 import { BlockchainToken } from '../../constants/types'
 
@@ -45,7 +43,7 @@ export const FromSection = (props: Props) => {
     const value = balance / 2
     onInputChange(value.toString())
   }
-  
+
   const onClickMaxPreset = () => {
     const value = tokenBalance ?? 0
     onInputChange(value.toString())
@@ -53,12 +51,8 @@ export const FromSection = (props: Props) => {
 
   // render
   return (
-    <SwapSectionBox
-      boxType='primary'
-    >
-      <Row
-        rowWidth='full'
-      >
+    <SwapSectionBox boxType='primary'>
+      <Row rowWidth='full'>
         <Row>
           <SelectTokenOrNetworkButton
             onClick={onClickSelectToken}
@@ -67,13 +61,9 @@ export const FromSection = (props: Props) => {
             text={token?.symbol}
             buttonType='primary'
           />
-          {token &&
+          {token && (
             <Row>
-              <HorizontalDivider
-                height={28}
-                marginLeft={8}
-                marginRight={8}
-              />
+              <HorizontalDivider height={28} marginLeft={8} marginRight={8} />
               <PresetButton
                 buttonText={getLocale('braveSwapHalf')}
                 onClick={onClickHalfPreset}
@@ -83,20 +73,20 @@ export const FromSection = (props: Props) => {
                 onClick={onClickMaxPreset}
               />
             </Row>
-          }
+          )}
         </Row>
-        <Column
-          horizontalAlign='flex-end'
-        >
-          {token &&
+        <Column horizontalAlign='flex-end'>
+          {token && (
             <Text
               textSize='14px'
               textColor={hasInputError ? 'error' : 'text02'}
               maintainHeight={true}
             >
-              {tokenBalance !== undefined ? `${getLocale('braveSwapBalance')} ${tokenBalance}` : ''}
+              {tokenBalance !== undefined
+                ? `${getLocale('braveSwapBalance')} ${tokenBalance}`
+                : ''}
             </Text>
-          }
+          )}
           <SwapInput
             onChange={onInputChange}
             value={inputValue}
@@ -104,17 +94,13 @@ export const FromSection = (props: Props) => {
             autoFocus={true}
           />
           {/* Todo: Setup locale for currency symbol */}
-          {token &&
-            <Text
-              textSize='14px'
-              textColor='text03'
-              maintainHeight={true}
-            >
+          {token && (
+            <Text textSize='14px' textColor='text03' maintainHeight={true}>
               {fiatValue ? `$${fiatValue}` : ''}
             </Text>
-          }
+          )}
         </Column>
       </Row>
-    </SwapSectionBox >
+    </SwapSectionBox>
   )
 }

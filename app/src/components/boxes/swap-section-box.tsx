@@ -3,8 +3,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 
 interface BoxStyleProps {
   boxType: 'primary' | 'secondary'
@@ -16,22 +16,29 @@ interface Props extends BoxStyleProps {
 
 export const SwapSectionBox = (props: Props) => {
   const { boxType, children } = props
-  return (
-    <Wrapper
-      boxType={boxType}
-    >
-      {children}
-    </Wrapper>
-  )
+
+  return <Wrapper boxType={boxType}>{children}</Wrapper>
 }
 
-// ToDo: Update hardcoded colors once new Brave-UI is installed.
 const Wrapper = styled.div<BoxStyleProps>`
+  --box-background: ${(p) =>
+    p.boxType === 'secondary'
+      ? p.theme.color.legacy.background01
+      : p.theme.color.secondary10};
+  @media (prefers-color-scheme: dark) {
+    --box-background: ${(p) =>
+      p.boxType === 'secondary'
+        ? p.theme.color.legacy.background01
+        : p.theme.color.legacy.background02};
+  }
+  background-color: var(--box-background);
   box-sizing: border-box;
-  background-color: ${(p) => p.boxType === 'secondary' ? '#FFFFFF' : '#F5F6FC'}; 
-  width: 100%;
   border-radius: 16px;
+  border: ${(p) =>
+    p.boxType === 'secondary'
+      ? `1px solid ${p.theme.color.legacy.divider01}`
+      : 'none'};
+  height: ${(p) => (p.boxType === 'secondary' ? '88px' : '114px')};
   padding: 14px 24px 14px 12px;
-  border: ${(p) => p.boxType === 'secondary' ? '1px solid #E9E9F4' : 'none'};
-  height: ${(p) => p.boxType === 'secondary' ? '88px' : '114px'};
+  width: 100%;
 `

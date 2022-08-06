@@ -38,12 +38,8 @@ export const ToSection = (props: Props) => {
   } = props
 
   return (
-    <SwapSectionBox
-      boxType='secondary'
-    >
-      <Row
-        rowWidth='full'
-      >
+    <SwapSectionBox boxType='secondary'>
+      <Row rowWidth='full'>
         <SelectTokenOrNetworkButton
           getLocale={getLocale}
           onClick={onClickSelectToken}
@@ -56,7 +52,7 @@ export const ToSection = (props: Props) => {
           verticalAlign={isLoading ? 'flex-start' : 'center'}
           columnHeight={isLoading ? 'full' : 'dynamic'}
         >
-          {isLoading &&
+          {isLoading && (
             <Row>
               <Loader />
               <Text
@@ -67,15 +63,15 @@ export const ToSection = (props: Props) => {
                 {getLocale('braveSwapFindingPrice')}
               </Text>
             </Row>
-          }
-          {!isLoading &&
+          )}
+          {!isLoading && (
             <SwapInput
               hasError={hasInputError}
               onChange={onInputChange}
               value={inputValue}
               disabled={disabled}
             />
-          }
+          )}
         </Column>
       </Row>
     </SwapSectionBox>
