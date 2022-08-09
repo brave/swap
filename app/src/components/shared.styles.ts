@@ -66,6 +66,13 @@ export const HorizontalSpacer = styled.div<{
   width: ${(p) => p.size}px;
 `
 
+export const VerticalSpacer = styled.div<{
+  size: number
+}>`
+  height: ${(p) => p.size}px;
+  width: 100%;
+`
+
 export const HorizontalDivider = styled.div<{
   height?: number
   marginLeft?: number
@@ -117,4 +124,16 @@ export const Loader = styled.div`
       transform: rotate(360deg);
     }
   }
+`
+
+export const IconButton = styled.button<{
+  size?: number
+  icon: string
+}>`
+  background-color: ${(p) => p.theme.color.legacy.text02};
+  height: ${(p) => (p.size ? p.size : 16)}px;
+  mask-image: url(${(p) => p.icon});
+  mask-size: contain;
+  width: ${(p) => (p.size ? p.size : 16)}px;
+  -webkit-mask-image: url(${(p) => p.icon});
 `

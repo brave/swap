@@ -13,12 +13,18 @@ import { BlockchainToken, NetworkInfo } from '../../constants/types'
 import CloseIcon from '../../assets/close-icon.svg'
 
 // Components
-import { StandardButton, TokenListButton, IconButton } from '../buttons'
+import { StandardButton, TokenListButton } from '../buttons'
 import { SearchWithNetworkSelector } from './search-with-network-selector'
 import { StandardModal } from '../modals'
 
 // Styled Components
-import { Column, Row, Text, VerticalDivider } from '../shared.styles'
+import {
+  Column,
+  Row,
+  Text,
+  VerticalDivider,
+  IconButton
+} from '../shared.styles'
 
 interface Props {
   onClose: () => void

@@ -8,6 +8,7 @@ import styled from 'styled-components'
 
 interface BoxStyleProps {
   boxType: 'primary' | 'secondary'
+  maintainHeight?: boolean
 }
 
 interface Props extends BoxStyleProps {
@@ -15,9 +16,13 @@ interface Props extends BoxStyleProps {
 }
 
 export const SwapSectionBox = (props: Props) => {
-  const { boxType, children } = props
+  const { boxType, children, maintainHeight } = props
 
-  return <Wrapper boxType={boxType}>{children}</Wrapper>
+  return (
+    <Wrapper boxType={boxType} maintainHeight={maintainHeight}>
+      {children}
+    </Wrapper>
+  )
 }
 
 const Wrapper = styled.div<BoxStyleProps>`
@@ -38,7 +43,13 @@ const Wrapper = styled.div<BoxStyleProps>`
     p.boxType === 'secondary'
       ? `1px solid ${p.theme.color.legacy.divider01}`
       : 'none'};
-  height: ${(p) => (p.boxType === 'secondary' ? '88px' : '114px')};
+  height: ${(p) =>
+    p.maintainHeight
+      ? p.boxType === 'secondary'
+        ? '88px'
+        : '114px'
+      : 'unset'};
+  min-height: ${(p) => (p.boxType === 'secondary' ? '88px' : '114px')};
   padding: 14px 24px 14px 12px;
   width: 100%;
 `
