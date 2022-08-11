@@ -7,7 +7,6 @@
 import { BlockchainToken } from '../../constants/types'
 
 // Components
-import { SwapSectionBox } from '../boxes'
 import { SelectTokenOrNetworkButton } from '../buttons'
 import { SwapInput } from '../inputs'
 
@@ -18,7 +17,7 @@ interface Props {
   getLocale: (key: string) => string
   onClickSelectToken: () => void
   onInputChange: (value: string) => void
-  isLoading: boolean
+  isLoading: boolean | undefined
   inputValue: string
   hasInputError: boolean
   token: BlockchainToken | undefined
@@ -38,42 +37,40 @@ export const ToSection = (props: Props) => {
   } = props
 
   return (
-    <SwapSectionBox boxType='secondary'>
-      <Row rowWidth='full'>
-        <SelectTokenOrNetworkButton
-          getLocale={getLocale}
-          onClick={onClickSelectToken}
-          icon={token?.logo}
-          text={token?.symbol}
-          buttonType='secondary'
-        />
-        <Column
-          horizontalAlign='flex-end'
-          verticalAlign={isLoading ? 'flex-start' : 'center'}
-          columnHeight={isLoading ? 'full' : 'dynamic'}
-        >
-          {isLoading && (
-            <Row>
-              <Loader />
-              <Text
-                textSize='12px'
-                textColor={hasInputError ? 'error' : 'text03'}
-                isBold={false}
-              >
-                {getLocale('braveSwapFindingPrice')}
-              </Text>
-            </Row>
-          )}
-          {!isLoading && (
-            <SwapInput
-              hasError={hasInputError}
-              onChange={onInputChange}
-              value={inputValue}
-              disabled={disabled}
-            />
-          )}
-        </Column>
-      </Row>
-    </SwapSectionBox>
+    <Row rowWidth='full'>
+      <SelectTokenOrNetworkButton
+        getLocale={getLocale}
+        onClick={onClickSelectToken}
+        icon={token?.logo}
+        text={token?.symbol}
+        buttonType='secondary'
+      />
+      <Column
+        horizontalAlign='flex-end'
+        verticalAlign={isLoading ? 'flex-start' : 'center'}
+        columnHeight={isLoading ? 'full' : 'dynamic'}
+      >
+        {isLoading && (
+          <Row>
+            <Loader />
+            <Text
+              textSize='12px'
+              textColor={hasInputError ? 'error' : 'text03'}
+              isBold={false}
+            >
+              {getLocale('braveSwapFindingPrice')}
+            </Text>
+          </Row>
+        )}
+        {!isLoading && (
+          <SwapInput
+            hasError={hasInputError}
+            onChange={onInputChange}
+            value={inputValue}
+            disabled={disabled}
+          />
+        )}
+      </Column>
+    </Row>
   )
 }

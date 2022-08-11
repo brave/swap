@@ -29,3 +29,10 @@ export type NetworkInfo = {
   decimals: number
   coin: number
 }
+
+export type QuoteOption = {
+  id: string
+  amount: string
+  symbol: string
+  contractAddress: string
+}
