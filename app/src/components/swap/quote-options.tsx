@@ -7,10 +7,13 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Types
-import { BlockchainToken, QuoteOption } from '../../constants/types'
+import { QuoteOption } from '../../constants/types'
 
 // Components
 import { SelectQuoteOptionButton } from '../buttons'
+
+// Context
+import { useSwapContext } from '../../context/swap.context'
 
 // Assets
 import CaratDownIcon from '../../assets/carat-down-icon.svg'
@@ -20,22 +23,38 @@ import { VerticalSpacer, Column, IconButton } from '../shared.styles'
 
 interface Props {
   quoteOptions: QuoteOption[]
-  selectedQuoteOption: QuoteOption
-  getTokenSpotPrice: (contractAddress: string) => string
+  selectedQuoteOption: QuoteOption | undefined
   onSelectQuoteOption: (option: QuoteOption) => void
-  getLocale: (key: string) => string
 }
 
 export const QuoteOptions = (props: Props) => {
-  const {
-    quoteOptions,
-    selectedQuoteOption,
-    onSelectQuoteOption,
-    getLocale,
-    getTokenSpotPrice
-  } = props
+  const { quoteOptions, selectedQuoteOption, onSelectQuoteOption } = props
 
+  // Context
+  const { getTokenPrice } = useSwapContext()
+
+  // State
   const [showAllOptions, setShowAllOptions] = React.useState<boolean>(false)
+  const [spotPrice, setSpotPrice] = React.useState<number | undefined>(
+    undefined
+  )
+
+  // Effects
+  React.useEffect(() => {
+    let ignore = false
+    if (selectedQuoteOption !== undefined) {
+      getTokenPrice(selectedQuoteOption.contractAddress)
+        .then((result) => {
+          if (!ignore) {
+            setSpotPrice(Number(result.price))
+          }
+        })
+        .catch((error) => console.log(error))
+      return () => {
+        ignore = true
+      }
+    }
+  }, [selectedQuoteOption, getTokenPrice])
 
   // Methods
   const onToggleShowAllOptions = React.useCallback(() => {
@@ -56,12 +75,13 @@ export const QuoteOptions = (props: Props) => {
       <Column columnHeight='dynamic' columnWidth='full'>
         {filteredQuoteOptions.map((option: QuoteOption, index) => (
           <SelectQuoteOptionButton
-            getLocale={getLocale}
             isBest={index === 0}
-            isSelected={selectedQuoteOption.id === option.id}
+            isSelected={
+              selectedQuoteOption ? selectedQuoteOption.id === option.id : false
+            }
             onClick={() => onSelectQuoteOption(option)}
             option={option}
-            getTokenSpotPrice={getTokenSpotPrice}
+            spotPrice={spotPrice}
             key={option.id}
           />
         ))}

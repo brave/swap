@@ -3,6 +3,9 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
+// Context
+import { useSwapContext } from '../../context/swap.context'
+
 // Types
 import { BlockchainToken } from '../../constants/types'
 
@@ -14,7 +17,6 @@ import { SwapInput } from '../inputs'
 import { Row, Column, Text, Loader } from '../shared.styles'
 
 interface Props {
-  getLocale: (key: string) => string
   onClickSelectToken: () => void
   onInputChange: (value: string) => void
   isLoading: boolean | undefined
@@ -26,7 +28,6 @@ interface Props {
 
 export const ToSection = (props: Props) => {
   const {
-    getLocale,
     onClickSelectToken,
     onInputChange,
     token,
@@ -36,10 +37,12 @@ export const ToSection = (props: Props) => {
     disabled
   } = props
 
+  // context
+  const { getLocale } = useSwapContext()
+
   return (
     <Row rowWidth='full'>
       <SelectTokenOrNetworkButton
-        getLocale={getLocale}
         onClick={onClickSelectToken}
         icon={token?.logo}
         text={token?.symbol}

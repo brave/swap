@@ -6,6 +6,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
+// Context
+import { useSwapContext } from '../../context/swap.context'
+
 // Types
 import { NetworkInfo } from '../../constants/types'
 
@@ -17,7 +20,6 @@ import { SearchInput } from '../inputs'
 import { HorizontalDivider } from '../shared.styles'
 
 interface Props {
-  getLocale: (key: string) => string
   onSearchChanged: (value: string) => void
   searchValue: string
   selectedNetwork: NetworkInfo
@@ -26,12 +28,14 @@ interface Props {
 
 export const SearchWithNetworkSelector = (props: Props) => {
   const {
-    getLocale,
     onSearchChanged,
     searchValue,
     selectedNetwork,
     networkSelectorDisabled
   } = props
+
+  // Context
+  const { getLocale } = useSwapContext()
 
   const onOpenNetworkSelector = React.useCallback(() => {
     // Todo: Add logic here to display network selector.
@@ -48,7 +52,6 @@ export const SearchWithNetworkSelector = (props: Props) => {
       <HorizontalDivider marginRight={8} height={24} />
       <SelectTokenOrNetworkButton
         icon={selectedNetwork.iconUrls[0]}
-        getLocale={getLocale}
         onClick={onOpenNetworkSelector}
         text={selectedNetwork.chainName}
         buttonSize='small'
