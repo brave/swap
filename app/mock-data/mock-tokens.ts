@@ -6,6 +6,9 @@
 // Types
 import { BlockchainToken } from '../src/constants/types'
 
+// Constants
+import { NATIVE_ASSET_CONTRACT_ADDRESS_0X } from '../src/constants/magics'
+
 // Icons
 import {
   BATIconUrl,
@@ -21,7 +24,7 @@ import {
 } from '../src/assets/asset-icons'
 
 export const mockEthereumToken = {
-  contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  contractAddress: NATIVE_ASSET_CONTRACT_ADDRESS_0X,
   name: 'Ethereum',
   symbol: 'ETH',
   logo: ETHIconUrl,

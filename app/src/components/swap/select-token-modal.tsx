@@ -6,6 +6,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
+// Context
+import { useSwapContext } from '../../context/swap.context'
+
 // Types
 import { BlockchainToken, NetworkInfo } from '../../constants/types'
 
@@ -29,7 +32,6 @@ import {
 interface Props {
   onClose: () => void
   onSelectToken: (token: BlockchainToken) => void
-  getLocale: (key: string) => string
   getTokenBalance: (token: BlockchainToken) => string
   selectedNetwork: NetworkInfo
   disabledToken: BlockchainToken | undefined
@@ -42,7 +44,6 @@ export const SelectTokenModal = (props: Props) => {
   const {
     onClose,
     onSelectToken,
-    getLocale,
     getTokenBalance,
     disabledToken,
     tokenList,
@@ -50,6 +51,9 @@ export const SelectTokenModal = (props: Props) => {
     isConnected,
     selectingFromOrTo
   } = props
+
+  // Context
+  const { getLocale } = useSwapContext()
 
   // State
   const [hideTokensWithZeroBalances, setHideTokensWithZeroBalances] =
@@ -126,7 +130,6 @@ export const SelectTokenModal = (props: Props) => {
       </Row>
       <Row rowWidth='full' horizontalPadding={20} marginBottom={16}>
         <SearchWithNetworkSelector
-          getLocale={getLocale}
           onSearchChanged={handleOnSearchChanged}
           searchValue={searchValue}
           selectedNetwork={selectedNetwork}

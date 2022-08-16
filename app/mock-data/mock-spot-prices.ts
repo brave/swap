@@ -3,8 +3,14 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
-export const mockSpotPrices: Record<string, string> = {
-  '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee': '23122.20',
+// Types
+import { Registry } from '../src/constants/types'
+
+// Constants
+import { NATIVE_ASSET_CONTRACT_ADDRESS_0X } from '../src/constants/magics'
+
+export const mockSpotPrices: Registry = {
+  [NATIVE_ASSET_CONTRACT_ADDRESS_0X]: '23122.20',
   '0x1': '0.4487',
   '0x2': '316.54',
   '0x3': '40.27',

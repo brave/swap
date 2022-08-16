@@ -6,6 +6,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
+// Context
+import { useSwapContext } from '../../context/swap.context'
+
 // Assets
 import CaratDownIcon from '../../assets/carat-down-icon.svg'
 
@@ -20,15 +23,16 @@ interface SelectTokenButtonStyleProps {
 
 interface Props extends SelectTokenButtonStyleProps {
   onClick: () => void
-  getLocale: (key: string) => string
   icon: string | undefined
   text: string | undefined
   disabled?: boolean
 }
 
 export const SelectTokenOrNetworkButton = (props: Props) => {
-  const { onClick, getLocale, buttonType, buttonSize, icon, text, disabled } =
-    props
+  const { onClick, buttonType, buttonSize, icon, text, disabled } = props
+
+  // Context
+  const { getLocale } = useSwapContext()
 
   // Memos
   const needsMorePadding = React.useMemo((): boolean => {

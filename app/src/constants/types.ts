@@ -36,3 +36,5 @@ export type QuoteOption = {
   symbol: string
   contractAddress: string
 }
+
+export type Registry = Record<string, string>

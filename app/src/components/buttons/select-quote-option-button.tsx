@@ -6,6 +6,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
+// Context
+import { useSwapContext } from '../../context/swap.context'
+
 // Types
 import { QuoteOption } from '../../constants/types'
 
@@ -14,16 +17,17 @@ import { Text, Column } from '../shared.styles'
 
 interface Props {
   onClick: (option: QuoteOption) => void
-  getLocale: (key: string) => string
-  getTokenSpotPrice: (contractAddress: string) => string
   option: QuoteOption
   isSelected: boolean
   isBest: boolean
+  spotPrice: number | undefined
 }
 
 export const SelectQuoteOptionButton = (props: Props) => {
-  const { onClick, getLocale, getTokenSpotPrice, option, isSelected, isBest } =
-    props
+  const { onClick, option, isSelected, isBest, spotPrice } = props
+
+  // Context
+  const { getLocale } = useSwapContext()
 
   // Methods
   const onSelectToken = React.useCallback(() => {
@@ -31,9 +35,8 @@ export const SelectQuoteOptionButton = (props: Props) => {
   }, [option, onClick])
 
   const quoteFiatValue = React.useMemo(() => {
-    const spotPrice = getTokenSpotPrice(option.contractAddress)
     return Number(spotPrice) * Number(option.amount)
-  }, [getTokenSpotPrice, option])
+  }, [spotPrice, option])
 
   return (
     <Button onClick={onSelectToken} isSelected={isSelected}>

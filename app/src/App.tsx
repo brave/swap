@@ -3,238 +3,51 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
-// import './App.css'
-
-import React from 'react'
-
-// Mock Data
-import { mockEthereumToken, mockEthereumTokens } from '../mock-data/mock-tokens'
-import { mockEthereumNetwork } from '../mock-data/mock-networks'
-import { mockTokenBalances } from '../mock-data/mock-token-balances'
-import { mockQuoteOptions } from '../mock-data/mock-quote-options'
-import { mockSpotPrices } from '../mock-data/mock-spot-prices'
+// Components
+import { Swap } from './views/swap'
 
 // Types
-import { BlockchainToken, QuoteOption } from './constants/types'
+import ITheme from './definitions/theme-interface'
 
-// Components
-import { StandardButton, FlipTokensButton } from './components/buttons'
-import {
-  SwapContainer,
-  FromSection,
-  ToSection,
-  SelectTokenModal,
-  QuoteOptions
-} from './components/swap'
-import { SwapSectionBox } from './components/boxes'
+// Providers
+import { ThemeProvider } from 'styled-components'
+import { SwapProvider, SwapProviderInterface } from './context/swap.context'
+import { WalletStateProvider } from './state/wallet'
 
-// Assets
-import AdvancedIcon from './assets/advanced-icon.svg'
+interface AppProps extends SwapProviderInterface {
+  defaultTheme: ITheme
+}
 
-// Utils
-import { getLocale } from './utils/locale'
+export const App = (props: AppProps) => {
+  const {
+    defaultTheme,
+    getBalance,
+    getERC20TokenBalance,
+    getLocale,
+    getAllTokens,
+    getSelectedAccount,
+    getSelectedNetwork,
+    getTokenPrice,
+    getSwapQuotes
+  } = props
 
-// Styled Components
-import { Row, Text, IconButton } from './components/shared.styles'
-
-function App() {
-  // ToDo: Setup React Context and Pass these as value props
-  // These values are just for testing components
-  const price = 1519.28
-  const rate = 0.026
-  const isConnected = true
-
-  // State
-  const [fromToken, setFromToken] = React.useState<BlockchainToken | undefined>(
-    mockEthereumToken
-  )
-  const [toToken, setToToken] = React.useState<BlockchainToken | undefined>()
-  const [fromAmount, setFromAmount] = React.useState<string>('')
-  const [toAmount, setToAmount] = React.useState<string>('')
-  const [isFetchingQuote, setIsFetchingQuote] = React.useState<
-    boolean | undefined
-  >(undefined)
-  const [selectingFromOrTo, setSelectingFromOrTo] = React.useState<
-    'from' | 'to' | undefined
-  >(undefined)
-  const [selectedQuoteOption, setSelectedQuoteOption] =
-    React.useState<QuoteOption>(mockQuoteOptions[0])
-
-  // Methods
-  const handleOnSetFromAmount = React.useCallback(
-    (value: string) => {
-      setFromAmount(value)
-      if (toToken) {
-        const updatedValue = (Number(value) / rate).toFixed(6).toString()
-        setToAmount(updatedValue)
-      }
-    },
-    [toToken, rate]
-  )
-
-  const handleOnSetToAmount = React.useCallback((value: string) => {
-    setToAmount(value)
-  }, [])
-
-  const getTokenBalance = React.useCallback(
-    (token: BlockchainToken): string => {
-      return mockTokenBalances[token.contractAddress] ?? '0'
-    },
-    [mockTokenBalances]
-  )
-
-  const onClickFlipSwapTokens = React.useCallback(() => {
-    setFromToken(toToken)
-    setToToken(fromToken)
-  }, [toToken, fromToken])
-
-  const onClickSettings = React.useCallback(() => {
-    // Todo: Add logic here to open settings view
-    return
-  }, [])
-
-  const onClickReviewOrder = React.useCallback(() => {
-    // Todo: Add logic here to review order
-  }, [])
-
-  const hideSelectTokenModal = React.useCallback(() => {
-    setSelectingFromOrTo(undefined) // hide modal
-  }, [])
-
-  const onSelectToToken = React.useCallback(
-    (token: BlockchainToken) => {
-      setToToken(token)
-      hideSelectTokenModal()
-    },
-    [hideSelectTokenModal]
-  )
-
-  const onSelectFromToken = React.useCallback(
-    (token: BlockchainToken) => {
-      setFromToken(token)
-      hideSelectTokenModal()
-    },
-    [hideSelectTokenModal]
-  )
-
-  const onSelectQuoteOption = React.useCallback((option: QuoteOption) => {
-    setSelectedQuoteOption(option)
-  }, [])
-
-  // ToDo: Setup React Context and Pass this as a Function Dependancy
-  const getTokenSpotPrice = React.useCallback(
-    (contractAddress: string): string => {
-      return mockSpotPrices[contractAddress] ?? ''
-    },
-    [mockSpotPrices]
-  )
-
-  // Memos
-  const fromTokenBalance: number = React.useMemo(() => {
-    if (fromToken) {
-      return Number(getTokenBalance(fromToken))
-    }
-    return 0
-  }, [fromToken])
-
-  const fiatValue: string | undefined = React.useMemo(() => {
-    if (fromAmount && price) {
-      return (price * Number(fromAmount)).toString()
-    }
-    return undefined
-  }, [price, fromAmount])
-
-  const insufficientBalance: boolean = React.useMemo(() => {
-    if (fromAmount && fromTokenBalance !== undefined) {
-      return Number(fromAmount) > fromTokenBalance
-    }
-    return false
-  }, [fromTokenBalance, fromAmount])
-
-  // Effects
-  React.useEffect(() => {
-    if (toToken && fromToken && fromAmount !== '') {
-      setIsFetchingQuote(true)
-      setTimeout(() => {
-        const value = (Number(fromAmount) / rate).toFixed(6).toString()
-        setToAmount(value)
-        setIsFetchingQuote(false)
-      }, 1000)
-      return
-    }
-    setToAmount('')
-  }, [toToken, fromToken, fromAmount, rate])
-
-  // render
   return (
-    <>
-      <SwapContainer>
-        <Row
-          rowWidth='full'
-          horizontalPadding={16}
-          verticalPadding={6}
-          marginBottom={18}
-        >
-          <Text isBold={true}>{getLocale('braveSwap')}</Text>
-          <IconButton icon={AdvancedIcon} onClick={onClickSettings} />
-        </Row>
-        <FromSection
-          getLocale={getLocale}
-          onInputChange={handleOnSetFromAmount}
-          inputValue={fromAmount}
-          onClickSelectToken={() => setSelectingFromOrTo('from')}
-          token={fromToken}
-          tokenBalance={fromTokenBalance}
-          hasInputError={insufficientBalance}
-          fiatValue={fiatValue}
-        />
-        <FlipTokensButton onClick={onClickFlipSwapTokens} />
-        <SwapSectionBox boxType='secondary' maintainHeight={isFetchingQuote}>
-          <ToSection
-            getLocale={getLocale}
-            onClickSelectToken={() => setSelectingFromOrTo('to')}
-            token={toToken}
-            inputValue={toAmount}
-            onInputChange={handleOnSetToAmount}
-            hasInputError={false}
-            isLoading={isFetchingQuote}
-            disabled={false} // Will need to disable for Solana in the future
-          />
-          {isFetchingQuote === false && (
-            <QuoteOptions
-              quoteOptions={mockQuoteOptions}
-              selectedQuoteOption={selectedQuoteOption}
-              onSelectQuoteOption={onSelectQuoteOption}
-              getLocale={getLocale}
-              getTokenSpotPrice={getTokenSpotPrice}
-            />
-          )}
-        </SwapSectionBox>
-        <StandardButton
-          onClick={onClickReviewOrder}
-          buttonText={getLocale('braveSwapReviewOrder')}
-          buttonType='primary'
-          buttonWidth='full'
-          verticalMargin={16}
-          disabled={true}
-        />
-      </SwapContainer>
-      {selectingFromOrTo && (
-        <SelectTokenModal
-          onClose={hideSelectTokenModal}
-          onSelectToken={
-            selectingFromOrTo === 'from' ? onSelectFromToken : onSelectToToken
-          }
-          disabledToken={selectingFromOrTo === 'from' ? toToken : fromToken}
-          tokenList={mockEthereumTokens}
-          selectedNetwork={mockEthereumNetwork}
-          getLocale={getLocale}
-          getTokenBalance={getTokenBalance}
-          isConnected={isConnected}
-          selectingFromOrTo={selectingFromOrTo}
-        />
-      )}
-    </>
+    <ThemeProvider theme={defaultTheme}>
+      <SwapProvider
+        getBalance={getBalance}
+        getERC20TokenBalance={getERC20TokenBalance}
+        getLocale={getLocale}
+        getAllTokens={getAllTokens}
+        getSelectedAccount={getSelectedAccount}
+        getSelectedNetwork={getSelectedNetwork}
+        getTokenPrice={getTokenPrice}
+        getSwapQuotes={getSwapQuotes}
+      >
+        <WalletStateProvider>
+          <Swap />
+        </WalletStateProvider>
+      </SwapProvider>
+    </ThemeProvider>
   )
 }
 
