@@ -9,8 +9,11 @@ import styled from 'styled-components'
 // Context
 import { useSwapContext } from '../../context/swap.context'
 
+// Hooks
+import { useWalletState } from '../../state/wallet'
+
 // Types
-import { BlockchainToken, NetworkInfo } from '../../constants/types'
+import { BlockchainToken } from '../../constants/types'
 
 // Assets
 import CloseIcon from '../../assets/close-icon.svg'
@@ -33,10 +36,7 @@ interface Props {
   onClose: () => void
   onSelectToken: (token: BlockchainToken) => void
   getTokenBalance: (token: BlockchainToken) => string
-  selectedNetwork: NetworkInfo
   disabledToken: BlockchainToken | undefined
-  tokenList: BlockchainToken[]
-  isConnected: boolean
   selectingFromOrTo: 'from' | 'to'
 }
 
@@ -46,14 +46,16 @@ export const SelectTokenModal = (props: Props) => {
     onSelectToken,
     getTokenBalance,
     disabledToken,
-    tokenList,
-    selectedNetwork,
-    isConnected,
     selectingFromOrTo
   } = props
 
   // Context
   const { getLocale } = useSwapContext()
+
+  // Wallet State
+  const {
+    state: { isConnected, tokenList }
+  } = useWalletState()
 
   // State
   const [hideTokensWithZeroBalances, setHideTokensWithZeroBalances] =
@@ -132,7 +134,6 @@ export const SelectTokenModal = (props: Props) => {
         <SearchWithNetworkSelector
           onSearchChanged={handleOnSearchChanged}
           searchValue={searchValue}
-          selectedNetwork={selectedNetwork}
           networkSelectorDisabled={selectingFromOrTo === 'to'}
         />
       </Row>

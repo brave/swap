@@ -33,7 +33,8 @@ const initialState: WalletState = {
   selectedNetwork: {} as NetworkInfo,
   // ToDo: Add logic to updated if wallet is connected
   isConnected: true,
-  initialized: false
+  initialized: false,
+  supportedNetworks: []
 }
 
 // Wallet State Reducer
@@ -48,6 +49,8 @@ const WalletReducer = (
       return { ...state, tokenList: action.payload }
     case 'updateSelectedNetwork':
       return { ...state, selectedNetwork: action.payload }
+    case 'updateSupportedNetworks':
+      return { ...state, supportedNetworks: action.payload }
     case 'updateSelectedAccount':
       return { ...state, selectedAccount: action.payload }
     case 'setInitialized':
@@ -71,7 +74,8 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     getBalance,
     getERC20TokenBalance,
     getSelectedNetwork,
-    getSelectedAccount
+    getSelectedAccount,
+    getSupportedNetworks
   } = useSwapContext()
 
   // Wallet State
@@ -81,7 +85,8 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     selectedAccount,
     selectedNetwork,
     tokenBalances,
-    initialized
+    initialized,
+    supportedNetworks
   } = state
 
   React.useEffect(() => {
@@ -91,6 +96,15 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
         getSelectedNetwork()
           .then((result) =>
             dispatch({ type: 'updateSelectedNetwork', payload: result })
+          )
+          .catch((error) => console.log(error))
+      }
+
+      // Get Supported Swap Networks and then sets to state
+      if (supportedNetworks.length === 0) {
+        getSupportedNetworks()
+          .then((result) =>
+            dispatch({ type: 'updateSupportedNetworks', payload: result })
           )
           .catch((error) => console.log(error))
       }
@@ -154,11 +168,13 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     selectedNetwork,
     tokenBalances,
     initialized,
+    supportedNetworks,
     getAllTokens,
     getBalance,
     getERC20TokenBalance,
     getSelectedNetwork,
     getSelectedAccount,
+    getSupportedNetworks,
     dispatch
   ])
 

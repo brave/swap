@@ -36,6 +36,7 @@ interface SwapContextInterface {
   }>
   getSelectedAccount: () => Promise<string>
   getSelectedNetwork: () => Promise<NetworkInfo>
+  getSupportedNetworks: () => Promise<NetworkInfo[]>
   getTokenPrice: (contractAddress: string) => Promise<{
     price: string
     error: number
@@ -66,7 +67,8 @@ const SwapProvider = (props: SwapProviderInterface) => {
     getSelectedAccount,
     getSelectedNetwork,
     getTokenPrice,
-    getSwapQuotes
+    getSwapQuotes,
+    getSupportedNetworks
   } = props
 
   return (
@@ -79,7 +81,8 @@ const SwapProvider = (props: SwapProviderInterface) => {
         getSelectedAccount,
         getSelectedNetwork,
         getTokenPrice,
-        getSwapQuotes
+        getSwapQuotes,
+        getSupportedNetworks
       }}
     >
       {children}
