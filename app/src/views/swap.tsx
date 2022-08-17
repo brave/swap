@@ -37,9 +37,9 @@ export const Swap = () => {
   // Context
   const { getLocale, getSwapQuotes } = useSwapContext()
 
-  // State
+  // Wallet State
   const {
-    state: { tokenBalances, tokenList, selectedNetwork, isConnected }
+    state: { tokenBalances, tokenList }
   } = useWalletState()
 
   // ToDo: Setup useSwap hook where all this kind of state will be handled.
@@ -234,10 +234,7 @@ export const Swap = () => {
             selectingFromOrTo === 'from' ? onSelectFromToken : onSelectToToken
           }
           disabledToken={selectingFromOrTo === 'from' ? toToken : fromToken}
-          tokenList={tokenList}
-          selectedNetwork={selectedNetwork}
           getTokenBalance={getTokenBalance}
-          isConnected={isConnected}
           selectingFromOrTo={selectingFromOrTo}
         />
       )}

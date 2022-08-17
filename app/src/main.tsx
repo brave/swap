@@ -17,7 +17,8 @@ import {
   getSelectedAccount,
   getSelectedNetwork,
   getTokenPrice,
-  getSwapQuotes
+  getSwapQuotes,
+  getSupportedNetworks
 } from '../mock-data/mock-apis'
 
 // Utils
@@ -35,6 +36,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       getSelectedNetwork={getSelectedNetwork}
       getTokenPrice={getTokenPrice}
       getSwapQuotes={getSwapQuotes}
+      getSupportedNetworks={getSupportedNetworks}
     />
   </React.StrictMode>
 )

@@ -5,7 +5,7 @@
 
 // Mock Data
 import { mockEVMNetworksData } from './mock-api-data'
-import { mockEthereumNetwork } from './mock-networks'
+import { mockEthereumNetwork, mockNetworks } from './mock-networks'
 import { mockEthereumTokens } from './mock-tokens'
 import { mockAccount1 } from './mock-accounts'
 import { mockSpotPrices } from './mock-spot-prices'
@@ -69,4 +69,8 @@ export const getSwapQuotes = async (
   toAddress: string
 ) => {
   return mockQuoteOptions
+}
+
+export const getSupportedNetworks = async () => {
+  return mockNetworks
 }

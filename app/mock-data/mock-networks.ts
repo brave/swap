@@ -7,7 +7,13 @@
 import { NetworkInfo } from '../src/constants/types'
 
 // Icons
-import { ETHIconUrl, BNBIconUrl, SOLIconUrl } from '../src/assets/asset-icons'
+import {
+  ETHIconUrl,
+  BNBIconUrl,
+  SOLIconUrl,
+  MATICIconUrl,
+  AVAXIconUrl
+} from '../src/assets/asset-icons'
 
 export const mockEthereumNetwork = {
   blockExplorerUrls: ['https://etherscan.io'],
@@ -33,6 +39,30 @@ export const mockBinanceNetwork = {
   symbolName: 'Binance'
 }
 
+export const mockPolygonNetwork = {
+  blockExplorerUrls: ['https://polygonscan.com'],
+  chainId: '0x89',
+  chainName: 'Polygon',
+  coin: 60,
+  decimals: 18,
+  iconUrls: [MATICIconUrl],
+  rpcUrls: [''],
+  symbol: 'MATIC',
+  symbolName: 'Polygon'
+}
+
+export const mockAvalancheNetwork = {
+  blockExplorerUrls: ['https://snowtrace.io'],
+  chainId: '0xa86a',
+  chainName: 'Avalanche',
+  coin: 60,
+  decimals: 18,
+  iconUrls: [AVAXIconUrl],
+  rpcUrls: [''],
+  symbol: 'AVAX',
+  symbolName: 'Avalanche'
+}
+
 export const mockSolanaNetwork = {
   blockExplorerUrls: ['https://explorer.solana.com/'],
   chainId: '0x65',
@@ -48,5 +78,7 @@ export const mockSolanaNetwork = {
 export const mockNetworks: NetworkInfo[] = [
   mockEthereumNetwork,
   mockBinanceNetwork,
+  mockPolygonNetwork,
+  mockAvalancheNetwork,
   mockSolanaNetwork
 ]

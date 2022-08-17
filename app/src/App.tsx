@@ -28,7 +28,8 @@ export const App = (props: AppProps) => {
     getSelectedAccount,
     getSelectedNetwork,
     getTokenPrice,
-    getSwapQuotes
+    getSwapQuotes,
+    getSupportedNetworks
   } = props
 
   return (
@@ -42,6 +43,7 @@ export const App = (props: AppProps) => {
         getSelectedNetwork={getSelectedNetwork}
         getTokenPrice={getTokenPrice}
         getSwapQuotes={getSwapQuotes}
+        getSupportedNetworks={getSupportedNetworks}
       >
         <WalletStateProvider>
           <Swap />

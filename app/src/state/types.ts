@@ -10,6 +10,7 @@ export type WalletState = {
   tokenList: BlockchainToken[]
   selectedAccount: string
   selectedNetwork: NetworkInfo
+  supportedNetworks: NetworkInfo[]
   isConnected: boolean
   initialized: boolean
 }
@@ -29,6 +30,11 @@ type UpdateSelectedNetwork = {
   payload: NetworkInfo
 }
 
+type UpdateSupportedNetworks = {
+  type: 'updateSupportedNetworks'
+  payload: NetworkInfo[]
+}
+
 type UpdateSelectedAccount = {
   type: 'updateSelectedAccount'
   payload: string
@@ -44,5 +50,6 @@ export type WalletActions =
   | UpdateSelectedNetwork
   | UpdateSelectedAccount
   | SetInitialized
+  | UpdateSupportedNetworks
 
 export type Dispatch = (action: WalletActions) => void
