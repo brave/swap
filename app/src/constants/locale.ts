@@ -18,5 +18,9 @@ export const locale: Registry = {
   braveSwapShowTokensWithZeroBalances: 'Show tokens with no balance',
   braveSwapHideTokensWithZeroBalances: 'Hide zero balance',
   braveSwapSearchToken: 'Search token by name',
-  braveSwapOption: 'Option'
+  braveSwapOption: 'Option',
+  braveSwapRate: 'Rate',
+  braveSwapPriceImpact: 'Price impact',
+  braveSwapMinimumReceivedAfterSlippage: 'Minimum received after slippage',
+  braveSwapNetworkFee: 'Network Fee'
 }

@@ -23,7 +23,8 @@ import {
   FromSection,
   ToSection,
   SelectTokenModal,
-  QuoteOptions
+  QuoteOptions,
+  QuoteInfo
 } from '../components/swap'
 import { SwapSectionBox } from '../components/boxes'
 
@@ -218,6 +219,12 @@ export const Swap = () => {
             />
           )}
         </SwapSectionBox>
+        {isFetchingQuote === false && (
+          <QuoteInfo
+            selectedQuoteOption={selectedQuoteOption}
+            fromToken={fromToken}
+          />
+        )}
         <StandardButton
           onClick={onClickReviewOrder}
           buttonText={getLocale('braveSwapReviewOrder')}
