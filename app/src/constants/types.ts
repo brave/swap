@@ -35,6 +35,8 @@ export type QuoteOption = {
   amount: string
   symbol: string
   contractAddress: string
+  rate: string
+  impact: string
 }
 
 export type Registry = Record<string, string>
