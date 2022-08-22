@@ -6,7 +6,12 @@
 import React, { createContext } from 'react'
 
 // Types
-import { BlockchainToken, NetworkInfo, QuoteOption } from '../constants/types'
+import {
+  BlockchainToken,
+  NetworkInfo,
+  QuoteOption,
+  WalletAccount
+} from '../constants/types'
 
 interface SwapContextInterface {
   getLocale: (key: string) => string
@@ -47,6 +52,7 @@ interface SwapContextInterface {
     fromAmount: string,
     toAddress: string
   ) => Promise<QuoteOption[]>
+  getBraveWalletAccounts?: () => Promise<WalletAccount[]>
 }
 
 // Create Swap Context
@@ -68,7 +74,8 @@ const SwapProvider = (props: SwapProviderInterface) => {
     getSelectedNetwork,
     getTokenPrice,
     getSwapQuotes,
-    getSupportedNetworks
+    getSupportedNetworks,
+    getBraveWalletAccounts
   } = props
 
   return (
@@ -82,7 +89,8 @@ const SwapProvider = (props: SwapProviderInterface) => {
         getSelectedNetwork,
         getTokenPrice,
         getSwapQuotes,
-        getSupportedNetworks
+        getSupportedNetworks,
+        getBraveWalletAccounts
       }}
     >
       {children}

@@ -107,6 +107,15 @@ span {
   color: var(--color-legacy-text1);
 }
 
+label {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: var(--color-legacy-text1);
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     background-color: var(--color-legacy-background2);

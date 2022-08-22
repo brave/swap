@@ -3,7 +3,12 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
-import { BlockchainToken, Registry, NetworkInfo } from '../constants/types'
+import {
+  BlockchainToken,
+  Registry,
+  NetworkInfo,
+  WalletAccount
+} from '../constants/types'
 
 export type WalletState = {
   tokenBalances: Registry
@@ -13,6 +18,7 @@ export type WalletState = {
   supportedNetworks: NetworkInfo[]
   isConnected: boolean
   initialized: boolean
+  braveWalletAccounts: WalletAccount[]
 }
 
 type UpdateTokenBalances = {
@@ -40,6 +46,11 @@ type UpdateSelectedAccount = {
   payload: string
 }
 
+type UpdateBraveWalletAccounts = {
+  type: 'updateBraveWalletAccounts'
+  payload: WalletAccount[]
+}
+
 type SetInitialized = {
   type: 'setInitialized'
 }
@@ -49,6 +60,7 @@ export type WalletActions =
   | UpdateTokenList
   | UpdateSelectedNetwork
   | UpdateSelectedAccount
+  | UpdateBraveWalletAccounts
   | SetInitialized
   | UpdateSupportedNetworks
 

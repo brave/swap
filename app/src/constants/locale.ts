@@ -22,5 +22,12 @@ export const locale: Registry = {
   braveSwapRate: 'Rate',
   braveSwapPriceImpact: 'Price impact',
   braveSwapMinimumReceivedAfterSlippage: 'Minimum received after slippage',
-  braveSwapNetworkFee: 'Network Fee'
+  braveSwapNetworkFee: 'Network Fee',
+  braveSwapSwapAndSend: 'Swap & send',
+  braveSwapNoExtraFees: 'NO extra fees!',
+  braveSwapConfirmAddress: 'I confirm that the address above is correct',
+  braveSwapAddressInputePlaceholder: 'Enter recipients Ethereum address',
+  braveSwapSelectAccount: 'Select an account',
+  braveSwapToAccount: 'To my account',
+  braveSwapToAddress: 'To another address'
 }

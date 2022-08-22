@@ -34,7 +34,8 @@ const initialState: WalletState = {
   // ToDo: Add logic to updated if wallet is connected
   isConnected: true,
   initialized: false,
-  supportedNetworks: []
+  supportedNetworks: [],
+  braveWalletAccounts: []
 }
 
 // Wallet State Reducer
@@ -53,6 +54,8 @@ const WalletReducer = (
       return { ...state, supportedNetworks: action.payload }
     case 'updateSelectedAccount':
       return { ...state, selectedAccount: action.payload }
+    case 'updateBraveWalletAccounts':
+      return { ...state, braveWalletAccounts: action.payload }
     case 'setInitialized':
       return { ...state, initialized: true }
     default:
@@ -75,7 +78,8 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     getERC20TokenBalance,
     getSelectedNetwork,
     getSelectedAccount,
-    getSupportedNetworks
+    getSupportedNetworks,
+    getBraveWalletAccounts
   } = useSwapContext()
 
   // Wallet State
@@ -86,7 +90,8 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     selectedNetwork,
     tokenBalances,
     initialized,
-    supportedNetworks
+    supportedNetworks,
+    braveWalletAccounts
   } = state
 
   React.useEffect(() => {
@@ -114,6 +119,15 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
         getSelectedAccount()
           .then((result) =>
             dispatch({ type: 'updateSelectedAccount', payload: result })
+          )
+          .catch((error) => console.log(error))
+      }
+
+      // Gets a list of Brave Wallet Accounts and sets to state
+      if (getBraveWalletAccounts && braveWalletAccounts.length === 0) {
+        getBraveWalletAccounts()
+          .then((result) =>
+            dispatch({ type: 'updateBraveWalletAccounts', payload: result })
           )
           .catch((error) => console.log(error))
       }
@@ -169,6 +183,8 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     tokenBalances,
     initialized,
     supportedNetworks,
+    braveWalletAccounts,
+    getBraveWalletAccounts,
     getAllTokens,
     getBalance,
     getERC20TokenBalance,

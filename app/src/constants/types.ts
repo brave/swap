@@ -40,3 +40,15 @@ export type QuoteOption = {
 }
 
 export type Registry = Record<string, string>
+
+export type WalletAccount = {
+  id: string
+  name: string
+  address: string
+  coin: number
+}
+
+export type SwapAndSend = {
+  label: string
+  name: string
+}

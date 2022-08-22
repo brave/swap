@@ -7,7 +7,7 @@
 import { mockEVMNetworksData } from './mock-api-data'
 import { mockEthereumNetwork, mockNetworks } from './mock-networks'
 import { mockEthereumTokens } from './mock-tokens'
-import { mockAccount1 } from './mock-accounts'
+import { mockAccount1, mockAccounts } from './mock-accounts'
 import { mockSpotPrices } from './mock-spot-prices'
 import { mockQuoteOptions } from './mock-quote-options'
 
@@ -48,7 +48,11 @@ export const getAllTokens = async (chainId: string, coin: number) => {
 }
 
 export const getSelectedAccount = async () => {
-  return mockAccount1
+  return mockAccount1.address
+}
+
+export const getBraveWalletAccounts = async () => {
+  return mockAccounts
 }
 
 export const getSelectedNetwork = async () => {
