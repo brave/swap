@@ -3,9 +3,10 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
-// import './App.css'
-
 import React from 'react'
+
+// Options
+import { SwapAndSendOptions } from '../options/select-and-send-options'
 
 // Context
 import { useSwapContext } from '../context/swap.context'
@@ -14,7 +15,7 @@ import { useSwapContext } from '../context/swap.context'
 import { useWalletState } from '../state/wallet'
 
 // Types
-import { BlockchainToken, QuoteOption } from '../constants/types'
+import { BlockchainToken, QuoteOption, WalletAccount } from '../constants/types'
 
 // Components
 import { StandardButton, FlipTokensButton } from '../components/buttons'
@@ -24,7 +25,8 @@ import {
   ToSection,
   SelectTokenModal,
   QuoteOptions,
-  QuoteInfo
+  QuoteInfo,
+  SwapAndSend
 } from '../components/swap'
 import { SwapSectionBox } from '../components/boxes'
 
@@ -64,6 +66,16 @@ export const Swap = () => {
   const [selectedQuoteOption, setSelectedQuoteOption] = React.useState<
     QuoteOption | undefined
   >()
+  const [selectedSwapAndSendOption, setSelectedSwapAndSendOption] =
+    React.useState<string>(SwapAndSendOptions[0].name)
+  const [swapAndSendSelected, setSwapAndSendSelected] =
+    React.useState<boolean>(false)
+  const [toAnotherAddress, setToAnotherAddress] = React.useState<string>('')
+  const [userConfirmedAddress, setUserConfirmedAddress] =
+    React.useState<boolean>(false)
+  const [selectedSwapSendAccount, setSelectedSwapSendAccount] = React.useState<
+    WalletAccount | undefined
+  >(undefined)
 
   // Update on render
   if (fromToken === undefined && fromToken !== tokenList[0]) {
@@ -156,6 +168,24 @@ export const Swap = () => {
     setSelectedQuoteOption(option)
   }, [])
 
+  const onSetSelectedSwapAndSendOption = React.useCallback((value: string) => {
+    if (value === 'to-account') {
+      setToAnotherAddress('')
+    }
+    setSelectedSwapAndSendOption(value)
+  }, [])
+
+  const handleOnSetToAnotherAddress = React.useCallback((value: string) => {
+    setToAnotherAddress(value)
+  }, [])
+
+  const onCheckUserConfirmedAddress = React.useCallback(
+    (id: string, checked: boolean) => {
+      setUserConfirmedAddress(checked)
+    },
+    [userConfirmedAddress]
+  )
+
   // Memos
   const fromTokenBalance: number = React.useMemo(() => {
     if (fromToken) {
@@ -220,10 +250,24 @@ export const Swap = () => {
           )}
         </SwapSectionBox>
         {isFetchingQuote === false && (
-          <QuoteInfo
-            selectedQuoteOption={selectedQuoteOption}
-            fromToken={fromToken}
-          />
+          <>
+            <QuoteInfo
+              selectedQuoteOption={selectedQuoteOption}
+              fromToken={fromToken}
+            />
+            <SwapAndSend
+              onChangeSwapAndSendSelected={setSwapAndSendSelected}
+              handleOnSetToAnotherAddress={handleOnSetToAnotherAddress}
+              onCheckUserConfirmedAddress={onCheckUserConfirmedAddress}
+              onSelectSwapAndSendOption={onSetSelectedSwapAndSendOption}
+              onSelectSwapSendAccount={setSelectedSwapSendAccount}
+              swapAndSendSelected={swapAndSendSelected}
+              selectedSwapAndSendOption={selectedSwapAndSendOption}
+              selectedSwapSendAccount={selectedSwapSendAccount}
+              toAnotherAddress={toAnotherAddress}
+              userConfirmedAddress={userConfirmedAddress}
+            />
+          </>
         )}
         <StandardButton
           onClick={onClickReviewOrder}

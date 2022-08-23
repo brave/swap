@@ -28,12 +28,15 @@ export const Row = styled.div<{
   marginBottom?: number
   horizontalPadding?: number
   verticalPadding?: number
+  horizontalAlign?: 'flex-start' | 'center' | 'flex-end'
+  verticalAlign?: 'flex-start' | 'center' | 'flex-end'
 }>`
   --vertical-padding: ${(p) => p.verticalPadding ?? 0}px;
   --horizontal-padding: ${(p) => p.horizontalPadding ?? 0}px;
   box-sizing: border-box;
   flex-direction: row;
-  justify-content: space-between;
+  align-items: ${(p) => p.verticalAlign ?? 'center'};
+  justify-content: ${(p) => p.horizontalAlign ?? 'space-between'};
   margin-bottom: ${(p) => p.marginBottom ?? 0}px;
   padding: var(--vertical-padding) var(--horizontal-padding);
   width: ${(p) => (p.rowWidth === 'full' ? '100%' : 'unset')};

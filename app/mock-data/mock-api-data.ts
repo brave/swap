@@ -18,7 +18,7 @@ export const mockEVMNetworksData: Record<
   string,
   Record<string, { nativeBalance: string; erc721Balances: Registry }>
 > = {
-  [mockAccount1]: {
+  [mockAccount1.address]: {
     [mockEthereumNetwork.chainId]: {
       nativeBalance: mockNativeTokenBalance,
       erc721Balances: mockERC721TokenBalances

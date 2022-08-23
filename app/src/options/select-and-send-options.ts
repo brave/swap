@@ -3,6 +3,16 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
-export { SwapInput } from './swap-input'
-export { SearchInput } from './search-input'
-export { StandardInput } from './standard-input'
+// Types
+import { SwapAndSend } from '../constants/types'
+
+export const SwapAndSendOptions: SwapAndSend[] = [
+  {
+    label: 'braveSwapToAccount',
+    name: 'to-account'
+  },
+  {
+    label: 'braveSwapToAddress',
+    name: 'to-address'
+  }
+]
