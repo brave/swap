@@ -5,8 +5,12 @@
 
 import React from 'react'
 
+// Types
+import { CoinType } from '../constants/types'
+
 // Context
 import { useSwapContext } from '../context/swap.context'
+import { useWalletState } from '../state/wallet'
 
 // Hooks
 import { useSwap } from '../hooks/useSwap'
@@ -65,6 +69,11 @@ export const Swap = () => {
     setSwapAndSendSelected
   } = swap
 
+  // Wallet State
+  const {
+    state: { selectedNetwork }
+  } = useWalletState()
+
   // Context
   const { getLocale } = useSwapContext()
 
@@ -110,13 +119,14 @@ export const Swap = () => {
             isLoading={isFetchingQuote}
             disabled={false} // Will need to disable for Solana in the future
           />
-          {isFetchingQuote === false && (
-            <QuoteOptions
-              quoteOptions={quoteOptions}
-              selectedQuoteOption={selectedQuoteOption}
-              onSelectQuoteOption={onSelectQuoteOption}
-            />
-          )}
+          {isFetchingQuote === false &&
+            selectedNetwork.coin === CoinType.Solana && (
+              <QuoteOptions
+                quoteOptions={quoteOptions}
+                selectedQuoteOption={selectedQuoteOption}
+                onSelectQuoteOption={onSelectQuoteOption}
+              />
+            )}
         </SwapSectionBox>
         {isFetchingQuote === false && (
           <>
