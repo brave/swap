@@ -52,3 +52,8 @@ export type SwapAndSend = {
   label: string
   name: string
 }
+
+export enum CoinType {
+  Solana = 501,
+  Ethereum = 60
+}
