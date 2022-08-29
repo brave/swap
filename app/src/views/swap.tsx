@@ -24,7 +24,8 @@ import {
   SelectTokenModal,
   QuoteOptions,
   QuoteInfo,
-  SwapAndSend
+  SwapAndSend,
+  SwapSettingsModal
 } from '../components/swap'
 import { SwapSectionBox } from '../components/boxes'
 
@@ -54,6 +55,11 @@ export const Swap = () => {
     userConfirmedAddress,
     selectedSwapSendAccount,
     selectedSwapAndSendOption,
+    selectedGasFeeOption,
+    slippageTolerance,
+    useDirectRoute,
+    useOptimizedFees,
+    gasEstimates,
     getTokenBalance,
     onSelectFromToken,
     onSelectToToken,
@@ -66,7 +72,11 @@ export const Swap = () => {
     onCheckUserConfirmedAddress,
     onSetSelectedSwapAndSendOption,
     setSelectedSwapSendAccount,
-    setSwapAndSendSelected
+    setSwapAndSendSelected,
+    setSelectedGasFeeOption,
+    setSlippageTolerance,
+    setUseDirectRoute,
+    setUseOptimizedFees
   } = swap
 
   // Wallet State
@@ -77,9 +87,11 @@ export const Swap = () => {
   // Context
   const { getLocale } = useSwapContext()
 
-  const onClickSettings = React.useCallback(() => {
-    // Todo: Add logic here to open settings view
-    return
+  // State
+  const [showSwapSettings, setShowSwapSettings] = React.useState<boolean>(false)
+
+  const onToggleShowSwapSettings = React.useCallback(() => {
+    setShowSwapSettings((prev) => !prev)
   }, [])
 
   const onClickReviewOrder = React.useCallback(() => {
@@ -97,7 +109,7 @@ export const Swap = () => {
           marginBottom={18}
         >
           <Text isBold={true}>{getLocale('braveSwap')}</Text>
-          <IconButton icon={AdvancedIcon} onClick={onClickSettings} />
+          <IconButton icon={AdvancedIcon} onClick={onToggleShowSwapSettings} />
         </Row>
         <FromSection
           onInputChange={handleOnSetFromAmount}
@@ -117,7 +129,7 @@ export const Swap = () => {
             onInputChange={handleOnSetToAmount}
             hasInputError={false}
             isLoading={isFetchingQuote}
-            disabled={false} // Will need to disable for Solana in the future
+            disabled={selectedNetwork.coin === CoinType.Solana}
           />
           {isFetchingQuote === false &&
             selectedNetwork.coin === CoinType.Solana && (
@@ -156,6 +168,19 @@ export const Swap = () => {
           verticalMargin={16}
           disabled={true}
         />
+        {showSwapSettings && (
+          <SwapSettingsModal
+            selectedGasFeeOption={selectedGasFeeOption}
+            slippageTolerance={slippageTolerance}
+            useDirectRoute={useDirectRoute}
+            useOptimizedFees={useOptimizedFees}
+            setSelectedGasFeeOption={setSelectedGasFeeOption}
+            setSlippageTolerance={setSlippageTolerance}
+            setUseDirectRoute={setUseDirectRoute}
+            setUseOptimizedFees={setUseOptimizedFees}
+            gasEstimates={gasEstimates}
+          />
+        )}
       </SwapContainer>
       {selectingFromOrTo && (
         <SelectTokenModal

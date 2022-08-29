@@ -68,3 +68,21 @@ export enum ChainID {
   OPTIMISM = '0xa',
   SOLANA_MAINNET = '0x65'
 }
+
+export type GasFeeOption = {
+  id: string
+  name: string
+  icon: string
+}
+
+export type Exchange = {
+  id: string
+  name: string
+}
+
+export type GasEstimate = {
+  gasFee: string
+  gasFeeGwei: string
+  gasFeeFiat: string
+  time: string
+}

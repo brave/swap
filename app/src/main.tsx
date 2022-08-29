@@ -19,7 +19,8 @@ import {
   getTokenPrice,
   getSwapQuotes,
   getSupportedNetworks,
-  getBraveWalletAccounts
+  getBraveWalletAccounts,
+  getExchanges
 } from '../mock-data/mock-apis'
 
 // Utils
@@ -39,6 +40,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       getSwapQuotes={getSwapQuotes}
       getSupportedNetworks={getSupportedNetworks}
       getBraveWalletAccounts={getBraveWalletAccounts}
+      getExchanges={getExchanges}
     />
   </React.StrictMode>
 )

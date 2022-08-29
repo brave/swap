@@ -7,6 +7,7 @@ import React from 'react'
 
 // Options
 import { SwapAndSendOptions } from '../options/select-and-send-options'
+import { gasFeeOptions } from '../options/gas-fee-options'
 
 // Context
 import { useSwapContext } from '../context/swap.context'
@@ -15,7 +16,13 @@ import { useSwapContext } from '../context/swap.context'
 import { useWalletState } from '../state/wallet'
 
 // Types
-import { BlockchainToken, QuoteOption, WalletAccount } from '../constants/types'
+import {
+  BlockchainToken,
+  QuoteOption,
+  WalletAccount,
+  GasFeeOption,
+  GasEstimate
+} from '../constants/types'
 
 export const useSwap = () => {
   // Context
@@ -57,6 +64,12 @@ export const useSwap = () => {
   const [selectedSwapSendAccount, setSelectedSwapSendAccount] = React.useState<
     WalletAccount | undefined
   >(undefined)
+  const [useDirectRoute, setUseDirectRoute] = React.useState<boolean>(false)
+  const [useOptimizedFees, setUseOptimizedFees] = React.useState<boolean>(false)
+  const [slippageTolerance, setSlippageTolerance] =
+    React.useState<string>('0.5')
+  const [selectedGasFeeOption, setSelectedGasFeeOption] =
+    React.useState<GasFeeOption>(gasFeeOptions[1])
 
   // Update on render
   if (fromToken === undefined && fromToken !== tokenList[0]) {
@@ -170,6 +183,16 @@ export const useSwap = () => {
     return false
   }, [fromTokenBalance, fromAmount])
 
+  const gasEstimates: GasEstimate = React.useMemo(() => {
+    // ToDo: Setup getGasEstimate Methods
+    return {
+      gasFee: '0.0034',
+      gasFeeGwei: '36',
+      gasFeeFiat: '17.59',
+      time: '1 min'
+    }
+  }, [])
+
   return {
     fromToken,
     toToken,
@@ -187,6 +210,11 @@ export const useSwap = () => {
     selectedSwapSendAccount,
     toAnotherAddress,
     userConfirmedAddress,
+    selectedGasFeeOption,
+    slippageTolerance,
+    useDirectRoute,
+    useOptimizedFees,
+    gasEstimates,
     onSelectFromToken,
     onSelectToToken,
     getTokenBalance,
@@ -199,7 +227,11 @@ export const useSwap = () => {
     handleOnSetToAnotherAddress,
     onCheckUserConfirmedAddress,
     onSetSelectedSwapAndSendOption,
-    setSelectedSwapSendAccount
+    setSelectedSwapSendAccount,
+    setSelectedGasFeeOption,
+    setSlippageTolerance,
+    setUseDirectRoute,
+    setUseOptimizedFees
   }
 }
 export default useSwap
