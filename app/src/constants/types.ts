@@ -57,3 +57,14 @@ export enum CoinType {
   Solana = 501,
   Ethereum = 60
 }
+
+export enum ChainID {
+  ETHEREUM_MAINNET = '0x1',
+  BINANCE_SMART_CHAIN = '0x38',
+  POLYGON = '0x89',
+  AVALANCHE = '0xa86a',
+  CELO = '0xa4ec',
+  FANTOM = '0xfa',
+  OPTIMISM = '0xa',
+  SOLANA_MAINNET = '0x65'
+}

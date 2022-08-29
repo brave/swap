@@ -12,12 +12,26 @@ default values here to prevent code duplication in styled components */
 :root {
   font-family: 'Poppins';
   color-scheme: light dark;
-  background-color: var(--color-legacy-background1);
   color: var(--color-legacy-text1);
   font-weight: 400;
   font-size: 18px;
   line-height: 20px;
   letter-spacing: 0.02em;
+}
+
+body {
+  margin: 0px;
+  padding: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  background-color: var(--color-legacy-background1);
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  padding: 0px;
+  margin: 0px;
 }
 
 div {
@@ -34,16 +48,6 @@ a {
 
 a:hover {
   color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  padding-top: 100px;
-  min-height: 100vh;
 }
 
 button {
@@ -117,7 +121,7 @@ label {
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  body {
     background-color: var(--color-legacy-background2);
   }
 }
