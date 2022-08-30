@@ -16,12 +16,15 @@ interface Props {
   label: string
   id: string
   isChecked: boolean
+  labelSize?: '12px' | '14px'
+  isBold?: boolean
   onChange: (id: string, checked: boolean) => void
 }
 
 export const StandardCheckbox = (props: Props) => {
-  const { label, id, onChange, isChecked } = props
+  const { label, id, onChange, isChecked, labelSize, isBold } = props
 
+  // Methods
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange(event.target.id, event.target.checked)
   }
@@ -35,7 +38,12 @@ export const StandardCheckbox = (props: Props) => {
         onChange={handleChange}
         checked={isChecked}
       />
-      <Label isChecked={isChecked} htmlFor={id}>
+      <Label
+        isChecked={isChecked}
+        htmlFor={id}
+        labelSize={labelSize}
+        isBold={isBold}
+      >
         <StyledCheckbox isChecked={isChecked}>
           {isChecked && <StyledIcon size={13} icon={CheckIcon} />}
         </StyledCheckbox>
@@ -75,12 +83,16 @@ const StyledCheckbox = styled.div<{ isChecked: boolean }>`
       : `inset 0px 0px 0px 1px ${p.theme.color.legacy.interactive08}`};
 `
 
-const Label = styled.label<{ isChecked: boolean }>`
+const Label = styled.label<{
+  isChecked: boolean
+  labelSize?: '12px' | '14px'
+  isBold?: boolean
+}>`
   display: flex;
   flex-direction: row;
   gap: 12px;
   cursor: pointer;
-  font-weight: 200;
-  font-size: 12px;
+  font-weight: ${(p) => (p.isBold ? 400 : 200)};
+  font-size: ${(p) => (p.labelSize ? p.labelSize : '12px')};
   color: ${(p) => p.theme.color.legacy.text02};
 `

@@ -22,12 +22,24 @@ export const locale: Registry = {
   braveSwapRate: 'Rate',
   braveSwapPriceImpact: 'Price impact',
   braveSwapMinimumReceivedAfterSlippage: 'Minimum received after slippage',
-  braveSwapNetworkFee: 'Network Fee',
+  braveSwapNetworkFee: 'Network fee',
   braveSwapSwapAndSend: 'Swap & send',
   braveSwapNoExtraFees: 'NO extra fees!',
   braveSwapConfirmAddress: 'I confirm that the address above is correct',
   braveSwapAddressInputePlaceholder: 'Enter recipients Ethereum address',
   braveSwapSelectAccount: 'Select an account',
   braveSwapToAccount: 'To my account',
-  braveSwapToAddress: 'To another address'
+  braveSwapToAddress: 'To another address',
+  braveSwapSlow: 'Slow',
+  braveSwapAverage: 'Average',
+  braveSwapFast: 'Fast',
+  braveSwapGwei: 'Gwei',
+  braveSwapSettings: 'Swap settings',
+  braveSwapSlippageTolerance: 'Slippage tolerance',
+  braveSwapExchanges: 'Exchanges',
+  braveSwapDirectRouteTitle: 'Direct route only',
+  braveSwapDirectRouteDescription:
+    'It insures only direct routing and also disables split trade trading',
+  braveSwapNetworkFeeDescription:
+    'Brave uses top the 60 tokens for intermediate routing for performance optimization'
 }

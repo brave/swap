@@ -10,6 +10,7 @@ import { mockEthereumTokens } from './mock-tokens'
 import { mockAccount1, mockAccounts } from './mock-accounts'
 import { mockSpotPrices } from './mock-spot-prices'
 import { mockQuoteOptions } from './mock-quote-options'
+import { mockExchanges } from './mock-exchanges'
 
 export const getBalance = async (
   address: string,
@@ -77,4 +78,8 @@ export const getSwapQuotes = async (
 
 export const getSupportedNetworks = async () => {
   return mockNetworks
+}
+
+export const getExchanges = async () => {
+  return mockExchanges
 }

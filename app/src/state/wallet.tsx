@@ -35,7 +35,11 @@ const initialState: WalletState = {
   isConnected: true,
   initialized: false,
   supportedNetworks: [],
-  braveWalletAccounts: []
+  braveWalletAccounts: [],
+  supportedExchanges: [],
+  // ToDo: Set up local storage for userSelectedExchanges
+  // and other user prefs
+  userSelectedExchanges: []
 }
 
 // Wallet State Reducer
@@ -56,6 +60,10 @@ const WalletReducer = (
       return { ...state, selectedAccount: action.payload }
     case 'updateBraveWalletAccounts':
       return { ...state, braveWalletAccounts: action.payload }
+    case 'updateSupportedExchanges':
+      return { ...state, supportedExchanges: action.payload }
+    case 'updateUserSelectedExchanges':
+      return { ...state, userSelectedExchanges: action.payload }
     case 'setInitialized':
       return { ...state, initialized: true }
     default:
@@ -79,7 +87,8 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     getSelectedNetwork,
     getSelectedAccount,
     getSupportedNetworks,
-    getBraveWalletAccounts
+    getBraveWalletAccounts,
+    getExchanges
   } = useSwapContext()
 
   // Wallet State
@@ -91,7 +100,8 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     tokenBalances,
     initialized,
     supportedNetworks,
-    braveWalletAccounts
+    braveWalletAccounts,
+    supportedExchanges
   } = state
 
   React.useEffect(() => {
@@ -141,6 +151,15 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
           .catch((error) => console.log(error))
       }
 
+      // Gets all exchanges then sets to state
+      if (supportedExchanges.length === 0) {
+        getExchanges()
+          .then((result) =>
+            dispatch({ type: 'updateSupportedExchanges', payload: result })
+          )
+          .catch((error) => console.log(error))
+      }
+
       // Gets all balances and sets to state
       if (!tokenBalances[NATIVE_ASSET_CONTRACT_ADDRESS_0X]) {
         let balances = tokenBalances
@@ -184,6 +203,7 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     initialized,
     supportedNetworks,
     braveWalletAccounts,
+    supportedExchanges,
     getBraveWalletAccounts,
     getAllTokens,
     getBalance,
@@ -191,6 +211,7 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     getSelectedNetwork,
     getSelectedAccount,
     getSupportedNetworks,
+    getExchanges,
     dispatch
   ])
 

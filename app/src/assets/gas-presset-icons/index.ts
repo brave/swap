@@ -3,7 +3,6 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
-export { SwapInput } from './swap-input'
-export { SearchInput } from './search-input'
-export { StandardInput } from './standard-input'
-export { SlippageInput } from './slippage-input'
+export { default as SlowIcon } from './slow-icon.svg'
+export { default as AverageIcon } from './average-icon.svg'
+export { default as FastIcon } from './fast-icon.svg'

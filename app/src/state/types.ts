@@ -7,7 +7,8 @@ import {
   BlockchainToken,
   Registry,
   NetworkInfo,
-  WalletAccount
+  WalletAccount,
+  Exchange
 } from '../constants/types'
 
 export type WalletState = {
@@ -19,6 +20,8 @@ export type WalletState = {
   isConnected: boolean
   initialized: boolean
   braveWalletAccounts: WalletAccount[]
+  supportedExchanges: Exchange[]
+  userSelectedExchanges: Exchange[]
 }
 
 type UpdateTokenBalances = {
@@ -51,6 +54,16 @@ type UpdateBraveWalletAccounts = {
   payload: WalletAccount[]
 }
 
+type UpdateSupportedExchanges = {
+  type: 'updateSupportedExchanges'
+  payload: Exchange[]
+}
+
+type UpdateUserSelectedExchanges = {
+  type: 'updateUserSelectedExchanges'
+  payload: Exchange[]
+}
+
 type SetInitialized = {
   type: 'setInitialized'
 }
@@ -63,5 +76,7 @@ export type WalletActions =
   | UpdateBraveWalletAccounts
   | SetInitialized
   | UpdateSupportedNetworks
+  | UpdateSupportedExchanges
+  | UpdateUserSelectedExchanges
 
 export type Dispatch = (action: WalletActions) => void
