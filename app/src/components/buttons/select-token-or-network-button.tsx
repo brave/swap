@@ -17,8 +17,10 @@ import { Text, Icon, HorizontalSpacer, Row } from '../shared.styles'
 
 interface SelectTokenButtonStyleProps {
   buttonType?: 'primary' | 'secondary'
-  buttonSize?: 'big' | 'small'
+  buttonSize?: 'big' | 'medium' | 'small'
   moreRightPadding?: boolean
+  hasBackground?: boolean
+  hasShadow?: boolean
 }
 
 interface Props extends SelectTokenButtonStyleProps {
@@ -29,7 +31,16 @@ interface Props extends SelectTokenButtonStyleProps {
 }
 
 export const SelectTokenOrNetworkButton = (props: Props) => {
-  const { onClick, buttonType, buttonSize, icon, text, disabled } = props
+  const {
+    onClick,
+    buttonType,
+    buttonSize,
+    icon,
+    text,
+    disabled,
+    hasBackground,
+    hasShadow
+  } = props
 
   // Context
   const { getLocale } = useSwapContext()
@@ -49,13 +60,17 @@ export const SelectTokenOrNetworkButton = (props: Props) => {
       moreRightPadding={needsMorePadding}
       buttonSize={buttonSize}
       disabled={disabled}
+      hasBackground={hasBackground}
+      hasShadow={hasShadow}
     >
       <Row>
         {text && icon && <ButtonImage src={icon} buttonSize={buttonSize} />}
         <Text
           isBold={text !== undefined}
           textColor={text ? 'text01' : 'text03'}
-          textSize={buttonSize === 'small' ? '14px' : '18px'}
+          textSize={
+            buttonSize === 'small' || buttonSize === 'medium' ? '14px' : '18px'
+          }
         >
           {text ?? getLocale('braveSwapSelectToken')}
         </Text>
@@ -80,15 +95,23 @@ const Button = styled.button<SelectTokenButtonStyleProps>`
         ? p.theme.color.legacy.background02
         : p.theme.color.legacy.background01};
   }
+  --medium-padding: 8px 16px;
   --small-padding: 4px 12px 4px 4px;
 
   /* Styles */
-  background-color: transparent;
+  background-color: ${(p) =>
+    p.hasBackground ? p.theme.color.legacy.background01 : 'transparent'};
   border-radius: 100px;
+  box-shadow: ${(p) =>
+    p.hasShadow ? '0px 0px 10px rgba(0, 0, 0, 0.05)' : 'none'};
   justify-content: ${(p) =>
     p.buttonSize === 'small' ? 'space-between' : 'center'};
   padding: ${(p) =>
-    p.buttonSize === 'small' ? 'var(--small-padding)' : 'var(--big-padding)'};
+    p.buttonSize === 'small'
+      ? 'var(--small-padding)'
+      : p.buttonSize === 'medium'
+      ? 'var(--medium-padding)'
+      : 'var(--big-padding)'};
   white-space: nowrap;
   width: ${(p) => (p.buttonSize === 'small' ? '140px' : 'unset')};
   :disabled {
@@ -104,7 +127,9 @@ const ButtonIcon = styled(Icon)`
 `
 
 const ButtonImage = styled.img<SelectTokenButtonStyleProps>`
-  height: ${(p) => (p.buttonSize === 'small' ? 24 : 40)}px;
+  height: ${(p) =>
+    p.buttonSize === 'small' || p.buttonSize === 'medium' ? 24 : 40}px;
   margin-right: 8px;
-  width: ${(p) => (p.buttonSize === 'small' ? 24 : 40)}px;
+  width: ${(p) =>
+    p.buttonSize === 'small' || p.buttonSize === 'medium' ? 24 : 40}px;
 `

@@ -129,10 +129,10 @@ export const Swap = () => {
             onInputChange={handleOnSetToAmount}
             hasInputError={false}
             isLoading={isFetchingQuote}
-            disabled={selectedNetwork.coin === CoinType.Solana}
+            disabled={selectedNetwork?.coin === CoinType.Solana}
           />
           {isFetchingQuote === false &&
-            selectedNetwork.coin === CoinType.Solana && (
+            selectedNetwork?.coin === CoinType.Solana && (
               <QuoteOptions
                 quoteOptions={quoteOptions}
                 selectedQuoteOption={selectedQuoteOption}

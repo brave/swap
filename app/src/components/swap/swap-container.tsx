@@ -9,6 +9,9 @@ import styled from 'styled-components'
 // Hooks
 import { useWalletState } from '../../state/wallet'
 
+// Components
+import { Header } from './header'
+
 interface Props {
   children?: React.ReactNode
 }
@@ -43,6 +46,7 @@ export const SwapContainer = (props: Props) => {
 
   return (
     <Wrapper>
+      <Header />
       <Container ref={ref}>{children}</Container>
       <Background
         height={backgroundHeight}

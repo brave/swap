@@ -30,9 +30,9 @@ const initialState: WalletState = {
   tokenBalances: {} as Registry,
   tokenList: [],
   selectedAccount: '',
-  selectedNetwork: {} as NetworkInfo,
+  selectedNetwork: undefined,
   // ToDo: Add logic to updated if wallet is connected
-  isConnected: true,
+  isConnected: false,
   initialized: false,
   supportedNetworks: [],
   braveWalletAccounts: [],
@@ -64,6 +64,8 @@ const WalletReducer = (
       return { ...state, supportedExchanges: action.payload }
     case 'updateUserSelectedExchanges':
       return { ...state, userSelectedExchanges: action.payload }
+    case 'setIsConnected':
+      return { ...state, isConnected: action.payload }
     case 'setInitialized':
       return { ...state, initialized: true }
     default:
@@ -107,7 +109,7 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
   React.useEffect(() => {
     if (!initialized) {
       // Gets Selected Network and then sets to state
-      if (selectedNetwork.chainId === undefined) {
+      if (selectedNetwork?.chainId === undefined) {
         getSelectedNetwork()
           .then((result) =>
             dispatch({ type: 'updateSelectedNetwork', payload: result })
@@ -143,8 +145,8 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
       }
 
       // Gets all tokens and then sets to state
-      if (tokenList.length === 0) {
-        getAllTokens(selectedNetwork.chainId, selectedNetwork.coin)
+      if (tokenList.length === 0 && selectedNetwork !== undefined) {
+        getAllTokens(selectedNetwork.chainId, selectedNetwork?.coin)
           .then((result) =>
             dispatch({ type: 'updateTokenList', payload: result.tokens })
           )
@@ -161,7 +163,10 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
       }
 
       // Gets all balances and sets to state
-      if (!tokenBalances[NATIVE_ASSET_CONTRACT_ADDRESS_0X]) {
+      if (
+        !tokenBalances[NATIVE_ASSET_CONTRACT_ADDRESS_0X] &&
+        selectedNetwork !== undefined
+      ) {
         let balances = tokenBalances
         Promise.all(
           tokenList.map(async (token) => {

@@ -92,7 +92,7 @@ export const mockFantomNetwork = {
 
 export const mockOptimismNetwork = {
   blockExplorerUrls: ['https://optimistic.etherscan.io'],
-  chainId: ChainID.FANTOM,
+  chainId: ChainID.OPTIMISM,
   chainName: 'Optimism',
   coin: CoinType.Ethereum,
   decimals: 18,
