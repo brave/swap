@@ -80,6 +80,8 @@ const Button = styled.button<{ isConnected: boolean }>`
     p.isConnected ? p.theme.color.legacy.text01 : p.theme.color.white};
   font-size: 14px;
   padding: ${(p) => (p.isConnected ? '8px 16px' : `10px 22px`)};
+  box-shadow: ${(p) =>
+    p.isConnected ? '0px 0px 10px rgba(0, 0, 0, 0.05)' : 'none'};
 `
 
 const AccountCircle = styled.div<{ orb: string }>`

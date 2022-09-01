@@ -28,6 +28,7 @@ const WalletStateDispatchContext = createContext<
 // Wallet Initial State
 const initialState: WalletState = {
   tokenBalances: {} as Registry,
+  tokenSpotPrices: {} as Registry,
   tokenList: [],
   selectedAccount: '',
   selectedNetwork: undefined,
@@ -49,6 +50,8 @@ const WalletReducer = (
 ): WalletState => {
   switch (action.type) {
     case 'updateTokenBalances':
+      return { ...state, tokenBalances: action.payload }
+    case 'updateTokenSpotPrices':
       return { ...state, tokenBalances: action.payload }
     case 'updateTokenList':
       return { ...state, tokenList: action.payload }
@@ -85,6 +88,7 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
   const {
     getAllTokens,
     getBalance,
+    getTokenPrice,
     getERC20TokenBalance,
     getSelectedNetwork,
     getSelectedAccount,
@@ -103,7 +107,8 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     initialized,
     supportedNetworks,
     braveWalletAccounts,
-    supportedExchanges
+    supportedExchanges,
+    tokenSpotPrices
   } = state
 
   React.useEffect(() => {
@@ -151,6 +156,24 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
             dispatch({ type: 'updateTokenList', payload: result.tokens })
           )
           .catch((error) => console.log(error))
+      }
+
+      // Gets all token spot prices and then sets to state
+      if (
+        tokenList.length !== 0 &&
+        !tokenSpotPrices[NATIVE_ASSET_CONTRACT_ADDRESS_0X]
+      ) {
+        let prices = tokenSpotPrices
+        Promise.all(
+          tokenList.map(async (token) => {
+            getTokenPrice(token.contractAddress)
+              .then((result) => {
+                prices[token.contractAddress] = result.price
+                dispatch({ type: 'updateTokenSpotPrices', payload: prices })
+              })
+              .catch((error) => console.log(error))
+          })
+        )
       }
 
       // Gets all exchanges then sets to state
@@ -209,6 +232,8 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     supportedNetworks,
     braveWalletAccounts,
     supportedExchanges,
+    tokenSpotPrices,
+    getTokenPrice,
     getBraveWalletAccounts,
     getAllTokens,
     getBalance,

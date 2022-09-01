@@ -33,7 +33,7 @@ export const mockEthereumToken = {
   decimals: 18,
   visible: true,
   tokenId: '',
-  coingeckoId: '',
+  coingeckoId: 'ethereum',
   coin: 60,
   chainId: '0x1'
 }
@@ -48,7 +48,7 @@ export const mockBasicAttentionToken = {
   decimals: 18,
   visible: true,
   tokenId: '',
-  coingeckoId: '',
+  coingeckoId: 'basic-attention-token',
   coin: 60,
   chainId: '0x1'
 }
@@ -63,7 +63,7 @@ export const mockWrappedBinanceCoinToken = {
   decimals: 18,
   visible: true,
   tokenId: '',
-  coingeckoId: '',
+  coingeckoId: 'bnb',
   coin: 60,
   chainId: '0x1'
 }
@@ -78,7 +78,7 @@ export const mockWrappedSolanaToken = {
   decimals: 18,
   visible: true,
   tokenId: '',
-  coingeckoId: '',
+  coingeckoId: 'solana',
   coin: 60,
   chainId: '0x1'
 }
@@ -93,7 +93,7 @@ export const mockUSDCToken = {
   decimals: 18,
   visible: true,
   tokenId: '',
-  coingeckoId: '',
+  coingeckoId: 'usd-coin',
   coin: 60,
   chainId: '0x1'
 }
@@ -108,7 +108,7 @@ export const mockSUSHIToken = {
   decimals: 18,
   visible: true,
   tokenId: '',
-  coingeckoId: '',
+  coingeckoId: 'sushi',
   coin: 60,
   chainId: '0x1'
 }
@@ -123,7 +123,7 @@ export const mockUSDTToken = {
   decimals: 18,
   visible: true,
   tokenId: '',
-  coingeckoId: '',
+  coingeckoId: 'tether',
   coin: 60,
   chainId: '0x1'
 }
@@ -138,7 +138,7 @@ export const mockMATICToken = {
   decimals: 18,
   visible: true,
   tokenId: '',
-  coingeckoId: '',
+  coingeckoId: 'polygon',
   coin: 60,
   chainId: '0x1'
 }
@@ -153,7 +153,7 @@ export const mock0XBTCToken = {
   decimals: 18,
   visible: true,
   tokenId: '',
-  coingeckoId: '',
+  coingeckoId: '0xbitcoin',
   coin: 60,
   chainId: '0x1'
 }
@@ -168,7 +168,7 @@ export const mock1INCHToken = {
   decimals: 18,
   visible: true,
   tokenId: '',
-  coingeckoId: '',
+  coingeckoId: '1inch',
   coin: 60,
   chainId: '0x1'
 }

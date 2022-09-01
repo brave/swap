@@ -13,6 +13,7 @@ import {
 
 export type WalletState = {
   tokenBalances: Registry
+  tokenSpotPrices: Registry
   tokenList: BlockchainToken[]
   selectedAccount: string
   selectedNetwork: NetworkInfo | undefined
@@ -26,6 +27,11 @@ export type WalletState = {
 
 type UpdateTokenBalances = {
   type: 'updateTokenBalances'
+  payload: Registry
+}
+
+type UpdateTokenSpotPrices = {
+  type: 'updateTokenSpotPrices'
   payload: Registry
 }
 
@@ -75,6 +81,7 @@ type SetInitialized = {
 
 export type WalletActions =
   | UpdateTokenBalances
+  | UpdateTokenSpotPrices
   | UpdateTokenList
   | UpdateSelectedNetwork
   | UpdateSelectedAccount

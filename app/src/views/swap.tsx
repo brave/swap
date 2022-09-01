@@ -145,6 +145,8 @@ export const Swap = () => {
             <QuoteInfo
               selectedQuoteOption={selectedQuoteOption}
               fromToken={fromToken}
+              toToken={toToken}
+              toAmmount={toAmount}
             />
             <SwapAndSend
               onChangeSwapAndSendSelected={setSwapAndSendSelected}
