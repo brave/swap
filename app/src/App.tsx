@@ -31,7 +31,8 @@ export const App = (props: AppProps) => {
     getSwapQuotes,
     getSupportedNetworks,
     getBraveWalletAccounts,
-    getExchanges
+    getExchanges,
+    getNetworkFeeEstimate
   } = props
 
   return (
@@ -48,6 +49,7 @@ export const App = (props: AppProps) => {
         getSupportedNetworks={getSupportedNetworks}
         getBraveWalletAccounts={getBraveWalletAccounts}
         getExchanges={getExchanges}
+        getNetworkFeeEstimate={getNetworkFeeEstimate}
       >
         <WalletStateProvider>
           <Swap />

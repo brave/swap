@@ -82,7 +82,7 @@ export type Exchange = {
 
 export type GasEstimate = {
   gasFee: string
-  gasFeeGwei: string
-  gasFeeFiat: string
-  time: string
+  gasFeeGwei?: string
+  gasFeeFiat?: string
+  time?: string
 }

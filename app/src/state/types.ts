@@ -8,7 +8,8 @@ import {
   Registry,
   NetworkInfo,
   WalletAccount,
-  Exchange
+  Exchange,
+  GasEstimate
 } from '../constants/types'
 
 export type WalletState = {
@@ -23,6 +24,7 @@ export type WalletState = {
   braveWalletAccounts: WalletAccount[]
   supportedExchanges: Exchange[]
   userSelectedExchanges: Exchange[]
+  networkFeeEstimates: Record<string, GasEstimate>
 }
 
 type UpdateTokenBalances = {
@@ -70,6 +72,11 @@ type UpdateUserSelectedExchanges = {
   payload: Exchange[]
 }
 
+type UpdateNetworkFeeEstimates = {
+  type: 'updateNetworkFeeEstimates'
+  payload: Record<string, GasEstimate>
+}
+
 type SetIsConnected = {
   type: 'setIsConnected'
   payload: boolean
@@ -90,6 +97,7 @@ export type WalletActions =
   | UpdateSupportedNetworks
   | UpdateSupportedExchanges
   | UpdateUserSelectedExchanges
+  | UpdateNetworkFeeEstimates
   | SetIsConnected
 
 export type Dispatch = (action: WalletActions) => void

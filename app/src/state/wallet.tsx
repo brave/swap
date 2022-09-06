@@ -7,7 +7,7 @@ import React, { useReducer, useContext, createContext, useEffect } from 'react'
 
 // Types
 import { WalletState, Dispatch, WalletActions } from './types'
-import { NetworkInfo, Registry } from '../constants/types'
+import { Registry, GasEstimate } from '../constants/types'
 
 // Context
 import { useSwapContext } from '../context/swap.context'
@@ -40,7 +40,8 @@ const initialState: WalletState = {
   supportedExchanges: [],
   // ToDo: Set up local storage for userSelectedExchanges
   // and other user prefs
-  userSelectedExchanges: []
+  userSelectedExchanges: [],
+  networkFeeEstimates: {} as Record<string, GasEstimate>
 }
 
 // Wallet State Reducer
@@ -67,6 +68,8 @@ const WalletReducer = (
       return { ...state, supportedExchanges: action.payload }
     case 'updateUserSelectedExchanges':
       return { ...state, userSelectedExchanges: action.payload }
+    case 'updateNetworkFeeEstimates':
+      return { ...state, networkFeeEstimates: action.payload }
     case 'setIsConnected':
       return { ...state, isConnected: action.payload }
     case 'setInitialized':
@@ -94,7 +97,8 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     getSelectedAccount,
     getSupportedNetworks,
     getBraveWalletAccounts,
-    getExchanges
+    getExchanges,
+    getNetworkFeeEstimate
   } = useSwapContext()
 
   // Wallet State
@@ -108,7 +112,8 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     supportedNetworks,
     braveWalletAccounts,
     supportedExchanges,
-    tokenSpotPrices
+    tokenSpotPrices,
+    networkFeeEstimates
   } = state
 
   React.useEffect(() => {
@@ -161,7 +166,8 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
       // Gets all token spot prices and then sets to state
       if (
         tokenList.length !== 0 &&
-        !tokenSpotPrices[NATIVE_ASSET_CONTRACT_ADDRESS_0X]
+        !tokenSpotPrices[NATIVE_ASSET_CONTRACT_ADDRESS_0X] &&
+        supportedNetworks.length !== 0
       ) {
         let prices = tokenSpotPrices
         Promise.all(
@@ -170,6 +176,36 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
               .then((result) => {
                 prices[token.contractAddress] = result.price
                 dispatch({ type: 'updateTokenSpotPrices', payload: prices })
+              })
+              .catch((error) => console.log(error))
+          })
+        )
+
+        // Gets all native asset spot prices for supported networks and sets to state
+        Promise.all(
+          supportedNetworks.map(async (network) => {
+            getTokenPrice(network.symbol)
+              .then((result) => {
+                prices[network.symbol] = result.price
+                dispatch({ type: 'updateTokenSpotPrices', payload: prices })
+              })
+              .catch((error) => console.log(error))
+          })
+        )
+      }
+
+      // Gets all supported network fee estimates and then sets to state
+      if (supportedNetworks.length !== 0) {
+        let estimates = networkFeeEstimates
+        Promise.all(
+          supportedNetworks.map(async (network) => {
+            getNetworkFeeEstimate(network.chainId)
+              .then((result) => {
+                estimates[network.chainId] = result
+                dispatch({
+                  type: 'updateNetworkFeeEstimates',
+                  payload: estimates
+                })
               })
               .catch((error) => console.log(error))
           })
@@ -233,6 +269,8 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     braveWalletAccounts,
     supportedExchanges,
     tokenSpotPrices,
+    networkFeeEstimates,
+    getNetworkFeeEstimate,
     getTokenPrice,
     getBraveWalletAccounts,
     getAllTokens,

@@ -13,7 +13,7 @@ import { useSwapContext } from '../../context/swap.context'
 import { useWalletState } from '../../state/wallet'
 
 // Types
-import { BlockchainToken } from '../../constants/types'
+import { BlockchainToken, NetworkInfo } from '../../constants/types'
 
 // Assets
 import CloseIcon from '../../assets/close-icon.svg'

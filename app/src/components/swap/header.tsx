@@ -17,12 +17,13 @@ import BraveLogoDark from '../../assets/brave-logo-dark.svg'
 import {
   ThemeButton,
   SelectTokenOrNetworkButton,
-  NetworkListButton,
   ConnectWalletButton
 } from '../buttons'
+import { NetworkSelector } from './network-selector'
 
 // Hooks
 import { useWalletState, useWalletDispatch } from '../../state/wallet'
+import { useNetworkFees } from '../../hooks/useNetworkFees'
 
 // Styled Components
 import { Row, HorizontalSpacer } from '../shared.styles'
@@ -34,6 +35,9 @@ export const Header = () => {
 
   // Dispatch
   const { dispatch } = useWalletDispatch()
+
+  // Hooks
+  const { getNetworkFeeFiatEstimate } = useNetworkFees()
 
   // State
   const [showNetworkSelector, setShowNetworkSelector] =
@@ -90,23 +94,19 @@ export const Header = () => {
           <ThemeButton onClick={toggleTheme} />
           <SelectorWrapper>
             <SelectTokenOrNetworkButton
-              onClick={() => setShowNetworkSelector(true)}
+              onClick={() => setShowNetworkSelector((prev) => !prev)}
               text={selectedNetwork.chainName}
               icon={selectedNetwork.iconUrls[0]}
               buttonSize='medium'
               hasBackground={true}
               hasShadow={true}
+              networkFeeFiatValue={getNetworkFeeFiatEstimate(selectedNetwork)}
             />
             {showNetworkSelector && (
-              <SelectorBox>
-                {supportedNetworks.map((network) => (
-                  <NetworkListButton
-                    key={network.chainId}
-                    onClick={onSelectNetwork}
-                    network={network}
-                  />
-                ))}
-              </SelectorBox>
+              <NetworkSelector
+                isHeader={true}
+                onSelectNetwork={onSelectNetwork}
+              />
             )}
           </SelectorWrapper>
           <HorizontalSpacer size={15} />
@@ -144,19 +144,4 @@ const BraveLogo = styled.div`
 const SelectorWrapper = styled.div`
   display: flex;
   position: relative;
-`
-
-const SelectorBox = styled.div`
-  --shadow-color: rgba(99, 105, 110, 0.18);
-  @media (prefers-color-scheme: dark) {
-    --shadow-color: rgba(0, 0, 0, 0.36);
-  }
-  background-color: ${(p) => p.theme.color.legacy.background01};
-  width: 158px;
-  position: absolute;
-  padding: 4px;
-  z-index: 10;
-  top: 42px;
-  box-shadow: 0px 0px 16px var(--shadow-color);
-  border-radius: 16px;
 `

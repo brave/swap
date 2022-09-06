@@ -11,6 +11,7 @@ import { useSwapContext } from '../../context/swap.context'
 
 // Assets
 import CaratDownIcon from '../../assets/carat-down-icon.svg'
+import FuelTankIcon from '../../assets/fuel-tank-icon.svg'
 
 // Styled Components
 import { Text, Icon, HorizontalSpacer, Row } from '../shared.styles'
@@ -28,6 +29,7 @@ interface Props extends SelectTokenButtonStyleProps {
   icon: string | undefined
   text: string | undefined
   disabled?: boolean
+  networkFeeFiatValue?: string
 }
 
 export const SelectTokenOrNetworkButton = (props: Props) => {
@@ -39,7 +41,8 @@ export const SelectTokenOrNetworkButton = (props: Props) => {
     text,
     disabled,
     hasBackground,
-    hasShadow
+    hasShadow,
+    networkFeeFiatValue
   } = props
 
   // Context
@@ -52,6 +55,16 @@ export const SelectTokenOrNetworkButton = (props: Props) => {
     }
     return text.length > 3
   }, [text])
+
+  const networkFeeFiatValueDisplay = React.useMemo(() => {
+    if (!networkFeeFiatValue) {
+      return ''
+    }
+    const fee = Number(networkFeeFiatValue).toFixed(4)
+    // ToDo: Add Support for Local Fiat Currencies
+    // https://github.com/brave/brave-browser/issues/25262
+    return fee ? `$${fee}` : ''
+  }, [networkFeeFiatValue])
 
   return (
     <Button
@@ -75,6 +88,17 @@ export const SelectTokenOrNetworkButton = (props: Props) => {
           {text ?? getLocale('braveSwapSelectToken')}
         </Text>
       </Row>
+      {networkFeeFiatValue && (
+        <>
+          <HorizontalSpacer size={8} />
+          <GasBubble>
+            <FuelTank icon={FuelTankIcon} size={12} />
+            <Text textSize='14px' textColor='text01'>
+              {networkFeeFiatValueDisplay}
+            </Text>
+          </GasBubble>
+        </>
+      )}
       {buttonSize !== 'small' && <HorizontalSpacer size={8} />}
       <ButtonIcon size={12} icon={CaratDownIcon} />
     </Button>
@@ -132,4 +156,19 @@ const ButtonImage = styled.img<SelectTokenButtonStyleProps>`
   margin-right: 8px;
   width: ${(p) =>
     p.buttonSize === 'small' || p.buttonSize === 'medium' ? 24 : 40}px;
+`
+
+const FuelTank = styled(Icon)`
+  background-color: ${(p) => p.theme.color.legacy.text02};
+  margin-right: 6px;
+`
+
+const GasBubble = styled(Row)`
+  padding: 2px 8px;
+  border-radius: 8px;
+  background-color: ${(p) => p.theme.color.secondary10};
+  @media (prefers-color-scheme: dark) {
+    /* #282B37 does not exist in design system */
+    background-color: #282b37;
+  }
 `
