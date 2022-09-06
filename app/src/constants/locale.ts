@@ -41,5 +41,7 @@ export const locale: Registry = {
   braveSwapDirectRouteDescription:
     'It insures only direct routing and also disables split trade trading',
   braveSwapNetworkFeeDescription:
-    'Brave uses top the 60 tokens for intermediate routing for performance optimization'
+    'Brave uses top the 60 tokens for intermediate routing for performance optimization',
+  braveSwapCoinGecko: 'CoinGecko',
+  braveSwapAPI: 'API'
 }
