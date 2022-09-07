@@ -11,6 +11,7 @@ import { mockAccount1, mockAccounts } from './mock-accounts'
 import { mockSpotPrices } from './mock-spot-prices'
 import { mockQuoteOptions } from './mock-quote-options'
 import { mockExchanges } from './mock-exchanges'
+import { mockNetworkFeeEstimates } from './mock-network-fee-estimates'
 
 export const getBalance = async (
   address: string,
@@ -82,4 +83,8 @@ export const getSupportedNetworks = async () => {
 
 export const getExchanges = async () => {
   return mockExchanges
+}
+
+export const getNetworkFeeEstimate = async (chainId: string) => {
+  return mockNetworkFeeEstimates[chainId]
 }

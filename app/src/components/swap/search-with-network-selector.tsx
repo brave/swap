@@ -17,8 +17,9 @@ import { useWalletDispatch } from '../../state/wallet'
 import { NetworkInfo } from '../../constants/types'
 
 // Components
-import { SelectTokenOrNetworkButton, NetworkListButton } from '../buttons'
+import { SelectTokenOrNetworkButton } from '../buttons'
 import { SearchInput } from '../inputs'
+import { NetworkSelector } from './network-selector'
 
 // Styled Components
 import { HorizontalDivider } from '../shared.styles'
@@ -40,7 +41,7 @@ export const SearchWithNetworkSelector = (props: Props) => {
 
   // Wallet State
   const {
-    state: { selectedNetwork, supportedNetworks }
+    state: { selectedNetwork }
   } = useWalletState()
 
   // State
@@ -66,22 +67,14 @@ export const SearchWithNetworkSelector = (props: Props) => {
       <HorizontalDivider marginRight={8} height={24} />
       <SelectorWrapper>
         <SelectTokenOrNetworkButton
-          icon={selectedNetwork.iconUrls[0]}
-          onClick={() => setShowNetworkSelector(true)}
-          text={selectedNetwork.chainName}
+          icon={selectedNetwork?.iconUrls[0]}
+          onClick={() => setShowNetworkSelector((prev) => !prev)}
+          text={selectedNetwork?.chainName}
           buttonSize='small'
           disabled={networkSelectorDisabled}
         />
         {showNetworkSelector && (
-          <SelectorBox>
-            {supportedNetworks.map((network) => (
-              <NetworkListButton
-                key={network.chainId}
-                onClick={onSelectNetwork}
-                network={network}
-              />
-            ))}
-          </SelectorBox>
+          <NetworkSelector onSelectNetwork={onSelectNetwork} />
         )}
       </SelectorWrapper>
     </Wrapper>
@@ -102,20 +95,4 @@ const Wrapper = styled.div`
 const SelectorWrapper = styled.div`
   display: flex;
   position: relative;
-`
-
-const SelectorBox = styled.div`
-  --shadow-color: rgba(99, 105, 110, 0.18);
-  @media (prefers-color-scheme: dark) {
-    --shadow-color: rgba(0, 0, 0, 0.36);
-  }
-  background-color: ${(p) => p.theme.color.legacy.background01};
-  width: 158px;
-  position: absolute;
-  padding: 5px 0px;
-  z-index: 10;
-  top: 40px;
-  right: -10px;
-  box-shadow: 0px 0px 16px var(--shadow-color);
-  border-radius: 4px;
 `

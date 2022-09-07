@@ -43,5 +43,6 @@ export const locale: Registry = {
   braveSwapNetworkFeeDescription:
     'Brave uses top the 60 tokens for intermediate routing for performance optimization',
   braveSwapCoinGecko: 'CoinGecko',
-  braveSwapAPI: 'API'
+  braveSwapAPI: 'API',
+  braveSwapName: 'Name'
 }

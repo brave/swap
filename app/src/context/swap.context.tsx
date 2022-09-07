@@ -11,7 +11,8 @@ import {
   NetworkInfo,
   QuoteOption,
   WalletAccount,
-  Exchange
+  Exchange,
+  GasEstimate
 } from '../constants/types'
 
 interface SwapContextInterface {
@@ -55,6 +56,7 @@ interface SwapContextInterface {
   ) => Promise<QuoteOption[]>
   getBraveWalletAccounts?: () => Promise<WalletAccount[]>
   getExchanges: () => Promise<Exchange[]>
+  getNetworkFeeEstimate: (chainId: string) => Promise<GasEstimate>
 }
 
 // Create Swap Context
@@ -78,7 +80,8 @@ const SwapProvider = (props: SwapProviderInterface) => {
     getSwapQuotes,
     getSupportedNetworks,
     getBraveWalletAccounts,
-    getExchanges
+    getExchanges,
+    getNetworkFeeEstimate
   } = props
 
   return (
@@ -94,7 +97,8 @@ const SwapProvider = (props: SwapProviderInterface) => {
         getSwapQuotes,
         getSupportedNetworks,
         getBraveWalletAccounts,
-        getExchanges
+        getExchanges,
+        getNetworkFeeEstimate
       }}
     >
       {children}
