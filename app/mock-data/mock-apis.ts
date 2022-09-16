@@ -9,9 +9,20 @@ import { mockEthereumNetwork, mockNetworks } from './mock-networks'
 import { mockEthereumTokens } from './mock-tokens'
 import { mockAccount1, mockAccounts } from './mock-accounts'
 import { mockSpotPrices } from './mock-spot-prices'
-import { mockQuoteOptions } from './mock-quote-options'
+import {
+  mockJupiterQuote,
+  mockJupiterSwapTransactions,
+  mockQuoteOptions,
+  mockZeroExQuoteResponse,
+  mockZeroExSwapResponse
+} from './mock-quote-options'
 import { mockExchanges } from './mock-exchanges'
 import { mockNetworkFeeEstimates } from './mock-network-fee-estimates'
+import {
+  JupiterQuoteParams,
+  JupiterSwapParams,
+  ZeroExSwapParams,
+} from "../src/constants/types";
 
 export const getBalance = async (
   address: string,
@@ -87,4 +98,35 @@ export const getExchanges = async () => {
 
 export const getNetworkFeeEstimate = async (chainId: string) => {
   return mockNetworkFeeEstimates[chainId]
+}
+
+export const swapService = {
+  getZeroExPriceQuote: async (params: ZeroExSwapParams) => {
+    return {
+      success: true,
+      response: mockZeroExQuoteResponse,
+      errorResponse: ""
+    }
+  },
+  getZeroExTransactionPayload: async (params: ZeroExSwapParams) => {
+    return {
+      success: true,
+      response: mockZeroExSwapResponse,
+      errorResponse: ""
+    }
+  },
+  getJupiterQuote: async (params: JupiterQuoteParams) => {
+    return {
+      success: true,
+      response: mockJupiterQuote,
+      errorResponse: ""
+    }
+  },
+  getJupiterTransactionsPayload: async (params: JupiterSwapParams) => {
+    return {
+      success: true,
+      response: mockJupiterSwapTransactions,
+      errorResponse: ""
+    }
+  }
 }

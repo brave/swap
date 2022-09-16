@@ -86,3 +86,89 @@ export type GasEstimate = {
   gasFeeFiat?: string
   time?: string
 }
+
+// Swap Service types
+export type ZeroExSwapParams = {
+  takerAddress: string
+  sellAmount: string
+  buyAmount: string
+  buyToken: string
+  sellToken: string
+  slippagePercentage: number
+  gasPrice: string
+}
+
+export interface ZeroExQuoteResponse {
+  price: string
+  value: string
+  gas: string
+  estimatedGas: string
+  gasPrice: string
+  protocolFee: string
+  minimumProtocolFee: string
+  buyTokenAddress: string
+  sellTokenAddress: string
+  buyAmount: string
+  sellAmount: string
+  allowanceTarget: string
+  sellTokenToEthRate: string
+  buyTokenToEthRate: string
+}
+
+export interface ZeroExSwapResponse extends ZeroExQuoteResponse {
+  guaranteedPrice: string
+  to: string
+  data: string
+}
+
+export type JupiterQuoteParams = {
+  inputMint: string
+  outputMint: string
+  amount: string
+  slippagePercentage: number
+}
+
+export type JupiterFee = {
+  amount: bigint
+  mint: string
+  pct: number
+}
+
+export type JupiterMarketInfo = {
+  id: string
+  label: string
+  inputMint: string
+  outputMint: string
+  notEnoughLiquidity: boolean
+  inAmount: bigint
+  outAmount: bigint
+  priceImpactPct: number
+  lpFee: JupiterFee
+  platformFee: JupiterFee
+}
+
+export type JupiterRoute = {
+  inAmount: bigint
+  outAmount: bigint
+  amount: bigint
+  otherAmountThreshold: bigint
+  swapMode: string
+  priceImpactPct: number
+  marketInfos: JupiterMarketInfo[]
+}
+
+export type JupiterQuote = {
+  routes: JupiterRoute[]
+}
+
+export type JupiterSwapParams = {
+  route: JupiterRoute
+  userPublicKey: string
+  outputMint: string
+}
+
+export type JupiterSwapTransactions = {
+  setupTransaction: string
+  swapTransaction: string
+  cleanupTransaction: string
+}
