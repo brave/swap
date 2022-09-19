@@ -144,5 +144,5 @@ const Container = styled.div`
   padding: 16px;
   width: 512px;
   position: relative;
-  z-index: 10;
+  z-index: 9;
 `
