@@ -17,11 +17,11 @@ import {
   getSelectedAccount,
   getSelectedNetwork,
   getTokenPrice,
-  getSwapQuotes,
   getSupportedNetworks,
   getBraveWalletAccounts,
   getExchanges,
-  getNetworkFeeEstimate, swapService
+  getNetworkFeeEstimate,
+  swapService
 } from '../mock-data/mock-apis'
 
 // Utils
@@ -38,7 +38,6 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       getSelectedAccount={getSelectedAccount}
       getSelectedNetwork={getSelectedNetwork}
       getTokenPrice={getTokenPrice}
-      getSwapQuotes={getSwapQuotes}
       swapService={swapService}
       getSupportedNetworks={getSupportedNetworks}
       getBraveWalletAccounts={getBraveWalletAccounts}

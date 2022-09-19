@@ -52,7 +52,7 @@ export const GasPresetButton = (props: Props) => {
           {gasEstimates.gasFeeGwei} {getLocale('braveSwapGwei')}
         </Text>
         <Text textColor='text03' textSize='12px' isBold={false}>
-          {gasEstimates.gasFee} {selectedNetwork.symbol}
+          {gasEstimates.gasFee} {selectedNetwork?.symbol}
         </Text>
       </Column>
     </Button>

@@ -22,13 +22,13 @@ import CaratDownIcon from '../../assets/carat-down-icon.svg'
 import { VerticalSpacer, Column, IconButton } from '../shared.styles'
 
 interface Props {
-  quoteOptions: QuoteOption[]
-  selectedQuoteOption: QuoteOption | undefined
-  onSelectQuoteOption: (option: QuoteOption) => void
+  options: QuoteOption[]
+  selectedQuoteOptionIndex: number
+  onSelectQuoteOption: (index: number) => void
 }
 
 export const QuoteOptions = (props: Props) => {
-  const { quoteOptions, selectedQuoteOption, onSelectQuoteOption } = props
+  const { options, selectedQuoteOptionIndex, onSelectQuoteOption } = props
 
   // Context
   const { getTokenPrice } = useSwapContext()
@@ -42,8 +42,8 @@ export const QuoteOptions = (props: Props) => {
   // Effects
   React.useEffect(() => {
     let ignore = false
-    if (selectedQuoteOption !== undefined) {
-      getTokenPrice(selectedQuoteOption.contractAddress)
+    if (options[selectedQuoteOptionIndex] !== undefined) {
+      getTokenPrice(options[selectedQuoteOptionIndex].toToken.contractAddress)
         .then((result) => {
           if (!ignore) {
             setSpotPrice(Number(result.price))
@@ -54,7 +54,7 @@ export const QuoteOptions = (props: Props) => {
         ignore = true
       }
     }
-  }, [selectedQuoteOption, getTokenPrice])
+  }, [options, selectedQuoteOptionIndex, getTokenPrice])
 
   // Methods
   const onToggleShowAllOptions = React.useCallback(() => {
@@ -64,10 +64,10 @@ export const QuoteOptions = (props: Props) => {
   // Memos
   const filteredQuoteOptions: QuoteOption[] = React.useMemo(() => {
     if (showAllOptions) {
-      return quoteOptions
+      return options
     }
-    return quoteOptions.slice(0, 2)
-  }, [quoteOptions, showAllOptions])
+    return options.slice(0, 2)
+  }, [options, showAllOptions])
 
   return (
     <>
@@ -76,13 +76,11 @@ export const QuoteOptions = (props: Props) => {
         {filteredQuoteOptions.map((option: QuoteOption, index) => (
           <SelectQuoteOptionButton
             isBest={index === 0}
-            isSelected={
-              selectedQuoteOption ? selectedQuoteOption.id === option.id : false
-            }
-            onClick={() => onSelectQuoteOption(option)}
+            isSelected={selectedQuoteOptionIndex === index}
+            onClick={() => onSelectQuoteOption(index)}
             option={option}
             spotPrice={spotPrice}
-            key={option.id}
+            key={index}
           />
         ))}
       </Column>

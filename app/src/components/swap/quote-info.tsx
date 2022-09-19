@@ -35,11 +35,11 @@ interface Props {
   selectedQuoteOption: QuoteOption | undefined
   fromToken: BlockchainToken | undefined
   toToken: BlockchainToken | undefined
-  toAmmount: string
+  toAmount: string
 }
 
 export const QuoteInfo = (props: Props) => {
-  const { selectedQuoteOption, fromToken, toToken, toAmmount } = props
+  const { selectedQuoteOption, fromToken, toToken, toAmount } = props
 
   // Context
   const { getLocale } = useSwapContext()
@@ -58,10 +58,9 @@ export const QuoteInfo = (props: Props) => {
     if (selectedQuoteOption === undefined) {
       return ''
     }
-    return `1 ${selectedQuoteOption.symbol} ≈ ${selectedQuoteOption.rate} ${
-      fromToken?.symbol ?? ''
-    }`
-  }, [selectedQuoteOption, fromToken])
+
+    return `1 ${selectedQuoteOption.fromToken.symbol} ≈ ${selectedQuoteOption.rate.format(6)} ${selectedQuoteOption.toToken.symbol}`
+  }, [selectedQuoteOption])
 
   const coinGeckoImpact: string = React.useMemo(() => {
     if (
@@ -73,30 +72,29 @@ export const QuoteInfo = (props: Props) => {
       const fromTokenPrice = tokenSpotPrices[fromToken.contractAddress]
       const toTokenPrice = tokenSpotPrices[toToken.contractAddress]
       const coinGeckoRate = Number(toTokenPrice) / Number(fromTokenPrice)
-      const coinGeckoMinimumReceived = Number(toAmmount) * coinGeckoRate
+      const coinGeckoMinimumReceived = Number(toAmount) * coinGeckoRate
       const impact =
-        Number(selectedQuoteOption.amount) / coinGeckoMinimumReceived
+        selectedQuoteOption.toAmount.toNumber() / coinGeckoMinimumReceived
       return impact.toFixed(2)
     }
     return ''
-  }, [tokenSpotPrices, fromToken, toToken, selectedQuoteOption, toAmmount])
+  }, [tokenSpotPrices, fromToken, toToken, selectedQuoteOption, toAmount])
 
   const swapImpact: string = React.useMemo(() => {
     if (selectedQuoteOption === undefined) {
       return ''
     }
-    return selectedQuoteOption.impact
+    return selectedQuoteOption.impact.format(6)
   }, [selectedQuoteOption])
 
   const minimumReceived: string = React.useMemo(() => {
     if (selectedQuoteOption === undefined) {
       return ''
     }
-    const calculatedMinimum =
-      Number(selectedQuoteOption.amount) -
-      Number(selectedQuoteOption.impact) * Number(selectedQuoteOption.amount)
 
-    return `${calculatedMinimum} ${selectedQuoteOption.symbol}`
+    return selectedQuoteOption
+      .minimumToAmount
+      .formatAsAsset(6, selectedQuoteOption.toToken.symbol)
   }, [selectedQuoteOption])
 
   // Methods
@@ -138,7 +136,9 @@ export const QuoteInfo = (props: Props) => {
       </Row>
       <Row rowWidth='full' marginBottom={10} horizontalPadding={16}>
         <Text textSize='14px'>{getLocale('braveSwapPriceImpact')}</Text>
-        <Text textSize='14px'>{`< ${swapImpact}%`}</Text>
+        <Text textSize='14px'>
+          {swapImpact === '0' ? `${swapImpact}%`: `< ${swapImpact}%`}
+        </Text>
       </Row>
       <Row rowWidth='full' marginBottom={8} horizontalPadding={16}>
         <Text textSize='14px'>

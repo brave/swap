@@ -12,7 +12,6 @@ import { mockSpotPrices } from './mock-spot-prices'
 import {
   mockJupiterQuote,
   mockJupiterSwapTransactions,
-  mockQuoteOptions,
   mockZeroExQuoteResponse,
   mockZeroExSwapResponse
 } from './mock-quote-options'
@@ -22,7 +21,7 @@ import {
   JupiterQuoteParams,
   JupiterSwapParams,
   ZeroExSwapParams,
-} from "../src/constants/types";
+} from '../src/constants/types'
 
 export const getBalance = async (
   address: string,
@@ -78,14 +77,6 @@ export const getTokenPrice = async (contractAddress: string) => {
     return { price: '0', error: 1, errorMessage: 'Contract Address not found.' }
   }
   return { price: price, error: 0, errorMessage: '' }
-}
-
-export const getSwapQuotes = async (
-  fromAddress: string,
-  fromAmount: string,
-  toAddress: string
-) => {
-  return mockQuoteOptions
 }
 
 export const getSupportedNetworks = async () => {

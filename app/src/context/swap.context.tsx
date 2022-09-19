@@ -16,9 +16,9 @@ import {
   ZeroExSwapParams,
   ZeroExSwapResponse,
   JupiterSwapParams,
-  JupiterQuote,
+  JupiterQuoteResponse,
   JupiterQuoteParams,
-  JupiterSwapTransactions,
+  JupiterSwapResponse,
   ZeroExQuoteResponse
 } from '../constants/types'
 
@@ -69,20 +69,15 @@ interface SwapContextInterface {
     }>
     getJupiterQuote: (params: JupiterQuoteParams) => Promise<{
       success: boolean
-      response: JupiterQuote
+      response: JupiterQuoteResponse
       errorResponse: string
     }>
     getJupiterTransactionsPayload: (params: JupiterSwapParams) => Promise<{
       success: boolean
-      response: JupiterSwapTransactions
+      response: JupiterSwapResponse
       errorResponse: string
     }>
   }
-  getSwapQuotes: (
-    fromAddress: string,
-    fromAmount: string,
-    toAddress: string
-  ) => Promise<QuoteOption[]>
   getBraveWalletAccounts?: () => Promise<WalletAccount[]>
   getExchanges: () => Promise<Exchange[]>
   getNetworkFeeEstimate: (chainId: string) => Promise<GasEstimate>
@@ -106,7 +101,6 @@ const SwapProvider = (props: SwapProviderInterface) => {
     getSelectedAccount,
     getSelectedNetwork,
     getTokenPrice,
-    getSwapQuotes,
     getSupportedNetworks,
     getBraveWalletAccounts,
     getExchanges,
@@ -124,7 +118,6 @@ const SwapProvider = (props: SwapProviderInterface) => {
         getSelectedAccount,
         getSelectedNetwork,
         getTokenPrice,
-        getSwapQuotes,
         getSupportedNetworks,
         getBraveWalletAccounts,
         getExchanges,

@@ -9,9 +9,6 @@ import { Registry } from '../src/constants/types'
 export const mockNativeTokenBalance = '1.674'
 
 export const mockERC721TokenBalances: Registry = {
-  '0x1': '54.37',
-  '0x2': '24',
-  '0x3': '0',
-  '0x4': '0',
-  '0x5': '0'
+  '': '5340000000000000000',
+  '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48': '24000000',
 }
