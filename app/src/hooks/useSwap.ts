@@ -72,7 +72,11 @@ export const useSwap = () => {
     React.useState<GasFeeOption>(gasFeeOptions[1])
 
   // Update on render
-  if (fromToken === undefined && fromToken !== tokenList[0]) {
+  if (
+    fromToken === undefined &&
+    toToken === undefined &&
+    tokenList[0] !== undefined
+  ) {
     setFromToken(tokenList[0])
   }
 
