@@ -92,7 +92,10 @@ export const Swap = () => {
 
   const onToggleShowSwapSettings = React.useCallback(() => {
     setShowSwapSettings((prev) => !prev)
-  }, [])
+    if (slippageTolerance === '') {
+      setSlippageTolerance('0.5')
+    }
+  }, [slippageTolerance])
 
   const onClickReviewOrder = React.useCallback(() => {
     // Todo: Add logic here to review order
