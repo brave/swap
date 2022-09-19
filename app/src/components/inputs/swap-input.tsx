@@ -21,7 +21,7 @@ export const SwapInput = (props: Props) => {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onChange(event.target.value)
     },
-    []
+    [onChange]
   )
 
   return (
