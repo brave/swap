@@ -3,6 +3,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
+import Amount from "../utils/amount";
+
 export type BlockchainToken = {
   contractAddress: string
   name: string
@@ -31,12 +33,14 @@ export type NetworkInfo = {
 }
 
 export type QuoteOption = {
-  id: string
-  amount: string
-  symbol: string
-  contractAddress: string
-  rate: string
-  impact: string
+  label: string
+  fromAmount: Amount
+  toAmount: Amount
+  minimumToAmount: Amount
+  fromToken: BlockchainToken
+  toToken: BlockchainToken
+  rate: Amount
+  impact: Amount
 }
 
 export type Registry = Record<string, string>
@@ -87,7 +91,15 @@ export type GasEstimate = {
   time?: string
 }
 
-// Swap Service types
+export type SwapParams = {
+  fromToken?: BlockchainToken
+  toToken?: BlockchainToken
+  fromAmount: string
+  toAmount: string
+  slippagePercentage: number
+  takerAddress?: string
+}
+
 export type ZeroExSwapParams = {
   takerAddress: string
   sellAmount: string
@@ -113,12 +125,19 @@ export interface ZeroExQuoteResponse {
   allowanceTarget: string
   sellTokenToEthRate: string
   buyTokenToEthRate: string
+  estimatedPriceImpact: string
 }
 
 export interface ZeroExSwapResponse extends ZeroExQuoteResponse {
   guaranteedPrice: string
   to: string
   data: string
+}
+
+export interface ZeroExErrorResponse {
+  code: number
+  reason: string
+  validationErrors?: Array<{ field: string, code: number, reason: string }>
 }
 
 export type JupiterQuoteParams = {
@@ -157,7 +176,7 @@ export type JupiterRoute = {
   marketInfos: JupiterMarketInfo[]
 }
 
-export type JupiterQuote = {
+export type JupiterQuoteResponse = {
   routes: JupiterRoute[]
 }
 
@@ -167,8 +186,14 @@ export type JupiterSwapParams = {
   outputMint: string
 }
 
-export type JupiterSwapTransactions = {
+export type JupiterSwapResponse = {
   setupTransaction: string
   swapTransaction: string
   cleanupTransaction: string
+}
+
+export interface JupiterErrorResponse {
+  statusCode: string
+  error: string
+  message: string
 }

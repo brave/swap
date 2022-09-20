@@ -177,7 +177,7 @@ export const SwapSettingsModal = (props: Props) => {
           <VerticalDivider />
 
           {/* Ethereum Only Settings */}
-          {selectedNetwork.coin === CoinType.Ethereum && (
+          {selectedNetwork?.coin === CoinType.Ethereum && (
             <>
               {/* Exchanges */}
               <ExpandSection
@@ -209,7 +209,7 @@ export const SwapSettingsModal = (props: Props) => {
           )}
 
           {/* Solana Only Settings */}
-          {selectedNetwork.coin === CoinType.Solana && (
+          {selectedNetwork?.coin === CoinType.Solana && (
             <>
               {/* Direct Route Toggle */}
               <ToggleSection

@@ -35,7 +35,9 @@ export const SelectQuoteOptionButton = (props: Props) => {
   }, [option, onClick])
 
   const quoteFiatValue = React.useMemo(() => {
-    return Number(spotPrice) * Number(option.amount)
+    return option.toAmount
+      .times(spotPrice || 0)
+      .formatAsFiat('USD')
   }, [spotPrice, option])
 
   return (
@@ -44,14 +46,15 @@ export const SelectQuoteOptionButton = (props: Props) => {
         <BestOptionBadge isSelected={isSelected}>Best</BestOptionBadge>
       )}
       <Text isBold={true} textColor='text01' textSize='16px'>
-        {getLocale('braveSwapOption')} {option.id}
+        {option.label}
       </Text>
       <Column horizontalAlign='flex-end'>
         <Text isBold={true} textColor='text01' textSize='16px'>
-          {option.amount} {option.symbol}
+          {option.toAmount
+            .formatAsAsset(6, option.toToken.symbol)}
         </Text>
         <Text textColor='text03' textSize='14px'>
-          ~${quoteFiatValue.toFixed(2)}
+          ~{quoteFiatValue}
         </Text>
       </Column>
     </Button>

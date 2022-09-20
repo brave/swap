@@ -46,7 +46,7 @@ export const Swap = () => {
     insufficientBalance,
     isFetchingQuote,
     quoteOptions,
-    selectedQuoteOption,
+    selectedQuoteOptionIndex,
     selectingFromOrTo,
     fromTokenBalance,
     fiatValue,
@@ -134,22 +134,22 @@ export const Swap = () => {
             isLoading={isFetchingQuote}
             disabled={selectedNetwork?.coin === CoinType.Solana}
           />
-          {isFetchingQuote === false &&
+          {!isFetchingQuote &&
             selectedNetwork?.coin === CoinType.Solana && (
               <QuoteOptions
-                quoteOptions={quoteOptions}
-                selectedQuoteOption={selectedQuoteOption}
+                options={quoteOptions}
+                selectedQuoteOptionIndex={selectedQuoteOptionIndex}
                 onSelectQuoteOption={onSelectQuoteOption}
               />
             )}
         </SwapSectionBox>
-        {isFetchingQuote === false && (
+        {quoteOptions.length > 0 && !isFetchingQuote && (
           <>
             <QuoteInfo
-              selectedQuoteOption={selectedQuoteOption}
+              selectedQuoteOption={quoteOptions[selectedQuoteOptionIndex]}
               fromToken={fromToken}
               toToken={toToken}
-              toAmmount={toAmount}
+              toAmount={toAmount}
             />
             <SwapAndSend
               onChangeSwapAndSendSelected={setSwapAndSendSelected}
