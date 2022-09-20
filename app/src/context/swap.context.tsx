@@ -77,6 +77,9 @@ interface SwapContextInterface {
       response: JupiterSwapResponse
       errorResponse: string
     }>
+    isSwapSupported: (chainId: string) => Promise<{
+      result: boolean
+    }>
   }
   getBraveWalletAccounts?: () => Promise<WalletAccount[]>
   getExchanges: () => Promise<Exchange[]>
