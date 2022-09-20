@@ -119,5 +119,8 @@ export const swapService = {
       response: mockJupiterSwapTransactions,
       errorResponse: ""
     }
+  },
+  isSwapSupported: async (chainId: string) => {
+    return { result: true }
   }
 }
