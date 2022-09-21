@@ -124,7 +124,7 @@ export const Swap = () => {
           fiatValue={fiatValue}
         />
         <FlipTokensButton onClick={onClickFlipSwapTokens} />
-        <SwapSectionBox boxType='secondary' maintainHeight={isFetchingQuote}>
+        <SwapSectionBox boxType='secondary'>
           <ToSection
             onClickSelectToken={() => setSelectingFromOrTo('to')}
             token={toToken}
@@ -134,13 +134,14 @@ export const Swap = () => {
             isLoading={isFetchingQuote}
             disabled={selectedNetwork?.coin === CoinType.Solana}
           />
-          {selectedNetwork?.coin === CoinType.Solana && (
-            <QuoteOptions
-              options={quoteOptions}
-              selectedQuoteOptionIndex={selectedQuoteOptionIndex}
-              onSelectQuoteOption={onSelectQuoteOption}
-            />
-          )}
+          {selectedNetwork?.coin === CoinType.Solana &&
+            quoteOptions.length > 0 && (
+              <QuoteOptions
+                options={quoteOptions}
+                selectedQuoteOptionIndex={selectedQuoteOptionIndex}
+                onSelectQuoteOption={onSelectQuoteOption}
+              />
+            )}
         </SwapSectionBox>
         {quoteOptions.length > 0 && (
           <>

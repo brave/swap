@@ -10,6 +10,7 @@ export const Text = styled.span<{
   isBold?: boolean
   textColor?: 'text01' | 'text02' | 'text03' | 'error'
   maintainHeight?: boolean
+  textAlign?: 'left' | 'right'
 }>`
   --text01: ${(p) => p.theme.color.legacy.text01};
   --text02: ${(p) => p.theme.color.legacy.text02};
@@ -21,10 +22,12 @@ export const Text = styled.span<{
   height: ${(p) => (p.maintainHeight ? '20px' : 'unset')};
   line-height: ${(p) => (p.textSize === '12px' ? '18px' : 'inherit')};
   letter-spacing: 0.02em;
+  text-align: ${(p) => (p.textAlign ? p.textAlign : 'center')};
 `
 
 export const Row = styled.div<{
   rowWidth?: 'dynamic' | 'full'
+  rowHeight?: 'dynamic' | 'full'
   marginBottom?: number
   horizontalPadding?: number
   verticalPadding?: number
@@ -40,6 +43,7 @@ export const Row = styled.div<{
   margin-bottom: ${(p) => p.marginBottom ?? 0}px;
   padding: var(--vertical-padding) var(--horizontal-padding);
   width: ${(p) => (p.rowWidth === 'full' ? '100%' : 'unset')};
+  height: ${(p) => (p.rowHeight === 'full' ? '100%' : 'unset')};
 `
 
 export const Column = styled.div<{
