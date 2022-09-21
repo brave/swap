@@ -23,6 +23,9 @@ import {
   ZeroExSwapParams,
 } from '../src/constants/types'
 
+const delay = (time: number) =>
+  new Promise(res => setTimeout(res, time))
+
 export const getBalance = async (
   address: string,
   coin: number,
@@ -93,6 +96,7 @@ export const getNetworkFeeEstimate = async (chainId: string) => {
 
 export const swapService = {
   getZeroExPriceQuote: async (params: ZeroExSwapParams) => {
+    await delay(2000)
     return {
       success: true,
       response: mockZeroExQuoteResponse,
@@ -107,6 +111,7 @@ export const swapService = {
     }
   },
   getJupiterQuote: async (params: JupiterQuoteParams) => {
+    await delay(2000)
     return {
       success: true,
       response: mockJupiterQuote,

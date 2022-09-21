@@ -42,7 +42,6 @@ export const useSwap = () => {
   const [toToken, setToToken] = React.useState<BlockchainToken | undefined>(undefined)
   const [fromAmount, setFromAmount] = React.useState<string>('')
   const [toAmount, setToAmount] = React.useState<string>('')
-  const [isFetchingQuote, setIsFetchingQuote] = React.useState<boolean | undefined>(undefined)
   const [selectingFromOrTo, setSelectingFromOrTo] = React.useState<'from' | 'to' | undefined>(
     undefined
   )
@@ -248,6 +247,8 @@ export const useSwap = () => {
   const onSelectToToken = React.useCallback(
     async (token: BlockchainToken) => {
       setToToken(token)
+      setSelectingFromOrTo(undefined)
+
       if (selectedNetwork?.coin === CoinType.Solana) {
         await handleJupiterQuoteRefresh({
           toToken: token
@@ -258,8 +259,6 @@ export const useSwap = () => {
           toAmount: ''
         })
       }
-
-      setSelectingFromOrTo(undefined)
     },
     [selectedNetwork, handleJupiterQuoteRefresh, handleZeroExQuoteRefresh]
   )
@@ -267,6 +266,8 @@ export const useSwap = () => {
   const onSelectFromToken = React.useCallback(
     async (token: BlockchainToken) => {
       setFromToken(token)
+      setSelectingFromOrTo(undefined)
+
       if (selectedNetwork?.coin === CoinType.Solana) {
         await handleJupiterQuoteRefresh({
           fromToken: token
@@ -277,8 +278,6 @@ export const useSwap = () => {
           fromAmount: ''
         })
       }
-
-      setSelectingFromOrTo(undefined)
     },
     [selectedNetwork, handleZeroExQuoteRefresh, handleJupiterQuoteRefresh]
   )
@@ -340,7 +339,7 @@ export const useSwap = () => {
     fromTokenBalance,
     insufficientBalance,
     fiatValue,
-    isFetchingQuote,
+    isFetchingQuote: zeroEx.loading || jupiter.loading,
     quoteOptions,
     selectedQuoteOptionIndex,
     selectingFromOrTo,
