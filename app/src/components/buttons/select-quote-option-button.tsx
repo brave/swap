@@ -7,7 +7,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Context
-import { useSwapContext } from '../../context/swap.context'
+import { useWalletState } from '../../state/wallet'
 
 // Types
 import { QuoteOption } from '../../constants/types'
@@ -26,8 +26,10 @@ interface Props {
 export const SelectQuoteOptionButton = (props: Props) => {
   const { onClick, option, isSelected, isBest, spotPrice } = props
 
-  // Context
-  const { getLocale } = useSwapContext()
+  // Wallet State
+  const {
+    state: { defaultBaseCurrency }
+  } = useWalletState()
 
   // Methods
   const onSelectToken = React.useCallback(() => {
@@ -37,8 +39,8 @@ export const SelectQuoteOptionButton = (props: Props) => {
   const quoteFiatValue = React.useMemo(() => {
     return option.toAmount
       .times(spotPrice || 0)
-      .formatAsFiat('USD')
-  }, [spotPrice, option])
+      .formatAsFiat(defaultBaseCurrency)
+  }, [spotPrice, option, defaultBaseCurrency])
 
   return (
     <Button onClick={onSelectToken} isSelected={isSelected}>

@@ -56,16 +56,6 @@ export const SelectTokenOrNetworkButton = (props: Props) => {
     return text.length > 3
   }, [text])
 
-  const networkFeeFiatValueDisplay = React.useMemo(() => {
-    if (!networkFeeFiatValue) {
-      return ''
-    }
-    const fee = Number(networkFeeFiatValue).toFixed(4)
-    // ToDo: Add Support for Local Fiat Currencies
-    // https://github.com/brave/brave-browser/issues/25262
-    return fee ? `$${fee}` : ''
-  }, [networkFeeFiatValue])
-
   return (
     <Button
       onClick={onClick}
@@ -94,7 +84,7 @@ export const SelectTokenOrNetworkButton = (props: Props) => {
           <GasBubble>
             <FuelTank icon={FuelTankIcon} size={12} />
             <Text textSize='14px' textColor='text01'>
-              {networkFeeFiatValueDisplay}
+              {networkFeeFiatValue}
             </Text>
           </GasBubble>
         </>

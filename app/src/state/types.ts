@@ -25,6 +25,7 @@ export type WalletState = {
   supportedExchanges: Exchange[]
   userSelectedExchanges: Exchange[]
   networkFeeEstimates: Record<string, GasEstimate>
+  defaultBaseCurrency: string
 }
 
 type UpdateTokenBalances = {
@@ -77,6 +78,11 @@ type UpdateNetworkFeeEstimates = {
   payload: Record<string, GasEstimate>
 }
 
+type UpdateDefaultBaseCurrency = {
+  type: 'updateDefaultBaseCurrency'
+  payload: string
+}
+
 type SetIsConnected = {
   type: 'setIsConnected'
   payload: boolean
@@ -99,5 +105,6 @@ export type WalletActions =
   | UpdateUserSelectedExchanges
   | UpdateNetworkFeeEstimates
   | SetIsConnected
+  | UpdateDefaultBaseCurrency
 
 export type Dispatch = (action: WalletActions) => void

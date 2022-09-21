@@ -32,6 +32,7 @@ export const App = (props: AppProps) => {
     getBraveWalletAccounts,
     getExchanges,
     getNetworkFeeEstimate,
+    getDefaultBaseCurrency,
     swapService
   } = props
 
@@ -50,6 +51,7 @@ export const App = (props: AppProps) => {
         getBraveWalletAccounts={getBraveWalletAccounts}
         getExchanges={getExchanges}
         getNetworkFeeEstimate={getNetworkFeeEstimate}
+        getDefaultBaseCurrency={getDefaultBaseCurrency}
       >
         <WalletStateProvider>
           <Swap />
