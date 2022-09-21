@@ -9,6 +9,9 @@ import styled from 'styled-components'
 // Types
 import { BlockchainToken, QuoteOption } from '../../constants/types'
 
+// Hooks
+import { useNetworkFees } from '../../hooks/useNetworkFees'
+
 // Context
 import { useSwapContext } from '../../context/swap.context'
 import { useWalletState } from '../../state/wallet'
@@ -41,17 +44,15 @@ interface Props {
 export const QuoteInfo = (props: Props) => {
   const { selectedQuoteOption, fromToken, toToken, toAmount } = props
 
+  // Hooks
+  const { getNetworkFeeFiatEstimate } = useNetworkFees()
+
   // Context
   const { getLocale } = useSwapContext()
 
   // Wallet State
   const { state } = useWalletState()
-  const { tokenSpotPrices } = state
-
-  // ToDo: Setup a useSwap hook to handle all these values and memos
-  // https://github.com/brave/brave-browser/issues/24756
-
-  const gasFeeFiatValue = '15.13'
+  const { tokenSpotPrices, selectedNetwork } = state
 
   // Memos
   const swapRate: string = React.useMemo(() => {
@@ -150,7 +151,9 @@ export const QuoteInfo = (props: Props) => {
         <Text textSize='14px'>{getLocale('braveSwapNetworkFee')}</Text>
         <GasBubble>
           <FuelTank icon={FuelTankIcon} size={12} />
-          <Text textSize='14px'>${gasFeeFiatValue}</Text>
+          <Text textSize='14px'>
+            {selectedNetwork ? getNetworkFeeFiatEstimate(selectedNetwork) : ''}
+          </Text>
         </GasBubble>
       </Row>
       <VerticalDivider />

@@ -31,7 +31,7 @@ import { Row, HorizontalSpacer } from '../shared.styles'
 export const Header = () => {
   // Wallet State
   const { state } = useWalletState()
-  const { selectedNetwork, supportedNetworks } = state
+  const { selectedNetwork } = state
 
   // Dispatch
   const { dispatch } = useWalletDispatch()

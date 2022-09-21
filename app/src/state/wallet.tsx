@@ -41,7 +41,8 @@ const initialState: WalletState = {
   // ToDo: Set up local storage for userSelectedExchanges
   // and other user prefs
   userSelectedExchanges: [],
-  networkFeeEstimates: {} as Record<string, GasEstimate>
+  networkFeeEstimates: {} as Record<string, GasEstimate>,
+  defaultBaseCurrency: ''
 }
 
 // Wallet State Reducer
@@ -70,6 +71,8 @@ const WalletReducer = (
       return { ...state, userSelectedExchanges: action.payload }
     case 'updateNetworkFeeEstimates':
       return { ...state, networkFeeEstimates: action.payload }
+    case 'updateDefaultBaseCurrency':
+      return { ...state, defaultBaseCurrency: action.payload }
     case 'setIsConnected':
       return { ...state, isConnected: action.payload }
     case 'setInitialized':
@@ -98,7 +101,8 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     getSupportedNetworks,
     getBraveWalletAccounts,
     getExchanges,
-    getNetworkFeeEstimate
+    getNetworkFeeEstimate,
+    getDefaultBaseCurrency
   } = useSwapContext()
 
   // Wallet State
@@ -113,7 +117,8 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     braveWalletAccounts,
     supportedExchanges,
     tokenSpotPrices,
-    networkFeeEstimates
+    networkFeeEstimates,
+    defaultBaseCurrency
   } = state
 
   React.useEffect(() => {
@@ -258,6 +263,18 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
           })
         )
       }
+
+      // Gets users Default Base Currency then sets to state
+      if (defaultBaseCurrency === '' && getDefaultBaseCurrency) {
+        getDefaultBaseCurrency()
+          .then((result) =>
+            dispatch({
+              type: 'updateDefaultBaseCurrency',
+              payload: result.currency
+            })
+          )
+          .catch((error) => console.log(error))
+      }
     }
   }, [
     tokenList,
@@ -270,6 +287,8 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     supportedExchanges,
     tokenSpotPrices,
     networkFeeEstimates,
+    defaultBaseCurrency,
+    getDefaultBaseCurrency,
     getNetworkFeeEstimate,
     getTokenPrice,
     getBraveWalletAccounts,

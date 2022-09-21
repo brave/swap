@@ -22,6 +22,7 @@ interface Props {
 
 export const NetworkListButton = (props: Props) => {
   const { network, onClick } = props
+
   // Hooks
   const { getNetworkFeeFiatEstimate } = useNetworkFees()
 
@@ -29,14 +30,6 @@ export const NetworkListButton = (props: Props) => {
   const onSelectNetwork = React.useCallback(() => {
     onClick(network)
   }, [network, onClick])
-
-  // Memos
-  const networkFeeFiatValue = React.useMemo(() => {
-    const fee = Number(getNetworkFeeFiatEstimate(network)).toFixed(4)
-    // ToDo: Add Support for Local Fiat Currencies
-    // https://github.com/brave/brave-browser/issues/25262
-    return fee ? `$${fee}` : ''
-  }, [network, getNetworkFeeFiatEstimate])
 
   return (
     <Button onClick={onSelectNetwork}>
@@ -46,7 +39,7 @@ export const NetworkListButton = (props: Props) => {
           {network.chainName}
         </Text>
       </Row>
-      <Text textSize='14px'>{networkFeeFiatValue}</Text>
+      <Text textSize='14px'>{getNetworkFeeFiatEstimate(network)}</Text>
     </Button>
   )
 }

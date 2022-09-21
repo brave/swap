@@ -20,7 +20,7 @@ import { mockNetworkFeeEstimates } from './mock-network-fee-estimates'
 import {
   JupiterQuoteParams,
   JupiterSwapParams,
-  ZeroExSwapParams,
+  ZeroExSwapParams
 } from '../src/constants/types'
 
 const delay = (time: number) =>
@@ -100,14 +100,14 @@ export const swapService = {
     return {
       success: true,
       response: mockZeroExQuoteResponse,
-      errorResponse: ""
+      errorResponse: ''
     }
   },
   getZeroExTransactionPayload: async (params: ZeroExSwapParams) => {
     return {
       success: true,
       response: mockZeroExSwapResponse,
-      errorResponse: ""
+      errorResponse: ''
     }
   },
   getJupiterQuote: async (params: JupiterQuoteParams) => {
@@ -115,17 +115,21 @@ export const swapService = {
     return {
       success: true,
       response: mockJupiterQuote,
-      errorResponse: ""
+      errorResponse: ''
     }
   },
   getJupiterTransactionsPayload: async (params: JupiterSwapParams) => {
     return {
       success: true,
       response: mockJupiterSwapTransactions,
-      errorResponse: ""
+      errorResponse: ''
     }
   },
   isSwapSupported: async (chainId: string) => {
     return { result: true }
   }
+}
+
+export const getDefaultBaseCurrency = async () => {
+  return { currency: 'USD' }
 }

@@ -31,7 +31,7 @@ import Amount from '../utils/amount'
 export const useSwap = () => {
   // Wallet State
   const {
-    state: { tokenBalances, tokenList, selectedNetwork, selectedAccount }
+    state: { tokenBalances, tokenList, selectedNetwork, selectedAccount, defaultBaseCurrency }
   } = useWalletState()
 
   // ToDo: Setup useSwap hook where all this kind of state will be handled.
@@ -327,9 +327,9 @@ export const useSwap = () => {
 
   const fiatValue: string | undefined = React.useMemo(() => {
     if (fromAmount && price) {
-      return new Amount(fromAmount).times(price).formatAsFiat()
+      return new Amount(fromAmount).times(price).formatAsFiat(defaultBaseCurrency)
     }
-  }, [price, fromAmount])
+  }, [price, fromAmount, defaultBaseCurrency])
 
   const insufficientBalance: boolean = React.useMemo(() => {
     if (fromAmount && fromTokenBalance !== undefined) {

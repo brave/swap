@@ -99,7 +99,7 @@ export const FromSection = (props: Props) => {
           {/* Todo: Setup locale for currency symbol */}
           {token && (
             <Text textSize='14px' textColor='text03' maintainHeight={true}>
-              {fiatValue ? `$${fiatValue}` : ''}
+              {fiatValue}
             </Text>
           )}
         </Column>
