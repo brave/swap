@@ -83,6 +83,19 @@ export const useSwap = () => {
     slippagePercentage: new Amount(slippageTolerance).div(100).toNumber()
   })
 
+  React.useEffect(() => {
+    const interval = setInterval(async () => {
+      if (selectedNetwork?.coin === CoinType.Solana) {
+        await jupiter.refresh()
+      } else {
+        await zeroEx.refresh()
+      }
+    }, 5000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [selectedNetwork, zeroEx.refresh, jupiter.refresh])
+
   const quoteOptions: QuoteOption[] = React.useMemo(() => {
     if (!fromToken || !toToken) {
       return []
@@ -196,6 +209,10 @@ export const useSwap = () => {
   const handleOnSetFromAmount = React.useCallback(
     async (value: string) => {
       setFromAmount(value)
+      if (!value) {
+        setToAmount('')
+      }
+
       if (selectedNetwork?.coin === CoinType.Solana) {
         await handleJupiterQuoteRefresh({
           fromAmount: value
