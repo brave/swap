@@ -41,7 +41,7 @@ export function useJupiter (params: SwapParams) {
   } = useWalletState()
 
   const refresh = React.useCallback(
-    async function (overrides: Partial<SwapParams>): Promise<Quote> {
+    async function (overrides: Partial<SwapParams> = {}): Promise<Quote> {
       const overriddenParams: SwapParams = {
         ...params,
         ...overrides
@@ -55,6 +55,8 @@ export function useJupiter (params: SwapParams) {
         return {}
       }
       if (!overriddenParams.fromAmount) {
+          setQuote(undefined)
+          setError(undefined)
         return {}
       }
 

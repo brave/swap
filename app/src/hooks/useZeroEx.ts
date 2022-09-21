@@ -32,7 +32,7 @@ export function useZeroEx (params: SwapParams) {
   } = useWalletState()
 
   const refresh = React.useCallback(
-    async function (overrides: Partial<SwapParams>): Promise<Quote> {
+    async function (overrides: Partial<SwapParams> = {}): Promise<Quote> {
       const overriddenParams: SwapParams = {
         ...params,
         ...overrides
@@ -46,6 +46,8 @@ export function useZeroEx (params: SwapParams) {
         return {}
       }
       if (!overriddenParams.fromAmount && !overriddenParams.toAmount) {
+          setQuote(undefined)
+          setError(undefined)
         return {}
       }
       if (!overriddenParams.takerAddress) {

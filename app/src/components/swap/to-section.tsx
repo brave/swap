@@ -65,14 +65,12 @@ export const ToSection = (props: Props) => {
             </Text>
           </Row>
         )}
-        {!isLoading && (
-          <SwapInput
-            hasError={hasInputError}
-            onChange={onInputChange}
-            value={inputValue}
-            disabled={disabled}
-          />
-        )}
+        <SwapInput
+          hasError={hasInputError}
+          onChange={onInputChange}
+          value={inputValue}
+          disabled={disabled}
+        />
       </Column>
     </Row>
   )
