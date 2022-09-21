@@ -3,6 +3,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
+import styled from 'styled-components'
+
 // Context
 import { useSwapContext } from '../../context/swap.context'
 
@@ -14,7 +16,7 @@ import { SelectTokenOrNetworkButton } from '../buttons'
 import { SwapInput } from '../inputs'
 
 // Styled Components
-import { Row, Column, Text, Loader } from '../shared.styles'
+import { Row, Column, Text, Loader, VerticalSpacer } from '../shared.styles'
 
 interface Props {
   onClickSelectToken: () => void
@@ -41,20 +43,10 @@ export const ToSection = (props: Props) => {
   const { getLocale } = useSwapContext()
 
   return (
-    <Row rowWidth='full'>
-      <SelectTokenOrNetworkButton
-        onClick={onClickSelectToken}
-        icon={token?.logo}
-        text={token?.symbol}
-        buttonType='secondary'
-      />
-      <Column
-        horizontalAlign='flex-end'
-        verticalAlign={isLoading ? 'flex-start' : 'center'}
-        columnHeight={isLoading ? 'full' : 'dynamic'}
-      >
+    <Column columnWidth='full'>
+      <LoadingRow rowWidth='full' horizontalAlign='flex-end'>
         {isLoading && (
-          <Row>
+          <>
             <Loader />
             <Text
               textSize='12px'
@@ -63,15 +55,30 @@ export const ToSection = (props: Props) => {
             >
               {getLocale('braveSwapFindingPrice')}
             </Text>
-          </Row>
+          </>
         )}
+      </LoadingRow>
+
+      <Row rowWidth='full'>
+        <SelectTokenOrNetworkButton
+          onClick={onClickSelectToken}
+          icon={token?.logo}
+          text={token?.symbol}
+          buttonType='secondary'
+        />
         <SwapInput
           hasError={hasInputError}
           onChange={onInputChange}
           value={inputValue}
           disabled={disabled}
         />
-      </Column>
-    </Row>
+      </Row>
+      <VerticalSpacer size={6} />
+    </Column>
   )
 }
+
+const LoadingRow = styled(Row)`
+  margin-top: 2px;
+  height: 4px;
+`

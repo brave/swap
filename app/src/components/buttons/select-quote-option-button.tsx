@@ -47,15 +47,19 @@ export const SelectQuoteOptionButton = (props: Props) => {
       {isBest && (
         <BestOptionBadge isSelected={isSelected}>Best</BestOptionBadge>
       )}
-      <Text isBold={true} textColor='text01' textSize='16px'>
+      <Text isBold={true} textColor='text01' textSize='14px' textAlign='left'>
         {option.label}
       </Text>
       <Column horizontalAlign='flex-end'>
-        <Text isBold={true} textColor='text01' textSize='16px'>
-          {option.toAmount
-            .formatAsAsset(6, option.toToken.symbol)}
+        <Text
+          isBold={true}
+          textColor='text01'
+          textSize='14px'
+          textAlign='right'
+        >
+          {option.toAmount.formatAsAsset(6, option.toToken.symbol)}
         </Text>
-        <Text textColor='text03' textSize='14px'>
+        <Text textColor='text03' textSize='14px' textAlign='right'>
           ~{quoteFiatValue}
         </Text>
       </Column>
