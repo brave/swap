@@ -27,11 +27,19 @@ import { Text, Icon } from '../shared.styles'
 interface Props {
   disabled?: boolean
   selectedAccount: WalletAccount | undefined
+  showAccountSelector: boolean
+  setShowAccountSelector: (value: boolean) => void
   onSelectAccount: (account: WalletAccount) => void
 }
 
 export const AccountSelector = (props: Props) => {
-  const { disabled, onSelectAccount, selectedAccount } = props
+  const {
+    disabled,
+    onSelectAccount,
+    selectedAccount,
+    showAccountSelector,
+    setShowAccountSelector
+  } = props
 
   // Context
   const { getLocale } = useSwapContext()
@@ -41,21 +49,17 @@ export const AccountSelector = (props: Props) => {
     state: { braveWalletAccounts }
   } = useWalletState()
 
-  // State
-  const [showAccountSelector, setShowAccountSelector] =
-    React.useState<boolean>(false)
-
   // Methods
   const onToggleShowAccountSelector = React.useCallback(() => {
-    setShowAccountSelector((prev) => !prev)
-  }, [])
+    setShowAccountSelector(!showAccountSelector)
+  }, [showAccountSelector, setShowAccountSelector])
 
   const onClickSelectAccount = React.useCallback(
     (account: WalletAccount) => {
       onSelectAccount(account)
       setShowAccountSelector(false)
     },
-    [onSelectAccount]
+    [onSelectAccount, setShowAccountSelector]
   )
 
   return (
