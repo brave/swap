@@ -32,6 +32,11 @@ export type NetworkInfo = {
   coin: number
 }
 
+type LiquiditySource = {
+  name: string
+  proportion: Amount
+}
+
 export type QuoteOption = {
   label: string
   fromAmount: Amount
@@ -41,6 +46,14 @@ export type QuoteOption = {
   toToken: BlockchainToken
   rate: Amount
   impact: Amount
+  sources: LiquiditySource[]
+
+  // Indicates the kind of routing followed by the order.
+  // split -> indicates that the order was fulfilled from two separate LPs
+  //
+  // flow  -> indicates that the order was fulfilled through an intermediate
+  //          asset between two separate LPs.
+  routing: 'split' | 'flow'
 }
 
 export type Registry = Record<string, string>
@@ -110,6 +123,11 @@ export type ZeroExSwapParams = {
   gasPrice: string
 }
 
+type ZeroExSource = {
+  name: string
+  proportion: string
+}
+
 export interface ZeroExQuoteResponse {
   price: string
   value: string
@@ -126,6 +144,7 @@ export interface ZeroExQuoteResponse {
   sellTokenToEthRate: string
   buyTokenToEthRate: string
   estimatedPriceImpact: string
+  sources: ZeroExSource[]
 }
 
 export interface ZeroExSwapResponse extends ZeroExQuoteResponse {

@@ -27,6 +27,92 @@ export const mockZeroExQuoteResponse: ZeroExQuoteResponse = {
   allowanceTarget: "0x0000000000000000000000000000000000000000",
   sellTokenToEthRate: "1",
   buyTokenToEthRate: "1342.18862",
+  sources: [
+    {
+      name: "SushiSwap",
+      proportion: "0"
+    },
+    {
+      name: "QuickSwap",
+      proportion: "0"
+    },
+    {
+      name: "Dfyn",
+      proportion: "0"
+    },
+    {
+      name: "mStable",
+      proportion: "0"
+    },
+    {
+      name: "Curve",
+      proportion: "0"
+    },
+    {
+      name: "DODO_V2",
+      proportion: "0"
+    },
+    {
+      name: "DODO",
+      proportion: "0"
+    },
+    {
+      name: "Curve_V2",
+      proportion: "0"
+    },
+    {
+      name: "WaultSwap",
+      proportion: "0"
+    },
+    {
+      name: "ApeSwap",
+      proportion: "0"
+    },
+    {
+      name: "FirebirdOneSwap",
+      proportion: "0"
+    },
+    {
+      name: "Balancer_V2",
+      proportion: "0"
+    },
+    {
+      name: "KyberDMM",
+      proportion: "0"
+    },
+    {
+      name: "LiquidityProvider",
+      proportion: "0"
+    },
+    {
+      name: "MultiHop",
+      proportion: "0"
+    },
+    {
+      name: "IronSwap",
+      proportion: "0"
+    },
+    {
+      name: "Aave_V2",
+      proportion: "0"
+    },
+    {
+      name: "Uniswap_V3",
+      proportion: "1"
+    },
+    {
+      name: "Synapse",
+      proportion: "0"
+    },
+    {
+      name: "MeshSwap",
+      proportion: "0"
+    },
+    {
+      name: "WOOFi",
+      proportion: "0"
+    }
+  ]
 }
 
 export const mockZeroExSwapResponse: ZeroExSwapResponse = {
