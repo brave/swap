@@ -204,28 +204,21 @@ const FuelTank = styled(Icon)`
 const Bubble = styled(Row)`
   padding: 2px 8px;
   border-radius: 8px;
-  background-color: ${(p) => p.theme.color.secondary10};
-  @media (prefers-color-scheme: dark) {
-    /* #282B37 does not exist in design system */
-    background-color: #282b37;
-  }
+  background-color: var(--token-or-network-bubble-background);
 `
 
-export const Link = styled.a`
+const Link = styled.a`
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
-  color: ${(p) => p.theme.color.legacy.interactive05};
+  color: var(--quote-info-link-color);
   text-decoration: none;
   display: block;
-  @media (prefers-color-scheme: dark) {
-    color: ${(p) => p.theme.color.legacy.interactive06};
-  }
 `
 
-const LPIcon = styled.div<{ icon: string, size: number }>`
+const LPIcon = styled.div<{ icon: string; size: number }>`
   background-image: url(${(p) => p.icon});
   background-size: cover;
   background-position: center;

@@ -38,10 +38,6 @@ export const StandardRadio = (props: Props) => {
 }
 
 export const Radio = styled.input`
-  --checked-color: ${(p) => p.theme.color.legacy.interactive05};
-  @media (prefers-color-scheme: dark) {
-    --checked-color: ${(p) => p.theme.color.legacy.interactive06};
-  }
   -webkit-appearance: none;
   appearance: none;
   margin: 0;
@@ -59,9 +55,9 @@ export const Radio = styled.input`
     margin: 3px;
   }
   :checked {
-    border: 2px solid var(--checked-color);
+    border: 2px solid var(--standard-radio-checked-color);
     ::after {
-      background-color: var(--checked-color);
+      background-color: var(--standard-radio-checked-color);
     }
   }
 `

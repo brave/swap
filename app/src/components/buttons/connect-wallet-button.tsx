@@ -64,17 +64,10 @@ export const ConnectWalletButton = (props: Props) => {
 }
 
 const Button = styled.button<{ isConnected: boolean }>`
-  --button-background: ${(p) =>
+  background-color: ${(p) =>
     p.isConnected
-      ? p.theme.color.legacy.background01
-      : p.theme.color.legacy.interactive04};
-  @media (prefers-color-scheme: dark) {
-    --button-background: ${(p) =>
-      p.isConnected
-        ? p.theme.color.legacy.background01
-        : p.theme.color.legacy.interactive05};
-  }
-  background-color: var(--button-background);
+      ? `var(--connect-wallet-button-background-connected)`
+      : `var(--connect-wallet-button-background-disconnected)`};
   border-radius: 48px;
   color: ${(p) =>
     p.isConnected ? p.theme.color.legacy.text01 : p.theme.color.white};

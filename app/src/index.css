@@ -8,6 +8,7 @@ default values here to prevent code duplication in styled components */
 
 @import url('https://fonts.googleapis.com/css?family=Poppins|Poppins:300,400,500,600,700');
 @import '@brave/leo/build/css/variables.css';
+@import './theme/component-variables.css';
 
 :root {
   font-family: 'Poppins';

@@ -21,18 +21,13 @@ export const StandardModal = (props: Props) => {
 }
 
 const Wrapper = styled.div`
-  // This RGBA value does not exist in the design system
-  background-color: rgba(196, 196, 196, 0.3);
+  background-color: var(--standard-modal-background-color);
   bottom: 0%;
   left: 0%;
   position: absolute;
   right: 0%;
   top: 0%;
   z-index: 10;
-  @media (prefers-color-scheme: dark) {
-    // This RGBA value does not exist in the design system
-    background-color: rgba(47, 47, 47, 0.46);
-  }
 `
 
 const Modal = styled.div<{
@@ -40,7 +35,7 @@ const Modal = styled.div<{
 }>`
   background-color: ${(p) => p.theme.color.legacy.background01};
   border-radius: 22px;
-  box-shadow: 0px 0px 24px rgba(99, 105, 110, 0.36);
+  box-shadow: var(--standard-modal-box-shadow);
   box-sizing: border-box;
   flex-direction: column;
   height: ${(p) => (p.modalHeight === 'full' ? '85%' : `520px`)};
@@ -49,7 +44,4 @@ const Modal = styled.div<{
   position: absolute;
   width: 440px;
   z-index: 20;
-  @media (prefers-color-scheme: dark) {
-    box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.36);
-  }
 `

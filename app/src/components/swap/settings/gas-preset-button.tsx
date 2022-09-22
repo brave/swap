@@ -62,10 +62,6 @@ export const GasPresetButton = (props: Props) => {
 const Button = styled.button<{
   isSelected: boolean
 }>`
-  --border-selected: ${(p) => p.theme.color.legacy.interactive05};
-  @media (prefers-color-scheme: dark) {
-    --border-selected: ${(p) => p.theme.color.legacy.focusBorder};
-  }
   display: flex;
   justify-content: space-between;
   width: 100%;
@@ -73,32 +69,24 @@ const Button = styled.button<{
   border-radius: 8px;
   border: 1px solid
     ${(p) =>
-      p.isSelected ? 'var(--border-selected)' : p.theme.color.legacy.divider01};
+      p.isSelected
+        ? 'var(--gas-preset-button-border-selected)'
+        : p.theme.color.legacy.divider01};
   padding: 12px 16px;
   margin-bottom: 8px;
   &:hover {
-    border: 1px solid var(--border-selected);
+    border: 1px solid var(--gas-preset-button-border-selected);
   }
 `
 
 const IconWrapper = styled.div`
-  /* rgb(225, 226, 246) does not exist in design system */
-  --background: rgba(225, 226, 246, 0.25);
-  @media (prefers-color-scheme: dark) {
-    /* rgb(118, 121, 177) does not exist in design system */
-    --background: rgba(118, 121, 177, 0.25);
-  }
   width: 32px;
   height: 32px;
   border-radius: 100%;
-  background-color: var(--background);
+  background-color: var(--gas-preset-button-icon-background);
   margin-right: 12px;
 `
 
 const ButtonIcon = styled(Icon)`
-  --icon-color: ${(p) => p.theme.color.legacy.interactive05};
-  @media (prefers-color-scheme: dark) {
-    --icon-color: ${(p) => p.theme.color.legacy.interactive06};
-  }
-  background-color: var(--icon-color);
+  background-color: var(--gas-preset-button-icon-color);
 `

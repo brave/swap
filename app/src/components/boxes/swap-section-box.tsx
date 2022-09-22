@@ -21,17 +21,10 @@ export const SwapSectionBox = (props: Props) => {
 }
 
 const Wrapper = styled.div<BoxStyleProps>`
-  --box-background: ${(p) =>
-    p.boxType === 'secondary'
-      ? p.theme.color.legacy.background01
-      : p.theme.color.secondary10};
-  @media (prefers-color-scheme: dark) {
-    --box-background: ${(p) =>
-      p.boxType === 'secondary'
-        ? p.theme.color.legacy.background01
-        : p.theme.color.legacy.background02};
-  }
-  background-color: var(--box-background);
+  background-color: ${(p) =>
+    p.boxType === 'primary'
+      ? 'var(--box-background-primary)'
+      : 'var(--box-background-secondary)'};
   box-sizing: border-box;
   border-radius: 16px;
   border: ${(p) =>

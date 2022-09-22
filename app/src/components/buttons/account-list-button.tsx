@@ -43,10 +43,6 @@ export const AccountListButton = (props: Props) => {
 }
 
 const Button = styled.button`
-  --button-hover-background: ${(p) => p.theme.color.secondary10};
-  @media (prefers-color-scheme: dark) {
-    --button-hover-background: ${(p) => p.theme.color.legacy.background02};
-  }
   border-radius: 4px;
   justify-content: space-between;
   padding: 5px 18px;
@@ -55,6 +51,6 @@ const Button = styled.button`
   background-color: none;
   margin-bottom: 2px;
   &:hover {
-    background-color: var(--button-hover-background);
+    background-color: var(--account-list-button-hover-background);
   }
 `

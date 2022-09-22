@@ -68,17 +68,13 @@ export const NetworkSelector = (props: Props) => {
 const SelectorBox = styled.div<{
   isHeader?: boolean
 }>`
-  --shadow-color: rgba(99, 105, 110, 0.18);
-  @media (prefers-color-scheme: dark) {
-    --shadow-color: rgba(0, 0, 0, 0.36);
-  }
   background-color: ${(p) => p.theme.color.legacy.background01};
   width: 222px;
   position: absolute;
   padding-bottom: 4px;
   z-index: 10;
   top: ${(p) => (p.isHeader ? 42 : 40)}px;
-  box-shadow: 0px 0px 16px var(--shadow-color);
+  box-shadow: 0px 0px 16px var(--network-selector-shadow-color);
   right: ${(p) => (p.isHeader ? 'unset' : '-10px')};
   border-radius: ${(p) => (p.isHeader ? 16 : 4)}px;
 `

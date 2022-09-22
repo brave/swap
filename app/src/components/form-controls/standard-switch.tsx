@@ -32,22 +32,11 @@ const Label = styled.label`
 `
 
 const Switch = styled.div`
-  --switch-unchecked-background: ${(p) => p.theme.color.legacy.disabled};
-  /* #e1e2f6 Does not exist in design system */
-  --switch-checked-background: #e1e2f6;
-  --button-checked-background: ${(p) => p.theme.color.legacy.interactive05};
-  @media (prefers-color-scheme: dark) {
-    --switch-unchecked-background: ${(p) => p.theme.color.legacy.interactive08};
-    /* #7679B1 Does not exist in design system */
-    --switch-checked-background: #7679b1;
-    /* #4436E1 Does not exist in design system */
-    --button-checked-background: #4436e1;
-  }
   position: relative;
   box-sizing: border-box;
   width: 48px;
   height: 24px;
-  background: var(--switch-unchecked-background);
+  background: var(--standard-switch-unchecked-background);
   border-radius: 32px;
   padding: 2px;
   transition: 300ms all;
@@ -70,11 +59,11 @@ const Input = styled.input`
   display: none;
 
   &:checked + ${Switch} {
-    background: var(--switch-checked-background);
+    background: var(--standard-switch-checked-background);
 
     &:before {
       transform: translate(20px, -50%);
-      background: var(--button-checked-background);
+      background: var(--standard-switch-button-checked-background);
     }
   }
 `

@@ -41,10 +41,6 @@ export const SlippageInput = (props: Props) => {
 }
 
 const InputWrapper = styled.div`
-  --border-selected: ${(p) => p.theme.color.legacy.interactive05};
-  @media (prefers-color-scheme: dark) {
-    --border-selected: ${(p) => p.theme.color.legacy.focusBorder};
-  }
   display: flex;
   width: 94px;
   height: 32px;
@@ -56,7 +52,7 @@ const InputWrapper = styled.div`
   justify-content: space-between;
   box-sizing: border-box;
   &:focus-within {
-    border: 1px solid var(--border-selected);
+    border: 1px solid var(--slippage-input-border-selected);
   }
 `
 
