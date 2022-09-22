@@ -48,7 +48,7 @@ interface Props {
   onCheckUserConfirmedAddress: (id: string, checked: boolean) => void
   handleOnSetToAnotherAddress: (value: string) => void
   onSelectSwapAndSendOption: (value: string) => void
-  onSelectSwapSendAccount: (account: WalletAccount) => void
+  onSelectSwapSendAccount: (account: WalletAccount | undefined) => void
 }
 
 export const SwapAndSend = (props: Props) => {
@@ -67,6 +67,22 @@ export const SwapAndSend = (props: Props) => {
 
   // Context
   const { getLocale } = useSwapContext()
+
+  // State
+  const [showAccountSelector, setShowAccountSelector] =
+    React.useState<boolean>(false)
+
+  // Methods
+  const handleOnSelectSwapAndSendOption = React.useCallback(
+    (value: string) => {
+      if (value === 'to-address') {
+        onSelectSwapSendAccount(undefined)
+        setShowAccountSelector(false)
+      }
+      onSelectSwapAndSendOption(value)
+    },
+    [onSelectSwapAndSendOption, onSelectSwapSendAccount]
+  )
 
   return (
     <Column columnHeight='dynamic' columnWidth='full'>
@@ -101,7 +117,7 @@ export const SwapAndSend = (props: Props) => {
                 id={option.name}
                 label={getLocale(option.label)}
                 isChecked={option.name === selectedSwapAndSendOption}
-                onSetIsChecked={onSelectSwapAndSendOption}
+                onSetIsChecked={handleOnSelectSwapAndSendOption}
                 key={option.name}
               />
               <VerticalSpacer size={10} />
@@ -113,6 +129,8 @@ export const SwapAndSend = (props: Props) => {
                       onSelectAccount={onSelectSwapSendAccount}
                       selectedAccount={selectedSwapSendAccount}
                       disabled={selectedSwapAndSendOption === 'to-address'}
+                      showAccountSelector={showAccountSelector}
+                      setShowAccountSelector={setShowAccountSelector}
                     />
                   </Row>
                   <VerticalSpacer size={16} />
