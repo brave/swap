@@ -120,7 +120,26 @@ export const useSwap = () => {
             rate: new Amount(route.otherAmountThreshold.toString())
               .divideByDecimals(toToken.decimals)
               .div(new Amount(route.inAmount.toString()).divideByDecimals(fromToken.decimals)),
-            impact: new Amount(route.priceImpactPct)
+            impact: new Amount(route.priceImpactPct),
+            sources: route.marketInfos.flatMap(marketInfo =>
+              // Split "Cykura (95%) + Lifinity (5%)" into "Cykura (95%)" and "Lifinity (5%)"
+              marketInfo.label.split('+').map(label => {
+                // Extract name and proportion from Cykura (95%)
+                const match = label.match(/(.*)\s+\((\d+)%\)/)
+                if (match && match.length === 3) {
+                  return {
+                    name: match[1].trim(),
+                    proportion: new Amount(match[2]).div(100)
+                  }
+                }
+
+                return {
+                  name: label.trim(),
+                  proportion: new Amount(1)
+                }
+              })
+            ),
+            routing: route.marketInfos.length > 1 ? 'flow' : 'split'
           } as QuoteOption)
       )
     }
@@ -140,7 +159,14 @@ export const useSwap = () => {
         rate: new Amount(zeroEx.quote.buyAmount)
           .divideByDecimals(toToken.decimals)
           .div(new Amount(zeroEx.quote.sellAmount).divideByDecimals(fromToken.decimals)),
-        impact: new Amount(zeroEx.quote.estimatedPriceImpact)
+        impact: new Amount(zeroEx.quote.estimatedPriceImpact),
+        sources: zeroEx.quote.sources
+          .map(source => ({
+            name: source.name,
+            proportion: new Amount(source.proportion)
+          }))
+          .filter(source => source.proportion.gt(0)),
+        routing: 'split' // 0x supports split routing only
       }
     ]
   }, [fromToken, toToken, selectedNetwork, jupiter.quote, zeroEx.quote])

@@ -23,6 +23,7 @@ export const locale: Registry = {
   braveSwapPriceImpact: 'Price impact',
   braveSwapMinimumReceivedAfterSlippage: 'Minimum received after slippage',
   braveSwapNetworkFee: 'Network fee',
+  braveSwapLiquidityProvider: 'Liquidity provider',
   braveSwapSwapAndSend: 'Swap & send',
   braveSwapNoExtraFees: 'NO extra fees!',
   braveSwapConfirmAddress: 'I confirm that the address above is correct',

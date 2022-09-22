@@ -9,6 +9,9 @@ import styled from 'styled-components'
 // Types
 import { BlockchainToken, QuoteOption } from '../../constants/types'
 
+// Constants
+import LPMetadata from '../../constants/lpMetadata'
+
 // Hooks
 import { useNetworkFees } from '../../hooks/useNetworkFees'
 
@@ -147,15 +150,42 @@ export const QuoteInfo = (props: Props) => {
         </Text>
         <Text textSize='14px'>{minimumReceived}</Text>
       </Row>
-      <Row rowWidth='full' marginBottom={16} horizontalPadding={16}>
+      <Row rowWidth='full' marginBottom={8} horizontalPadding={16}>
         <Text textSize='14px'>{getLocale('braveSwapNetworkFee')}</Text>
-        <GasBubble>
+        <Bubble>
           <FuelTank icon={FuelTankIcon} size={12} />
           <Text textSize='14px'>
             {selectedNetwork ? getNetworkFeeFiatEstimate(selectedNetwork) : ''}
           </Text>
-        </GasBubble>
+        </Bubble>
       </Row>
+
+      {selectedQuoteOption && selectedQuoteOption.sources.length > 0 &&
+        <Row rowWidth='full' marginBottom={16} horizontalPadding={16}>
+          <Text textSize='14px'>{getLocale('braveSwapLiquidityProvider')}</Text>
+          <Row>
+            {selectedQuoteOption.sources.map((source, idx) =>
+              <>
+                <Bubble>
+                  <Text textSize='14px'>
+                    {source.name.split('_').join(' ')}
+                  </Text>
+                  {LPMetadata[source.name]
+                    ? <LPIcon icon={LPMetadata[source.name]} size={16} />
+                    : null
+                  }
+                </Bubble>
+
+                {idx !== (selectedQuoteOption.sources.length - 1) &&
+                  <LPSeparator textSize='14px'>
+                    {selectedQuoteOption.routing === 'split' ? '+': '×'}
+                  </LPSeparator>
+                }
+              </>
+            )}
+          </Row>
+        </Row>
+      }
       <VerticalDivider />
     </Column>
   )
@@ -171,7 +201,7 @@ const FuelTank = styled(Icon)`
   margin-right: 6px;
 `
 
-const GasBubble = styled(Row)`
+const Bubble = styled(Row)`
   padding: 2px 8px;
   border-radius: 8px;
   background-color: ${(p) => p.theme.color.secondary10};
@@ -193,4 +223,19 @@ export const Link = styled.a`
   @media (prefers-color-scheme: dark) {
     color: ${(p) => p.theme.color.legacy.interactive06};
   }
+`
+
+const LPIcon = styled.div<{ icon: string, size: number }>`
+  background-image: url(${(p) => p.icon});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: ${(p) => p.size}px;
+  width: ${(p) => p.size}px;
+  margin-left: 6px;
+  border-radius: 50px;
+`
+
+const LPSeparator = styled(Text)`
+  padding: 0 6px;
 `
