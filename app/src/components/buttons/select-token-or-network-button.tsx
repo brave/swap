@@ -98,17 +98,6 @@ export const SelectTokenOrNetworkButton = (props: Props) => {
 const Button = styled.button<SelectTokenButtonStyleProps>`
   /* Variables */
   --big-padding: 10px ${(p) => (p.moreRightPadding ? 12 : 10)}px 10px 12px;
-  --button-background-hover: ${(p) =>
-    p.buttonType === 'secondary' || p.buttonSize === 'small'
-      ? p.theme.color.secondary10
-      : 'rgba(255, 255, 255, 0.6)'};
-  // This RGBA value does not exist in the design system
-  @media (prefers-color-scheme: dark) {
-    --button-background-hover: ${(p) =>
-      p.buttonType === 'secondary' || p.buttonSize === 'small'
-        ? p.theme.color.legacy.background02
-        : p.theme.color.legacy.background01};
-  }
   --medium-padding: 8px 16px;
   --small-padding: 4px 12px 4px 4px;
 
@@ -132,7 +121,10 @@ const Button = styled.button<SelectTokenButtonStyleProps>`
     opacity: 0.3;
   }
   &:hover:not([disabled]) {
-    background-color: var(--button-background-hover);
+    background-color: ${(p) =>
+      p.buttonType === 'secondary' || p.buttonSize === 'small'
+        ? 'var(--token-or-network-button-background-hover-secondary)'
+        : 'var(--token-or-network-button-background-hover-primary)'};
   }
 `
 
@@ -156,9 +148,5 @@ const FuelTank = styled(Icon)`
 const GasBubble = styled(Row)`
   padding: 2px 8px;
   border-radius: 8px;
-  background-color: ${(p) => p.theme.color.secondary10};
-  @media (prefers-color-scheme: dark) {
-    /* #282B37 does not exist in design system */
-    background-color: #282b37;
-  }
+  background-color: var(--token-or-network-bubble-background);
 `

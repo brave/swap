@@ -1,0 +1,304 @@
+/* Copyright (c) 2022 The Brave Authors. All rights reserved.
+   This Source Code Form is subject to the terms of the Mozilla Public
+   License, v. 2.0. If a copy of the MPL was not distributed with this file,
+   you can obtain one at http://mozilla.org/MPL/2.0/. */
+
+:root {
+  /* Light Variables */
+  --box-background-primary: var(--color-secondary-10);
+  --box-background-secondary: var(--color-legacy-background1);
+
+  --account-list-button-hover-background: var(--color-secondary-10);
+
+  --connect-wallet-button-background-connected: var(--color-legacy-background1);
+  --connect-wallet-button-background-disconnected: var(
+    --color-legacy-interactive4
+  );
+
+  --flip-tokens-button-shadow: 0px 0px 10px rgba(99, 105, 110, 0.2);
+  /* #f0f1fc does not exist in the design system */
+  --flip-tokens-button-background-hover: #f0f1fc;
+  --flip-tokens-button-icon-color-hover: var(--color-legacy-interactive5);
+
+  /* These RGBA values do not exist in the design system */
+  --preset-button-background: rgba(255, 255, 255, 0.6);
+  --preset-button-background-hover: rgba(218, 220, 232, 0.4);
+
+  /* #f9faff does not exist in the design system */
+  --select-quote-button-background: #f9faff;
+
+  /* This RGBA value does not exist in the design system */
+  --token-or-network-button-background-hover-primary: rgba(255, 255, 255, 0.6);
+  --token-or-network-button-background-hover-secondary: var(
+    --color-secondary-10
+  );
+  --token-or-network-bubble-background: var(--color-secondary-10);
+
+  --standard-button-color-disabled: #ffffff;
+  --standard-button-border-secondary-selected: var(--color-legacy-interactive5);
+
+  /* #f0f1fc does not exist in the design system */
+  --theme-button-background-hover: #f0f1fc;
+  --theme-button-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+  --theme-button-icon: url('../assets/day-icon.svg');
+
+  --token-list-button-shadow: 0px 0px 10px rgba(79, 79, 79, 0.1);
+
+  --standard-radio-checked-color: var(--color-legacy-interactive5);
+
+  --standard-switch-unchecked-background: var(--color-legacy-disabled);
+  /* #e1e2f6 Does not exist in the design system */
+  --standard-switch-checked-background: #e1e2f6;
+  --standard-switch-button-checked-background: var(--color-legacy-interactive5);
+
+  --slippage-input-border-selected: var(--color-legacy-interactive5);
+
+  /* This RGBA value does not exist in the design system */
+  --standard-modal-background-color: rgba(196, 196, 196, 0.3);
+  --standard-modal-box-shadow: 0px 0px 24px rgba(99, 105, 110, 0.36);
+
+  --gas-preset-button-border-selected: var(--color-legacy-interactive5);
+  /* rgb(225, 226, 246) does not exist in design system */
+  --gas-preset-button-icon-background: rgba(225, 226, 246, 0.25);
+  --gas-preset-button-icon-color: var(--color-legacy-interactive5);
+
+  --swap-settings-modal-border-color: var(--color-legacy-disabled);
+  --swap-settings-modal-box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+
+  /* This RGBA value does not exist in the design system */
+  --account-selector-shadow-color: rgba(99, 105, 110, 0.36);
+
+  --header-icon: url('../assets/brave-logo-light.svg');
+
+  /* This RGBA value does not exist in the design system */
+  --network-selector-shadow-color: rgba(99, 105, 110, 0.18);
+
+  --quote-info-link-color: var(--color-legacy-interactive5);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark Variables */
+    --box-background-primary: var(--color-legacy-background2);
+
+    --account-list-button-hover-background: var(--color-legacy-background2);
+
+    --connect-wallet-button-background-disconnected: var(
+      --color-legacy-interactive5
+    );
+
+    --flip-tokens-button-shadow: 0px 0px 16px rgba(0, 0, 0, 0.36);
+    /* #484b67 does not exist in the design system */
+    --flip-tokens-button-background-hover: #484b67;
+    --flip-tokens-button-icon-color-hover: var(--color-legacy-focus-border);
+
+    /* These RGBA values do not exist in the design system */
+    --preset-button-background: rgba(52, 58, 64, 0.6);
+    --preset-button-background-hover: rgba(66, 69, 82, 0.8);
+
+    /* #222530 does not exist in the design system */
+    --select-quote-button-background: #222530;
+
+    --token-or-network-button-background-hover-primary: var(
+      --color-legacy-background1
+    );
+    --token-or-network-button-background-hover-secondary: var(
+      --color-legacy-background2
+    );
+    /* #282B37 does not exist in the design system */
+    --token-or-network-bubble-background: #282b37;
+
+    /* #677078 does not exist in design system */
+    --standard-button-color-disabled: #677078;
+    --standard-button-border-secondary-selected: var(
+      --color-legacy-focus-border
+    );
+
+    /* #484b67 does not exist in the design system */
+    --theme-button-background-hover: #484b67;
+    --theme-button-box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.36);
+    --theme-button-icon: url('../assets/night-icon.svg');
+
+    --token-list-button-shadow: 0px 0px 16px rgba(0, 0, 0, 0.36);
+
+    --standard-radio-checked-color: var(--color-legacy-interactive6);
+
+    --standard-switch-unchecked-background: var(--color-legacy-interactive8);
+    /* #7679B1 Does not exist in the design system */
+    --standard-switch-checked-background: #7679b1;
+    /* #4436E1 Does not exist in the design system */
+    --standard-switch-button-checked-background: #4436e1;
+
+    --slippage-input-border-selected: var(--color-legacy-focus-border);
+
+    /* This RGBA value does not exist in the design system */
+    --standard-modal-background-color: rgba(47, 47, 47, 0.46);
+    --standard-modal-box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.36);
+
+    --gas-preset-button-border-selected: var(--color-legacy-focus-border);
+    /* rgb(118, 121, 177) does not exist in design system */
+    --gas-preset-button-icon-background: rgba(118, 121, 177, 0.25);
+    --gas-preset-button-icon-color: var(--color-legacy-interactive6);
+
+    --swap-settings-modal-border-color: var(--color-legacy-divider1);
+    --swap-settings-modal-box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.36);
+
+    /* This RGBA value does not exist in the design system */
+    --account-selector-shadow-color: rgba(0, 0, 0, 0.56);
+
+    --header-icon: url('../assets/brave-logo-dark.svg');
+
+    /* This RGBA value does not exist in the design system */
+    --network-selector-shadow-color: rgba(0, 0, 0, 0.36);
+
+    --quote-info-link-color: var(--color-legacy-interactive6);
+  }
+}
+
+html[data-theme='light'] {
+  /* Light Variables */
+  --box-background-primary: var(--color-secondary-10);
+  --box-background-secondary: var(--color-legacy-background1);
+
+  --account-list-button-hover-background: var(--color-secondary-10);
+
+  --connect-wallet-button-background-connected: var(--color-legacy-background1);
+  --connect-wallet-button-background-disconnected: var(
+    --color-legacy-interactive4
+  );
+
+  --flip-tokens-button-shadow: 0px 0px 10px rgba(99, 105, 110, 0.2);
+  /* #f0f1fc does not exist in the design system */
+  --flip-tokens-button-background-hover: #f0f1fc;
+  --flip-tokens-button-icon-color-hover: var(--color-legacy-interactive5);
+
+  /* These RGBA values do not exist in the design system */
+  --preset-button-background: rgba(255, 255, 255, 0.6);
+  --preset-button-background-hover: rgba(218, 220, 232, 0.4);
+
+  /* #f9faff does not exist in the design system */
+  --select-quote-button-background: #f9faff;
+
+  /* This RGBA value does not exist in the design system */
+  --token-or-network-button-background-hover-primary: rgba(255, 255, 255, 0.6);
+  --token-or-network-button-background-hover-secondary: var(
+    --color-secondary-10
+  );
+  --token-or-network-bubble-background: var(--color-secondary-10);
+
+  --standard-button-color-disabled: #ffffff;
+  --standard-button-border-secondary-selected: var(--color-legacy-interactive5);
+
+  /* #f0f1fc does not exist in the design system */
+  --theme-button-background-hover: #f0f1fc;
+  --theme-button-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
+  --theme-button-icon: url('../assets/day-icon.svg');
+
+  --token-list-button-shadow: 0px 0px 10px rgba(79, 79, 79, 0.1);
+
+  --standard-radio-checked-color: var(--color-legacy-interactive5);
+
+  --standard-switch-unchecked-background: var(--color-legacy-disabled);
+  /* #e1e2f6 Does not exist in the design system */
+  --standard-switch-checked-background: #e1e2f6;
+  --standard-switch-button-checked-background: var(--color-legacy-interactive5);
+
+  --slippage-input-border-selected: var(--color-legacy-interactive5);
+
+  /* This RGBA value does not exist in the design system */
+  --standard-modal-background-color: rgba(196, 196, 196, 0.3);
+  --standard-modal-box-shadow: 0px 0px 24px rgba(99, 105, 110, 0.36);
+
+  --gas-preset-button-border-selected: var(--color-legacy-interactive5);
+  /* rgb(225, 226, 246) does not exist in design system */
+  --gas-preset-button-icon-background: rgba(225, 226, 246, 0.25);
+  --gas-preset-button-icon-color: var(--color-legacy-interactive5);
+
+  --swap-settings-modal-border-color: var(--color-legacy-disabled);
+  --swap-settings-modal-box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+
+  /* This RGBA value does not exist in the design system */
+  --account-selector-shadow-color: rgba(99, 105, 110, 0.36);
+
+  --header-icon: url('../assets/brave-logo-light.svg');
+
+  /* This RGBA value does not exist in the design system */
+  --network-selector-shadow-color: rgba(99, 105, 110, 0.18);
+
+  --quote-info-link-color: var(--color-legacy-interactive5);
+}
+
+html[data-theme='dark'] {
+  /* Dark Variables */
+  --box-background-primary: var(--color-legacy-background2);
+
+  --account-list-button-hover-background: var(--color-legacy-background2);
+
+  --connect-wallet-button-background-disconnected: var(
+    --color-legacy-interactive5
+  );
+
+  --flip-tokens-button-shadow: 0px 0px 16px rgba(0, 0, 0, 0.36);
+  /* #484b67 does not exist in the design system */
+  --flip-tokens-button-background-hover: #484b67;
+  --flip-tokens-button-icon-color-hover: var(--color-legacy-focus-border);
+
+  /* These RGBA values do not exist in the design system */
+  --preset-button-background: rgba(52, 58, 64, 0.6);
+  --preset-button-background-hover: rgba(66, 69, 82, 0.8);
+
+  /* #222530 does not exist in the design system */
+  --select-quote-button-background: #222530;
+
+  --token-or-network-button-background-hover-primary: var(
+    --color-legacy-background1
+  );
+  --token-or-network-button-background-hover-secondary: var(
+    --color-legacy-background2
+  );
+  /* #282B37 does not exist in the design system */
+  --token-or-network-bubble-background: #282b37;
+
+  /* #677078 does not exist in design system */
+  --standard-button-color-disabled: #677078;
+  --standard-button-border-secondary-selected: var(--color-legacy-focus-border);
+
+  /* #484b67 does not exist in the design system */
+  --theme-button-background-hover: #484b67;
+  --theme-button-box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.36);
+  --theme-button-icon: url('../assets/night-icon.svg');
+
+  --token-list-button-shadow: 0px 0px 16px rgba(0, 0, 0, 0.36);
+
+  --standard-radio-checked-color: var(--color-legacy-interactive6);
+
+  --standard-switch-unchecked-background: var(--color-legacy-interactive8);
+  /* #7679B1 Does not exist in the design system */
+  --standard-switch-checked-background: #7679b1;
+  /* #4436E1 Does not exist in the design system */
+  --standard-switch-button-checked-background: #4436e1;
+
+  --slippage-input-border-selected: var(--color-legacy-focus-border);
+
+  /* This RGBA value does not exist in the design system */
+  --standard-modal-background-color: rgba(47, 47, 47, 0.46);
+  --standard-modal-box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.36);
+
+  --gas-preset-button-border-selected: var(--color-legacy-focus-border);
+  /* rgb(118, 121, 177) does not exist in design system */
+  --gas-preset-button-icon-background: rgba(118, 121, 177, 0.25);
+  --gas-preset-button-icon-color: var(--color-legacy-interactive6);
+
+  --swap-settings-modal-border-color: var(--color-legacy-divider1);
+  --swap-settings-modal-box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.36);
+
+  /* This RGBA value does not exist in the design system */
+  --account-selector-shadow-color: rgba(0, 0, 0, 0.56);
+
+  --header-icon: url('../assets/brave-logo-dark.svg');
+
+  /* This RGBA value does not exist in the design system */
+  --network-selector-shadow-color: rgba(0, 0, 0, 0.36);
+
+  --quote-info-link-color: var(--color-legacy-interactive6);
+}

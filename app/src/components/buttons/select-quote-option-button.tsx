@@ -70,15 +70,11 @@ export const SelectQuoteOptionButton = (props: Props) => {
 const Button = styled.button<{
   isSelected: boolean
 }>`
-  --button-background: #f9faff;
   --best-background: ${(p) =>
     p.isSelected
       ? p.theme.color.legacy.interactive05
       : p.theme.color.legacy.focusBorder};
-  @media (prefers-color-scheme: dark) {
-    --button-background: #222530;
-  }
-  background-color: var(--button-background);
+  background-color: var(--select-quote-button-background);
   border-radius: 8px;
   justify-content: space-between;
   padding: 12px 24px;

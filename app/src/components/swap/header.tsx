@@ -9,10 +9,6 @@ import styled from 'styled-components'
 // Types
 import { NetworkInfo } from '../../constants/types'
 
-// Assets
-import BraveLogoLight from '../../assets/brave-logo-light.svg'
-import BraveLogoDark from '../../assets/brave-logo-dark.svg'
-
 // Components
 import {
   ThemeButton,
@@ -134,11 +130,8 @@ const Wrapper = styled.div`
 const BraveLogo = styled.div`
   height: 30px;
   width: 100px;
-  background-image: url(${BraveLogoLight});
+  background-image: var(--header-icon);
   background-size: cover;
-  @media (prefers-color-scheme: dark) {
-    background: url(${BraveLogoDark});
-  }
 `
 
 const SelectorWrapper = styled.div`

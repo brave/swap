@@ -50,10 +50,6 @@ export const TokenListButton = (props: Props) => {
 }
 
 const Button = styled.button`
-  --button-shadow: 0px 0px 10px rgba(79, 79, 79, 0.1);
-  @media (prefers-color-scheme: dark) {
-    --button-shadow: 0px 0px 16px rgba(0, 0, 0, 0.36);
-  }
   background-color: ${(p) => p.theme.color.legacy.background01};
   border-radius: 8px;
   justify-content: space-between;
@@ -64,7 +60,7 @@ const Button = styled.button`
     opacity: 0.3;
   }
   &:hover:not([disabled]) {
-    box-shadow: var(--button-shadow);
+    box-shadow: var(--token-list-button-shadow);
     z-index: 20px;
     position: relative;
   }

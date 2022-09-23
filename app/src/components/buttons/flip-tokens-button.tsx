@@ -34,25 +34,16 @@ const Wrapper = styled.div`
 
 const Button = styled.button`
   --icon-color: ${(p) => p.theme.color.legacy.text02};
-  --icon-color-hover: ${(p) => p.theme.color.legacy.interactive05};
-  // #f0f1fc does not exist in the design system
-  --button-background-hover: #f0f1fc;
   background-color: ${(p) => p.theme.color.legacy.background01};
   border-radius: 100%;
-  box-shadow: 0px 0px 10px rgba(99, 105, 110, 0.2);
+  box-shadow: var(--flip-tokens-button-shadow);
   height: 40px;
   position: absolute;
   width: 40px;
   z-index: 10;
-  @media (prefers-color-scheme: dark) {
-    box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.36);
-    // #484b67 does not exist in the design system
-    --button-background-hover: #484b67;
-    --icon-color-hover: ${(p) => p.theme.color.legacy.focusBorder};
-  }
   &:hover {
-    --icon-color: var(--icon-color-hover);
-    background-color: var(--button-background-hover);
+    --icon-color: var(--flip-tokens-button-icon-color-hover);
+    background-color: var(--flip-tokens-button-background-hover);
   }
 `
 

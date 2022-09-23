@@ -236,14 +236,10 @@ export const SwapSettingsModal = (props: Props) => {
 }
 
 const Modal = styled.div`
-  --border-color: ${(p) => p.theme.color.legacy.disabled};
-  @media (prefers-color-scheme: dark) {
-    --border-color: ${(p) => p.theme.color.legacy.divider01};
-  }
   background-color: ${(p) => p.theme.color.legacy.background02};
   border-radius: 16px;
-  border: 1px solid var(--border-color);
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--swap-settings-modal-border-color);
+  box-shadow: var(--swap-settings-modal-box-shadow);
   box-sizing: border-box;
   flex-direction: column;
   justify-content: flex-start;
@@ -255,9 +251,6 @@ const Modal = styled.div`
   z-index: 20;
   right: 16px;
   top: 58px;
-  @media (prefers-color-scheme: dark) {
-    box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.36);
-  }
 `
 
 const ExchangesColumn = styled.div`

@@ -107,10 +107,6 @@ const SelectorWrapper = styled.div`
 `
 
 const SelectorBox = styled.div`
-  --shadow-color: rgba(99, 105, 110, 0.36);
-  @media (prefers-color-scheme: dark) {
-    --shadow-color: rgba(0, 0, 0, 0.56);
-  }
   background-color: ${(p) => p.theme.color.legacy.background01};
   width: 200px;
   position: absolute;
@@ -118,7 +114,7 @@ const SelectorBox = styled.div`
   top: 36px;
   left: 0px;
   padding: 6px 4px 4px 4px;
-  box-shadow: 0px 0px 24px var(--shadow-color);
+  box-shadow: 0px 0px 24px var(--account-selector-shadow-color);
   border-radius: 8px;
   box-sizing: border-box;
 `

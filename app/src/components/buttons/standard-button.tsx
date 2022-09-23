@@ -66,30 +66,20 @@ const Button = styled.button<StandardButtonStyleProps>`
     p.buttonStyle === 'square'
       ? p.theme.color.legacy.interactive05
       : p.theme.color.legacy.interactive04};
-  --button-color-disabled: ${(p) => p.theme.color.white};
   --vertical-margin: ${(p) => p.verticalMargin ?? 0}px;
   --horizontal-margin: ${(p) => p.horizontalMargin ?? 0}px;
-  --button-border-secondary-selected: ${(p) =>
-    p.theme.color.legacy.interactive05};
-  @media (prefers-color-scheme: dark) {
-    // #677078 does not exist in design system
-    --button-color-disabled: #677078;
-    --button-border-secondary-selected: ${(p) =>
-      p.theme.color.legacy.focusBorder};
-  }
-
   background-color: var(--button-background);
   border-radius: ${(p) => (p.buttonStyle === 'square' ? '0px' : '48px')};
   border: ${(p) =>
     p.buttonType === 'secondary'
       ? p.isSelected
-        ? `1px solid var(--button-border-secondary-selected)`
+        ? `1px solid var(--standard-button-border-secondary-selected)`
         : `1px solid ${p.theme.color.legacy.interactive08}`
       : 'none'};
   color: ${(p) =>
     p.buttonType === 'secondary'
       ? p.isSelected
-        ? 'var(--button-border-secondary-selected)'
+        ? 'var(--standard-button-border-secondary-selected)'
         : p.theme.color.legacy.text03
       : p.buttonStyle === 'square'
       ? p.theme.color.legacy.text02
@@ -112,17 +102,17 @@ const Button = styled.button<StandardButtonStyleProps>`
         : 'var(--button-background-hover)'};
     border: ${(p) =>
       p.buttonType === 'secondary'
-        ? `1px solid var(--button-border-secondary-selected)`
+        ? `1px solid var(--standard-button-border-secondary-selected)`
         : 'none'};
     color: ${(p) =>
       p.buttonType === 'secondary'
         ? p.isSelected
-          ? 'var(--button-border-secondary-selected)'
+          ? 'var(--standard-button-border-secondary-selected)'
           : p.theme.color.legacy.text03
         : p.theme.color.white};
   }
   :disabled {
     background-color: ${(p) => p.theme.color.legacy.disabled};
-    color: var(--button-color-disabled);
+    color: var(--standard-button-color-disabled);
   }
 `
