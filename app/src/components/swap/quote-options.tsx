@@ -7,19 +7,19 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Types
-import { QuoteOption } from '../../constants/types'
+import { QuoteOption } from '~/constants/types'
 
 // Components
-import { SelectQuoteOptionButton } from '../buttons'
+import { SelectQuoteOptionButton } from '~/components/buttons'
 
 // Context
-import { useSwapContext } from '../../context/swap.context'
+import { useSwapContext } from '~/context/swap.context'
 
 // Assets
-import CaratDownIcon from '../../assets/carat-down-icon.svg'
+import CaratDownIcon from '~/assets/carat-down-icon.svg'
 
 // Styled Components
-import { VerticalSpacer, Column, IconButton } from '../shared.styles'
+import { VerticalSpacer, Column, IconButton } from '~/components/shared.styles'
 
 interface Props {
   options: QuoteOption[]

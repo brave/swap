@@ -7,14 +7,14 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Context
-import { useSwapContext } from '../../context/swap.context'
+import { useSwapContext } from '~/context/swap.context'
 
 // Assets
-import CaratDownIcon from '../../assets/carat-down-icon.svg'
-import FuelTankIcon from '../../assets/fuel-tank-icon.svg'
+import CaratDownIcon from '~/assets/carat-down-icon.svg'
+import FuelTankIcon from '~/assets/fuel-tank-icon.svg'
 
 // Styled Components
-import { Text, Icon, HorizontalSpacer, Row } from '../shared.styles'
+import { Text, Icon, HorizontalSpacer, Row } from '~/components/shared.styles'
 
 interface SelectTokenButtonStyleProps {
   buttonType?: 'primary' | 'secondary'

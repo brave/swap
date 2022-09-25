@@ -5,13 +5,13 @@
 
 import React from 'react'
 
-// Types
-import { CoinType, SwapParams, ZeroExErrorResponse, ZeroExQuoteResponse } from '../constants/types'
+// Types / constants
+import { CoinType, SwapParams, ZeroExErrorResponse, ZeroExQuoteResponse } from '~/constants/types'
+import { NATIVE_ASSET_CONTRACT_ADDRESS_0X } from '~/constants/magics'
 
 // Hooks
-import { useSwapContext } from '../context/swap.context'
-import { useWalletState } from '../state/wallet'
-import { NATIVE_ASSET_CONTRACT_ADDRESS_0X } from '../constants/magics'
+import { useSwapContext } from '~/context/swap.context'
+import { useWalletState } from '~/state/wallet'
 
 type Quote = {
   quote?: ZeroExQuoteResponse

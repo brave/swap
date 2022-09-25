@@ -7,13 +7,13 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Types
-import { NetworkInfo } from '../../constants/types'
+import { NetworkInfo } from '~/constants/types'
 
 // Hooks
-import { useNetworkFees } from '../../hooks/useNetworkFees'
+import { useNetworkFees } from '~/hooks/useNetworkFees'
 
 // Styled Components
-import { Text, Row } from '../shared.styles'
+import { Text, Row } from '~/components/shared.styles'
 
 interface Props {
   onClick: (network: NetworkInfo) => void

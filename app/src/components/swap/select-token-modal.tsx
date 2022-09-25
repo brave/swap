@@ -7,21 +7,21 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Context
-import { useSwapContext } from '../../context/swap.context'
+import { useSwapContext } from '~/context/swap.context'
 
 // Hooks
-import { useWalletState } from '../../state/wallet'
+import { useWalletState } from '~/state/wallet'
 
 // Types
-import { BlockchainToken, NetworkInfo } from '../../constants/types'
+import { BlockchainToken, NetworkInfo } from '~/constants/types'
 
 // Assets
-import CloseIcon from '../../assets/close-icon.svg'
+import CloseIcon from '~/assets/close-icon.svg'
 
 // Components
-import { StandardButton, TokenListButton } from '../buttons'
+import { StandardButton, TokenListButton } from '~/components/buttons'
 import { SearchWithNetworkSelector } from './search-with-network-selector'
-import { StandardModal } from '../modals'
+import { StandardModal } from '~/components/modals'
 
 // Styled Components
 import {
@@ -30,7 +30,7 @@ import {
   Text,
   VerticalDivider,
   IconButton
-} from '../shared.styles'
+} from '~/components/shared.styles'
 
 interface Props {
   onClose: () => void

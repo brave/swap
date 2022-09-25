@@ -6,10 +6,10 @@
 import styled from 'styled-components'
 
 // Assets
-import ArrowIcon from '../../assets/arrow-icon.svg'
+import ArrowIcon from '~/assets/arrow-icon.svg'
 
 // Styled Components
-import { Icon } from '../shared.styles'
+import { Icon } from '~/components/shared.styles'
 
 interface Props {
   onClick: () => void

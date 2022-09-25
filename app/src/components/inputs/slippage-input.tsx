@@ -7,9 +7,9 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Styled Components
-import { Text } from '../shared.styles'
+import { Text } from '~/components/shared.styles'
 
-export interface Props {
+interface Props {
   onChange: (value: string) => void
   value: string
 }

@@ -6,17 +6,17 @@
 import React from 'react'
 
 // Types
-import { CoinType } from '../constants/types'
+import { CoinType } from '~/constants/types'
 
 // Context
-import { useSwapContext } from '../context/swap.context'
-import { useWalletState } from '../state/wallet'
+import { useSwapContext } from '~/context/swap.context'
+import { useWalletState } from '~/state/wallet'
 
 // Hooks
-import { useSwap } from '../hooks/useSwap'
+import { useSwap } from '~/hooks/useSwap'
 
 // Components
-import { StandardButton, FlipTokensButton } from '../components/buttons'
+import { StandardButton, FlipTokensButton } from '~/components/buttons'
 import {
   SwapContainer,
   FromSection,
@@ -26,14 +26,14 @@ import {
   QuoteInfo,
   SwapAndSend,
   SwapSettingsModal
-} from '../components/swap'
-import { SwapSectionBox } from '../components/boxes'
+} from '~/components/swap'
+import { SwapSectionBox } from '~/components/boxes'
 
 // Assets
-import AdvancedIcon from '../assets/advanced-icon.svg'
+import AdvancedIcon from '~/assets/advanced-icon.svg'
 
 // Styled Components
-import { Row, Text, IconButton } from '../components/shared.styles'
+import { Row, Text, IconButton } from '~/components/shared.styles'
 
 export const Swap = () => {
   // Hooks

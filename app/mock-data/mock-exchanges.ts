@@ -4,7 +4,7 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Types
-import { Exchange } from '../src/constants/types'
+import { Exchange } from '~/constants/types'
 
 export const mockExchanges: Exchange[] = [
   {

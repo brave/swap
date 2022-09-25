@@ -4,10 +4,10 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Types
-import { GasFeeOption } from '../constants/types'
+import { GasFeeOption } from '~/constants/types'
 
 // Assets
-import { SlowIcon, AverageIcon, FastIcon } from '../assets/gas-presset-icons'
+import { SlowIcon, AverageIcon, FastIcon } from '~/assets/gas-presset-icons'
 
 export const gasFeeOptions: GasFeeOption[] = [
   {

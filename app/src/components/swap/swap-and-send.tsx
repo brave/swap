@@ -7,24 +7,24 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Options
-import { SwapAndSendOptions } from '../../options/select-and-send-options'
+import { SwapAndSendOptions } from '~/options/select-and-send-options'
 
 // Types
-import { WalletAccount } from '../../constants/types'
+import { WalletAccount } from '~/constants/types'
 
 // Context
-import { useSwapContext } from '../../context/swap.context'
+import { useSwapContext } from '~/context/swap.context'
 
 // Assets
-import FlashIcon from '../../assets/flash-icon.svg'
+import FlashIcon from '~/assets/flash-icon.svg'
 
 // Components
 import {
   StandardSwitch,
   StandardRadio,
   StandardCheckbox
-} from '../form-controls'
-import { StandardInput } from '../inputs'
+} from '~/components/form-controls'
+import { StandardInput } from '~/components/inputs'
 
 import { AccountSelector } from './account-selector'
 
@@ -36,7 +36,7 @@ import {
   VerticalSpacer,
   HorizontalSpacer,
   Icon
-} from '../shared.styles'
+} from '~/components/shared.styles'
 
 interface Props {
   selectedSwapAndSendOption: string

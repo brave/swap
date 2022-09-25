@@ -6,14 +6,14 @@
 import styled from 'styled-components'
 
 // Types
-import { GasFeeOption, GasEstimate } from '../../../constants/types'
+import { GasFeeOption, GasEstimate } from '~/constants/types'
 
 // Context
-import { useSwapContext } from '../../../context/swap.context'
-import { useWalletState } from '../../../state/wallet'
+import { useSwapContext } from '~/context/swap.context'
+import { useWalletState } from '~/state/wallet'
 
 // Styles
-import { Column, Row, Text, Icon } from '../../shared.styles'
+import { Column, Row, Text, Icon } from '~/components/shared.styles'
 
 interface Props {
   isSelected: boolean

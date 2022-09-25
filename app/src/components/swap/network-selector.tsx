@@ -6,20 +6,20 @@
 import styled from 'styled-components'
 
 // Context
-import { useSwapContext } from '../../context/swap.context'
+import { useSwapContext } from '~/context/swap.context'
 
 // Hooks
-import { useWalletState } from '../../state/wallet'
-import { useNetworkFees } from '../../hooks/useNetworkFees'
+import { useWalletState } from '~/state/wallet'
+import { useNetworkFees } from '~/hooks/useNetworkFees'
 
 // Types
-import { NetworkInfo } from '../../constants/types'
+import { NetworkInfo } from '~/constants/types'
 
 // Components
-import { NetworkListButton } from '../buttons'
+import { NetworkListButton } from '~/components/buttons'
 
 // Styled Components
-import { Text, Row, VerticalDivider, VerticalSpacer } from '../shared.styles'
+import { Text, Row, VerticalDivider, VerticalSpacer } from '~/components/shared.styles'
 
 interface Props {
   onSelectNetwork: (network: NetworkInfo) => void

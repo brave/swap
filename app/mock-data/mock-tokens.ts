@@ -4,7 +4,7 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Types
-import { BlockchainToken, CoinType } from '../src/constants/types'
+import { BlockchainToken, CoinType } from '~/constants/types'
 
 // Icons
 import {
@@ -18,7 +18,7 @@ import {
   ONEINCHIconUrl,
   USDTIconUrl,
   ZEROXBTCIconUrl
-} from '../src/assets/asset-icons'
+} from '~/assets/asset-icons'
 
 export const mockEthereumTokens: BlockchainToken[] = [
   {

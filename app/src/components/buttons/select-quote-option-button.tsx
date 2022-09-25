@@ -7,13 +7,13 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Context
-import { useWalletState } from '../../state/wallet'
+import { useWalletState } from '~/state/wallet'
 
 // Types
-import { QuoteOption } from '../../constants/types'
+import { QuoteOption } from '~/constants/types'
 
 // Styled Components
-import { Text, Column } from '../shared.styles'
+import { Text, Column } from '~/components/shared.styles'
 
 interface Props {
   onClick: (option: QuoteOption) => void

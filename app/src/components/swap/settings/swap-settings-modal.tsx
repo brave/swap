@@ -7,27 +7,27 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Types
-import { CoinType, GasEstimate, GasFeeOption } from '../../../constants/types'
+import { CoinType, GasEstimate, GasFeeOption } from '~/constants/types'
 
 // Assets
-import CloseIcon from '../../../assets/close-icon.svg'
+import CloseIcon from '~/assets/close-icon.svg'
 
 // Context
-import { useSwapContext } from '../../../context/swap.context'
+import { useSwapContext } from '~/context/swap.context'
 
 // Hooks
-import { useWalletState, useWalletDispatch } from '../../../state/wallet'
+import { useWalletState, useWalletDispatch } from '~/state/wallet'
 
 // Options
-import { gasFeeOptions } from '../../../options/gas-fee-options'
+import { gasFeeOptions } from '~/options/gas-fee-options'
 
 // Components
 import { ExpandSection } from './expand-section'
 import { ToggleSection } from './toggle-section'
 import { GasPresetButton } from './gas-preset-button'
-import { StandardButton } from '../../buttons'
-import { StandardCheckbox } from '../../form-controls'
-import { SlippageInput } from '../../inputs'
+import { StandardButton } from '~/components/buttons'
+import { StandardCheckbox } from '~/components/form-controls'
+import { SlippageInput } from '~/components/inputs'
 
 // Styled Components
 import {
@@ -37,7 +37,7 @@ import {
   VerticalDivider,
   IconButton,
   VerticalSpacer
-} from '../../shared.styles'
+} from '~/components/shared.styles'
 
 const slippagePresets = ['0.1', '0.5', '1.0']
 

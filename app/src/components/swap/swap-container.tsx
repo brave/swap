@@ -7,7 +7,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Hooks
-import { useWalletState } from '../../state/wallet'
+import { useWalletState } from '~/state/wallet'
 
 // Components
 import { Header } from './header'

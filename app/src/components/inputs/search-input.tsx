@@ -7,12 +7,12 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Assets
-import SearchIcon from '../../assets/search-icon.svg'
+import SearchIcon from '~/assets/search-icon.svg'
 
 // Styled Components
-import { Icon } from '../shared.styles'
+import { Icon } from '~/components/shared.styles'
 
-export interface Props {
+interface Props {
   onChange: (value: string) => void
   value: string
   autoFocus?: boolean

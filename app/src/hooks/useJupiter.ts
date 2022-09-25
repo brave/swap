@@ -12,14 +12,14 @@ import {
   JupiterQuoteResponse,
   JupiterRoute,
   SwapParams
-} from '../constants/types'
+} from '~/constants/types'
 
 // Hooks
-import { useSwapContext } from '../context/swap.context'
-import { useWalletState } from '../state/wallet'
+import { useSwapContext } from '~/context/swap.context'
+import { useWalletState } from '~/state/wallet'
 
 // Constants
-import { WRAPPED_SOL_CONTRACT_ADDRESS } from '../constants/magics'
+import { WRAPPED_SOL_CONTRACT_ADDRESS } from '~/constants/magics'
 
 type Quote = {
   quote?: JupiterQuoteResponse

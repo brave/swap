@@ -9,7 +9,6 @@ import React, { createContext } from 'react'
 import {
   BlockchainToken,
   NetworkInfo,
-  QuoteOption,
   WalletAccount,
   Exchange,
   GasEstimate,
@@ -20,7 +19,7 @@ import {
   JupiterQuoteParams,
   JupiterSwapResponse,
   ZeroExQuoteResponse
-} from '../constants/types'
+} from '~/constants/types'
 
 interface SwapContextInterface {
   getLocale: (key: string) => string

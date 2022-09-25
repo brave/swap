@@ -3,17 +3,17 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
-import React, { useReducer, useContext, createContext, useEffect } from 'react'
+import React, { useReducer, useContext, createContext } from 'react'
 
 // Types
 import { WalletState, Dispatch, WalletActions } from './types'
-import { Registry, GasEstimate } from '../constants/types'
+import { Registry, GasEstimate } from '~/constants/types'
 
 // Context
-import { useSwapContext } from '../context/swap.context'
+import { useSwapContext } from '~/context/swap.context'
 
 // Constants
-import { NATIVE_ASSET_CONTRACT_ADDRESS_0X } from '../constants/magics'
+import { NATIVE_ASSET_CONTRACT_ADDRESS_0X } from '~/constants/magics'
 
 // Create Wallet State Context
 const WalletStateContext = createContext<{ state: WalletState } | undefined>(

@@ -7,10 +7,10 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Types
-import { BlockchainToken } from '../../constants/types'
+import { BlockchainToken } from '~/constants/types'
 
 // Styled Components
-import { Text, Column, Row } from '../shared.styles'
+import { Text, Column, Row } from '~/components/shared.styles'
 
 interface Props {
   onClick: (token: BlockchainToken) => void

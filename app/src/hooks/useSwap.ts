@@ -6,11 +6,11 @@
 import React from 'react'
 
 // Options
-import { SwapAndSendOptions } from '../options/select-and-send-options'
-import { gasFeeOptions } from '../options/gas-fee-options'
+import { SwapAndSendOptions } from '~/options/select-and-send-options'
+import { gasFeeOptions } from '~/options/gas-fee-options'
 
 // Hooks
-import { useWalletState } from '../state/wallet'
+import { useWalletState } from '~/state/wallet'
 import { useJupiter } from './useJupiter'
 import { useZeroEx } from './useZeroEx'
 
@@ -23,10 +23,10 @@ import {
   GasEstimate,
   CoinType,
   SwapParams
-} from '../constants/types'
+} from '~/constants/types'
 
 // Utils
-import Amount from '../utils/amount'
+import Amount from '~/utils/amount'
 
 export const useSwap = () => {
   // Wallet State

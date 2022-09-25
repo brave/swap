@@ -26,7 +26,7 @@ import {
 } from '../mock-data/mock-apis'
 
 // Utils
-import { getLocale } from './utils/locale'
+import { getLocale } from '~/utils/locale'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

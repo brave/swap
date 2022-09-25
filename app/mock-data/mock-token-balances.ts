@@ -4,7 +4,7 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Types
-import { Registry } from '../src/constants/types'
+import { Registry } from '~/constants/types'
 
 export const mockNativeTokenBalance = '1.674'
 

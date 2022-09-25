@@ -7,22 +7,22 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Types
-import { NetworkInfo } from '../../constants/types'
+import { NetworkInfo } from '~/constants/types'
 
 // Components
 import {
   ThemeButton,
   SelectTokenOrNetworkButton,
   ConnectWalletButton
-} from '../buttons'
+} from '~/components/buttons'
 import { NetworkSelector } from './network-selector'
 
 // Hooks
-import { useWalletState, useWalletDispatch } from '../../state/wallet'
-import { useNetworkFees } from '../../hooks/useNetworkFees'
+import { useWalletState, useWalletDispatch } from '~/state/wallet'
+import { useNetworkFees } from '~/hooks/useNetworkFees'
 
 // Styled Components
-import { Row, HorizontalSpacer } from '../shared.styles'
+import { Row, HorizontalSpacer } from '~/components/shared.styles'
 
 export const Header = () => {
   // Wallet State
