@@ -7,22 +7,22 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Context
-import { useSwapContext } from '../../context/swap.context'
+import { useSwapContext } from '~/context/swap.context'
 
 // Hooks
-import { useWalletState } from '../../state/wallet'
+import { useWalletState } from '~/state/wallet'
 
 // Types
-import { WalletAccount } from '../../constants/types'
+import { WalletAccount } from '~/constants/types'
 
 // Assets
-import CaratDownIcon from '../../assets/carat-down-icon.svg'
+import CaratDownIcon from '~/assets/carat-down-icon.svg'
 
 // Components
-import { AccountListButton } from '../buttons'
+import { AccountListButton } from '~/components/buttons'
 
 // Styled Components
-import { Text, Icon } from '../shared.styles'
+import { Text, Icon } from '~/components/shared.styles'
 
 interface Props {
   disabled?: boolean

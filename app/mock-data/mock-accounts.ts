@@ -4,7 +4,7 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Types
-import { WalletAccount } from '../src/constants/types'
+import { WalletAccount } from '~/constants/types'
 
 export const mockAccount1: WalletAccount = {
   id: '1',

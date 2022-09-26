@@ -8,7 +8,7 @@ import {
   JupiterSwapResponse,
   ZeroExQuoteResponse,
   ZeroExSwapResponse
-} from '../src/constants/types'
+} from '~/constants/types'
 
 // 0x quote for 1 WETH -> USDC
 export const mockZeroExQuoteResponse: ZeroExQuoteResponse = {

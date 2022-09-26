@@ -7,7 +7,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Assets
-import CaratDownIcon from '../../../assets/carat-down-icon.svg'
+import CaratDownIcon from '~/assets/carat-down-icon.svg'
 
 // Styled Components
 import {
@@ -16,7 +16,7 @@ import {
   Text,
   HorizontalSpacer,
   IconButton
-} from '../../shared.styles'
+} from '~/components/shared.styles'
 
 interface Props {
   label: string

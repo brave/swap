@@ -6,17 +6,17 @@
 import styled from 'styled-components'
 
 // Context
-import { useSwapContext } from '../../context/swap.context'
+import { useSwapContext } from '~/context/swap.context'
 
 // Types
-import { BlockchainToken } from '../../constants/types'
+import { BlockchainToken } from '~/constants/types'
 
 // Components
-import { SelectTokenOrNetworkButton } from '../buttons'
-import { SwapInput } from '../inputs'
+import { SelectTokenOrNetworkButton } from '~/components/buttons'
+import { SwapInput } from '~/components/inputs'
 
 // Styled Components
-import { Row, Column, Text, Loader, VerticalSpacer } from '../shared.styles'
+import { Row, Column, Text, Loader, VerticalSpacer } from '~/components/shared.styles'
 
 interface Props {
   onClickSelectToken: () => void

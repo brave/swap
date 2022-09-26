@@ -4,7 +4,7 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Types
-import { GasEstimate, ChainID } from '../src/constants/types'
+import { GasEstimate, ChainID } from '~/constants/types'
 
 export const mockNetworkFeeEstimates: Record<string, GasEstimate> = {
   [ChainID.ETHEREUM_MAINNET]: {

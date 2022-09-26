@@ -6,13 +6,13 @@
 import React from 'react'
 
 // Hooks
-import { useWalletState } from '../state/wallet'
+import { useWalletState } from '~/state/wallet'
 
 // Utils
-import Amount from '../utils/amount'
+import Amount from '~/utils/amount'
 
 // Types
-import { NetworkInfo } from '../constants/types'
+import { NetworkInfo } from '~/constants/types'
 
 export const useNetworkFees = () => {
   // Wallet State

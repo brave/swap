@@ -8,13 +8,13 @@ import styled from 'styled-components'
 import { create } from 'ethereum-blockies'
 
 // Utils
-import { reduceAddress } from '../../utils/reduce-address'
+import { reduceAddress } from '~/utils/reduce-address'
 
 // Hooks
-import { useWalletState } from '../../state/wallet'
+import { useWalletState } from '~/state/wallet'
 
 // Styles
-import { Text, HorizontalSpacer } from '../shared.styles'
+import { Text, HorizontalSpacer } from '~/components/shared.styles'
 
 interface Props {
   onClick: () => void

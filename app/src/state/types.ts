@@ -10,7 +10,7 @@ import {
   WalletAccount,
   Exchange,
   GasEstimate
-} from '../constants/types'
+} from '~/constants/types'
 
 export type WalletState = {
   tokenBalances: Registry

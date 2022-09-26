@@ -4,18 +4,18 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Context
-import { useSwapContext } from '../../context/swap.context'
+import { useSwapContext } from '~/context/swap.context'
 
 // Types
-import { BlockchainToken } from '../../constants/types'
+import { BlockchainToken } from '~/constants/types'
 
 // Components
-import { SwapSectionBox } from '../boxes'
-import { SelectTokenOrNetworkButton, PresetButton } from '../buttons'
-import { SwapInput } from '../inputs'
+import { SwapSectionBox } from '~/components/boxes'
+import { SelectTokenOrNetworkButton, PresetButton } from '~/components/buttons'
+import { SwapInput } from '~/components/inputs'
 
 // Styled Components
-import { Row, Column, HorizontalDivider, Text } from '../shared.styles'
+import { Row, Column, HorizontalDivider, Text } from '~/components/shared.styles'
 
 interface Props {
   onClickSelectToken: () => void

@@ -7,24 +7,24 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Types
-import { BlockchainToken, QuoteOption } from '../../constants/types'
+import { BlockchainToken, QuoteOption } from '~/constants/types'
 
 // Constants
-import LPMetadata from '../../constants/lpMetadata'
+import LPMetadata from '~/constants/lpMetadata'
 
 // Hooks
-import { useNetworkFees } from '../../hooks/useNetworkFees'
+import { useNetworkFees } from '~/hooks/useNetworkFees'
 
 // Context
-import { useSwapContext } from '../../context/swap.context'
-import { useWalletState } from '../../state/wallet'
+import { useSwapContext } from '~/context/swap.context'
+import { useWalletState } from '~/state/wallet'
 
 // Utils
-import { constructCoinGeckoRateURL } from '../../utils/api-utils'
+import { constructCoinGeckoRateURL } from '~/utils/api-utils'
 
 // Assets
-import HorizontalArrowsIcon from '../../assets/horizontal-arrows-icon.svg'
-import FuelTankIcon from '../../assets/fuel-tank-icon.svg'
+import HorizontalArrowsIcon from '~/assets/horizontal-arrows-icon.svg'
+import FuelTankIcon from '~/assets/fuel-tank-icon.svg'
 
 // Styled Components
 import {
@@ -35,7 +35,7 @@ import {
   VerticalDivider,
   HorizontalSpacer,
   Icon
-} from '../shared.styles'
+} from '~/components/shared.styles'
 
 interface Props {
   selectedQuoteOption: QuoteOption | undefined

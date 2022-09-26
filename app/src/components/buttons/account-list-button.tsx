@@ -7,13 +7,13 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Types
-import { WalletAccount } from '../../constants/types'
+import { WalletAccount } from '~/constants/types'
 
 // Utils
-import { reduceAddress } from '../../utils/reduce-address'
+import { reduceAddress } from '~/utils/reduce-address'
 
 // Styled Components
-import { Text, Row, HorizontalSpacer } from '../shared.styles'
+import { Text, Row, HorizontalSpacer } from '~/components/shared.styles'
 
 interface Props {
   onClick: (network: WalletAccount) => void

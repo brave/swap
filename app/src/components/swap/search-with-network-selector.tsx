@@ -7,22 +7,22 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Context
-import { useSwapContext } from '../../context/swap.context'
+import { useSwapContext } from '~/context/swap.context'
 
 // Hooks
-import { useWalletState } from '../../state/wallet'
-import { useWalletDispatch } from '../../state/wallet'
+import { useWalletState } from '~/state/wallet'
+import { useWalletDispatch } from '~/state/wallet'
 
 // Types
-import { NetworkInfo } from '../../constants/types'
+import { NetworkInfo } from '~/constants/types'
 
 // Components
-import { SelectTokenOrNetworkButton } from '../buttons'
-import { SearchInput } from '../inputs'
+import { SelectTokenOrNetworkButton } from '~/components/buttons'
+import { SearchInput } from '~/components/inputs'
 import { NetworkSelector } from './network-selector'
 
 // Styled Components
-import { HorizontalDivider } from '../shared.styles'
+import { HorizontalDivider } from '~/components/shared.styles'
 
 interface Props {
   onSearchChanged: (value: string) => void

@@ -4,10 +4,10 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Components
-import { StandardSwitch } from '../../form-controls'
+import { StandardSwitch } from '~/components/form-controls'
 
 // Styled Components
-import { Row, Column, Text, VerticalSpacer } from '../../shared.styles'
+import { Row, Column, Text, VerticalSpacer } from '~/components/shared.styles'
 
 interface Props {
   label: string

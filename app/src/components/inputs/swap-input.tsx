@@ -6,7 +6,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-export interface Props {
+interface Props {
   onChange: (value: string) => void
   hasError: boolean
   value: string

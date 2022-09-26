@@ -4,7 +4,7 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Types
-import { SwapAndSend } from '../constants/types'
+import { SwapAndSend } from '~/constants/types'
 
 export const SwapAndSendOptions: SwapAndSend[] = [
   {

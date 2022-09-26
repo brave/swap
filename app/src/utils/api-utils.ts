@@ -4,7 +4,7 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Types
-import { BlockchainToken } from '../constants/types'
+import { BlockchainToken } from '~/constants/types'
 
 // ToDo: Set up default fait currency instead of having hardcoded usd
 export const constructCoinGeckoRateURL = (

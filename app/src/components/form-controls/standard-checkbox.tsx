@@ -7,10 +7,10 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Styled Components
-import { Icon, Row } from '../shared.styles'
+import { Icon, Row } from '~/components/shared.styles'
 
 // Assets
-import CheckIcon from '../../assets/check-icon.svg'
+import CheckIcon from '~/assets/check-icon.svg'
 
 interface Props {
   label: string

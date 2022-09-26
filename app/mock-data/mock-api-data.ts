@@ -4,7 +4,7 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Types
-import { Registry } from '../src/constants/types'
+import { Registry } from '~/constants/types'
 
 // Mock Data
 import { mockEthereumNetwork } from './mock-networks'

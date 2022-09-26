@@ -21,7 +21,7 @@ import {
   JupiterQuoteParams,
   JupiterSwapParams,
   ZeroExSwapParams
-} from '../src/constants/types'
+} from '~/constants/types'
 
 const delay = (time: number) =>
   new Promise(res => setTimeout(res, time))
