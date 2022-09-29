@@ -97,6 +97,7 @@ export const Header = () => {
               hasBackground={true}
               hasShadow={true}
               networkFeeFiatValue={getNetworkFeeFiatEstimate(selectedNetwork)}
+              isHeader={true}
             />
             {showNetworkSelector && (
               <NetworkSelector

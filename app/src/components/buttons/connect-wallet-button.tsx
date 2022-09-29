@@ -14,7 +14,11 @@ import { reduceAddress } from '~/utils/reduce-address'
 import { useWalletState } from '~/state/wallet'
 
 // Styles
-import { Text, HorizontalSpacer } from '~/components/shared.styles'
+import {
+  Text,
+  HorizontalSpacer,
+  HiddenResponsiveRow
+} from '~/components/shared.styles'
 
 interface Props {
   onClick: () => void
@@ -48,10 +52,12 @@ export const ConnectWalletButton = (props: Props) => {
       {isConnected ? (
         <>
           <AccountCircle orb={accountOrb} />{' '}
-          <Text textSize='14px' textColor='text01' isBold={true}>
-            {accountName}
-          </Text>
-          <HorizontalSpacer size={4} />
+          <HiddenResponsiveRow>
+            <Text textSize='14px' textColor='text01' isBold={true}>
+              {accountName}
+            </Text>
+            <HorizontalSpacer size={4} />
+          </HiddenResponsiveRow>
           <Text textSize='14px' textColor='text03' isBold={true}>
             {reduceAddress(selectedAccount)}
           </Text>
