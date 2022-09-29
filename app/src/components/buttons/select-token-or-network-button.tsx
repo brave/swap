@@ -14,7 +14,13 @@ import CaratDownIcon from '~/assets/carat-down-icon.svg'
 import FuelTankIcon from '~/assets/fuel-tank-icon.svg'
 
 // Styled Components
-import { Text, Icon, HorizontalSpacer, Row } from '~/components/shared.styles'
+import {
+  Text,
+  Icon,
+  HorizontalSpacer,
+  Row,
+  HiddenResponsiveRow
+} from '~/components/shared.styles'
 
 interface SelectTokenButtonStyleProps {
   buttonType?: 'primary' | 'secondary'
@@ -30,6 +36,7 @@ interface Props extends SelectTokenButtonStyleProps {
   text: string | undefined
   disabled?: boolean
   networkFeeFiatValue?: string
+  isHeader?: boolean
 }
 
 export const SelectTokenOrNetworkButton = (props: Props) => {
@@ -42,7 +49,8 @@ export const SelectTokenOrNetworkButton = (props: Props) => {
     disabled,
     hasBackground,
     hasShadow,
-    networkFeeFiatValue
+    networkFeeFiatValue,
+    isHeader
   } = props
 
   // Context
@@ -68,28 +76,34 @@ export const SelectTokenOrNetworkButton = (props: Props) => {
     >
       <Row>
         {text && icon && <ButtonImage src={icon} buttonSize={buttonSize} />}
-        <Text
-          isBold={text !== undefined}
-          textColor={text ? 'text01' : 'text03'}
-          textSize={
-            buttonSize === 'small' || buttonSize === 'medium' ? '14px' : '18px'
-          }
-        >
-          {text ?? getLocale('braveSwapSelectToken')}
-        </Text>
+        <HiddenResponsiveRow dontHide={!isHeader}>
+          <Text
+            isBold={text !== undefined}
+            textColor={text ? 'text01' : 'text03'}
+            textSize={
+              buttonSize === 'small' || buttonSize === 'medium'
+                ? '14px'
+                : '18px'
+            }
+          >
+            {text ?? getLocale('braveSwapSelectToken')}
+          </Text>
+        </HiddenResponsiveRow>
       </Row>
-      {networkFeeFiatValue && (
-        <>
-          <HorizontalSpacer size={8} />
-          <GasBubble>
-            <FuelTank icon={FuelTankIcon} size={12} />
-            <Text textSize='14px' textColor='text01'>
-              {networkFeeFiatValue}
-            </Text>
-          </GasBubble>
-        </>
-      )}
-      {buttonSize !== 'small' && <HorizontalSpacer size={8} />}
+      <HiddenResponsiveRow dontHide={!isHeader}>
+        {networkFeeFiatValue && (
+          <>
+            <HorizontalSpacer size={8} />
+            <GasBubble>
+              <FuelTank icon={FuelTankIcon} size={12} />
+              <Text textSize='14px' textColor='text01'>
+                {networkFeeFiatValue}
+              </Text>
+            </GasBubble>
+          </>
+        )}
+        {buttonSize !== 'small' && <HorizontalSpacer size={8} />}
+      </HiddenResponsiveRow>
       <ButtonIcon size={12} icon={CaratDownIcon} />
     </Button>
   )

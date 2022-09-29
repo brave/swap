@@ -77,4 +77,7 @@ const SelectorBox = styled.div<{
   box-shadow: 0px 0px 16px var(--network-selector-shadow-color);
   right: ${(p) => (p.isHeader ? 'unset' : '-10px')};
   border-radius: ${(p) => (p.isHeader ? 16 : 4)}px;
+  @media screen and (max-width: 800px) {
+    left: ${(p) => (p.isHeader ? '0px' : 'unset')};
+  }
 `

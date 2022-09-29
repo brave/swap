@@ -145,10 +145,12 @@ export const QuoteInfo = (props: Props) => {
         </Text>
       </Row>
       <Row rowWidth='full' marginBottom={8} horizontalPadding={16}>
-        <Text textSize='14px'>
+        <Text textSize='14px' textAlign='left'>
           {getLocale('braveSwapMinimumReceivedAfterSlippage')}
         </Text>
-        <Text textSize='14px'>{minimumReceived}</Text>
+        <Text textSize='14px' textAlign='right'>
+          {minimumReceived}
+        </Text>
       </Row>
       <Row rowWidth='full' marginBottom={8} horizontalPadding={16}>
         <Text textSize='14px'>{getLocale('braveSwapNetworkFee')}</Text>

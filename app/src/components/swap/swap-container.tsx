@@ -145,4 +145,7 @@ const Container = styled.div`
   width: 512px;
   position: relative;
   z-index: 9;
+  @media screen and (max-width: 570px) {
+    width: 90%;
+  }
 `

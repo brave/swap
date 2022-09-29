@@ -44,4 +44,7 @@ const Modal = styled.div<{
   position: absolute;
   width: 440px;
   z-index: 20;
+  @media screen and (max-width: 570px) {
+    width: 90%;
+  }
 `

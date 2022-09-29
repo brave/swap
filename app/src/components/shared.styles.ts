@@ -144,3 +144,10 @@ export const IconButton = styled.button<{
   width: ${(p) => (p.size ? p.size : 16)}px;
   -webkit-mask-image: url(${(p) => p.icon});
 `
+
+export const HiddenResponsiveRow = styled(Row)<{ dontHide?: boolean }>`
+  display: flex;
+  @media screen and (max-width: 800px) {
+    display: ${(p) => (p.dontHide ? 'flex' : 'none')};
+  }
+`
