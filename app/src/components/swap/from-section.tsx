@@ -5,6 +5,7 @@
 
 // Context
 import { useSwapContext } from '~/context/swap.context'
+import { useWalletState } from '~/state/wallet'
 
 // Types
 import { BlockchainToken } from '~/constants/types'
@@ -40,6 +41,9 @@ export const FromSection = (props: Props) => {
 
   // context
   const { getLocale } = useSwapContext()
+
+  // Wallet State
+  const { state: { isConnected } } = useWalletState()
 
   // methods
   const onClickHalfPreset = () => {
@@ -85,7 +89,7 @@ export const FromSection = (props: Props) => {
               textColor={hasInputError ? 'error' : 'text02'}
               maintainHeight={true}
             >
-              {tokenBalance !== undefined
+              {tokenBalance !== undefined && isConnected
                 ? `${getLocale('braveSwapBalance')} ${tokenBalance}`
                 : ''}
             </Text>
