@@ -33,7 +33,7 @@ export function useJupiter (params: SwapParams) {
   const [selectedRoute, setSelectedRoute] = React.useState<JupiterRoute | undefined>(undefined)
 
   // Context
-  const { swapService } = useSwapContext()
+  const { swapService, solWalletAdapter } = useSwapContext()
 
   // Wallet State
   const {
@@ -55,8 +55,8 @@ export function useJupiter (params: SwapParams) {
         return {}
       }
       if (!overriddenParams.fromAmount) {
-          setQuote(undefined)
-          setError(undefined)
+        setQuote(undefined)
+        setError(undefined)
         return {}
       }
 
@@ -115,13 +115,14 @@ export function useJupiter (params: SwapParams) {
       if (success && response) {
         const { setupTransaction, swapTransaction, cleanupTransaction } = response
 
-        const serializedTransactions = [
-          setupTransaction,
-          swapTransaction,
-          cleanupTransaction
-        ].filter(txn => txn !== '')
-
-        // Sign and submit serializedTransactions sequentially
+        // Ignore setupTransaction and cleanupTransaction
+        await solWalletAdapter.sendTransaction({
+          encodedTransaction: swapTransaction,
+          from: selectedAccount,
+          sendOptions: {
+            skipPreflight: true
+          }
+        })
       } else if (errorResponse) {
         try {
           const err = JSON.parse(errorResponse) as JupiterErrorResponse

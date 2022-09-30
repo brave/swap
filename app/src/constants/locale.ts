@@ -8,6 +8,8 @@ import { Registry } from './types'
 export const locale: Registry = {
   braveSwap: 'Swap',
   braveSwapReviewOrder: 'Review order',
+  braveSwapApproveToken: 'Approve $1',
+  braveSwapInsufficientBalance: 'Insufficient $1 balance',
   braveSwapSelectToken: 'Select token',
   braveSwapHalf: 'Half',
   braveSwapMax: 'Max',

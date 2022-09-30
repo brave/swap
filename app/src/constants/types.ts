@@ -30,6 +30,7 @@ export type NetworkInfo = {
   symbolName: string
   decimals: number
   coin: number
+  isEIP1559: boolean // only for ETH coin type
 }
 
 type LiquiditySource = {
@@ -103,6 +104,18 @@ export type GasEstimate = {
   gasFeeFiat?: string
   time?: string
 }
+
+export type AmountValidationErrorType =
+    | 'fromAmountDecimalsOverflow'
+    | 'toAmountDecimalsOverflow'
+
+export type SwapValidationErrorType =
+    | AmountValidationErrorType
+    | 'insufficientBalance'
+    | 'insufficientFundsForGas'
+    | 'insufficientAllowance'
+    | 'insufficientLiquidity'
+    | 'unknownError'
 
 export type SwapParams = {
   fromToken?: BlockchainToken
@@ -215,4 +228,46 @@ export interface JupiterErrorResponse {
   statusCode: string
   error: string
   message: string
+}
+
+// ETH Wallet Adapter
+export type GasPrice1559 = {
+  slowMaxPriorityFeePerGas: string,
+  slowMaxFeePerGas: string
+  avgMaxPriorityFeePerGas: string,
+  avgMaxFeePerGas: string
+  fastMaxPriorityFeePerGas: string,
+  fastMaxFeePerGas: string
+  baseFeePerGas: string
+}
+export type ETHSendTransactionParams = {
+  from: string
+  to: string
+  value: string
+  data: number[]
+
+  gas?: string
+
+  // Legacy gas pricing
+  gasPrice?: string
+
+  // EIP-1559 gas pricing
+  maxPriorityFeePerGas?: string
+  maxFeePerGas?: string
+}
+export type ApproveERC20Params = {
+  contractAddress: string
+  spenderAddress: string
+  allowance: string
+}
+
+// SOL Wallet Adapter
+export type SOLSendTransactionParams = {
+  encodedTransaction: string
+  from: string
+  sendOptions?: {
+    maxRetries?: number,
+    preflightCommitment?: string,
+    skipPreflight?: boolean
+  }
 }

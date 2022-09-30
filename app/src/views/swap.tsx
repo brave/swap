@@ -76,7 +76,10 @@ export const Swap = () => {
     setSelectedGasFeeOption,
     setSlippageTolerance,
     setUseDirectRoute,
-    setUseOptimizedFees
+    setUseOptimizedFees,
+    onSubmit,
+    submitButtonText,
+    isSubmitButtonDisabled
   } = swap
 
   // Wallet State
@@ -96,10 +99,6 @@ export const Swap = () => {
       setSlippageTolerance('0.5')
     }
   }, [slippageTolerance])
-
-  const onClickReviewOrder = React.useCallback(() => {
-    // Todo: Add logic here to review order
-  }, [])
 
   // render
   return (
@@ -166,12 +165,12 @@ export const Swap = () => {
           </>
         )}
         <StandardButton
-          onClick={onClickReviewOrder}
-          buttonText={getLocale('braveSwapReviewOrder')}
+          onClick={onSubmit}
+          buttonText={submitButtonText}
           buttonType='primary'
           buttonWidth='full'
           verticalMargin={16}
-          disabled={true}
+          disabled={isSubmitButtonDisabled}
         />
         {showSwapSettings && (
           <SwapSettingsModal
