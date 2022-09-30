@@ -33,6 +33,8 @@ export const App = (props: AppProps) => {
     getExchanges,
     getNetworkFeeEstimate,
     getDefaultBaseCurrency,
+    ethWalletAdapter,
+    solWalletAdapter,
     swapService
   } = props
 
@@ -46,12 +48,14 @@ export const App = (props: AppProps) => {
         getSelectedAccount={getSelectedAccount}
         getSelectedNetwork={getSelectedNetwork}
         getTokenPrice={getTokenPrice}
-        swapService={swapService}
         getSupportedNetworks={getSupportedNetworks}
         getBraveWalletAccounts={getBraveWalletAccounts}
         getExchanges={getExchanges}
         getNetworkFeeEstimate={getNetworkFeeEstimate}
         getDefaultBaseCurrency={getDefaultBaseCurrency}
+        ethWalletAdapter={ethWalletAdapter}
+        solWalletAdapter={solWalletAdapter}
+        swapService={swapService}
       >
         <WalletStateProvider>
           <Swap />

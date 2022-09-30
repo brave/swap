@@ -18,8 +18,11 @@ import {
 import { mockExchanges } from './mock-exchanges'
 import { mockNetworkFeeEstimates } from './mock-network-fee-estimates'
 import {
+  ApproveERC20Params,
+  ETHSendTransactionParams,
   JupiterQuoteParams,
   JupiterSwapParams,
+  SOLSendTransactionParams,
   ZeroExSwapParams
 } from '~/constants/types'
 
@@ -132,4 +135,34 @@ export const swapService = {
 
 export const getDefaultBaseCurrency = async () => {
   return { currency: 'USD' }
+}
+
+export const ethWalletAdapter = ({
+  getGasPrice: async (chainId: string) => "0x0001" as string,
+  getGasPrice1559: async (chainId: string) => ({
+    slowMaxPriorityFeePerGas: '0x1',
+    slowMaxFeePerGas: '0x1',
+    avgMaxPriorityFeePerGas: '0x1',
+    avgMaxFeePerGas: '0x1',
+    fastMaxPriorityFeePerGas: '0x1',
+    fastMaxFeePerGas: '0x1',
+    baseFeePerGas: '0x0'
+  }),
+  sendTransaction: async (params: ETHSendTransactionParams) => {
+    await delay(2000)
+  },
+  getERC20ApproveData: async (params: ApproveERC20Params) => {
+    await delay(1000)
+    return [1, 2, 3] as number[]
+  },
+  getERC20Allowance: async (contractAddress: string, ownerAddress: string, spenderAddress: string) => {
+    await delay(1000)
+    return "0x0" as string
+  }
+})
+
+export const solWalletAdapter = {
+  sendTransaction: async (params: SOLSendTransactionParams) => {
+    await delay(2000)
+  }
 }

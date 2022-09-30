@@ -11,6 +11,7 @@ import './index.css'
 
 // Mock Data
 import {
+  ethWalletAdapter,
   getBalance,
   getERC20TokenBalance,
   getAllTokens,
@@ -21,8 +22,9 @@ import {
   getBraveWalletAccounts,
   getExchanges,
   getNetworkFeeEstimate,
-  swapService,
-  getDefaultBaseCurrency
+  getDefaultBaseCurrency,
+  solWalletAdapter,
+  swapService
 } from '../mock-data/mock-apis'
 
 // Utils
@@ -39,12 +41,14 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       getSelectedAccount={getSelectedAccount}
       getSelectedNetwork={getSelectedNetwork}
       getTokenPrice={getTokenPrice}
-      swapService={swapService}
       getSupportedNetworks={getSupportedNetworks}
       getBraveWalletAccounts={getBraveWalletAccounts}
       getExchanges={getExchanges}
       getNetworkFeeEstimate={getNetworkFeeEstimate}
       getDefaultBaseCurrency={getDefaultBaseCurrency}
+      ethWalletAdapter={ethWalletAdapter}
+      solWalletAdapter={solWalletAdapter}
+      swapService={swapService}
     />
   </React.StrictMode>
 )

@@ -13,6 +13,7 @@ import { gasFeeOptions } from '~/options/gas-fee-options'
 import { useWalletState } from '~/state/wallet'
 import { useJupiter } from './useJupiter'
 import { useZeroEx } from './useZeroEx'
+import { useSwapContext } from '~/context/swap.context'
 
 // Types and constants
 import {
@@ -22,17 +23,41 @@ import {
   GasFeeOption,
   GasEstimate,
   CoinType,
-  SwapParams
+  SwapParams,
+  SwapValidationErrorType
 } from '~/constants/types'
 
 // Utils
 import Amount from '~/utils/amount'
+import { ZERO_EX_VALIDATION_ERROR_CODE } from '~/constants/magics'
+
+const hasDecimalsOverflow = (amount: string, asset?: BlockchainToken) => {
+  if (!asset) {
+    return false
+  }
+
+  const amountBaseWrapped = new Amount(amount).multiplyByDecimals(asset.decimals)
+  if (!amountBaseWrapped.value) {
+    return false
+  }
+
+  const decimalPlaces = amountBaseWrapped.value.decimalPlaces()
+  return decimalPlaces !== null && decimalPlaces > 0
+}
 
 export const useSwap = () => {
   // Wallet State
   const {
-    state: { tokenBalances, tokenList, selectedNetwork, selectedAccount, defaultBaseCurrency, isConnected }
+    state: {
+      tokenBalances,
+      tokenList,
+      selectedNetwork,
+      selectedAccount,
+      defaultBaseCurrency,
+      isConnected
+    }
   } = useWalletState()
+  const { getLocale } = useSwapContext()
 
   // ToDo: Setup useSwap hook where all this kind of state will be handled.
   const price = 1519.28
@@ -280,12 +305,11 @@ export const useSwap = () => {
     [tokenBalances]
   )
 
-  const onClickFlipSwapTokens = React.useCallback(() => {
+  const onClickFlipSwapTokens = React.useCallback(async () => {
     setFromToken(toToken)
     setToToken(fromToken)
-    setFromAmount('')
-    setToAmount('')
-  }, [fromToken, toToken])
+    await handleOnSetFromAmount('')
+  }, [fromToken, toToken, handleOnSetFromAmount])
 
   const onSelectToToken = React.useCallback(
     async (token: BlockchainToken) => {
@@ -374,6 +398,209 @@ export const useSwap = () => {
     }
   }, [])
 
+  const feesWrapped = React.useMemo(() => {
+    if (!selectedNetwork) {
+      return Amount.zero()
+    }
+
+    if (selectedNetwork.coin === CoinType.Ethereum) {
+      if (!zeroEx.quote) {
+        return Amount.zero()
+      }
+
+      // NOTE: Swap will eventually use EIP-1559 gas fields, but we rely on
+      // gasPrice as a fee-ceiling for validation of inputs.
+      const { gasPrice, gas } = zeroEx.quote
+      const gasPriceWrapped = new Amount(gasPrice)
+      const gasWrapped = new Amount(gas)
+      return gasPriceWrapped.times(gasWrapped)
+    } else if (selectedNetwork.coin === CoinType.Solana) {
+      // TODO: solana
+    }
+
+    return Amount.zero()
+  }, [selectedNetwork, zeroEx])
+
+  const swapValidationError: SwapValidationErrorType | undefined = React.useMemo(() => {
+    if (!fromToken || !toToken) {
+      return
+    }
+
+    // No validation to perform when From and To amounts are empty, since quote
+    // is not fetched.
+    if (!fromAmount && !toAmount) {
+      return
+    }
+
+    if (!selectedNetwork) {
+      return
+    }
+
+    if (hasDecimalsOverflow(fromAmount, fromToken)) {
+      return 'fromAmountDecimalsOverflow'
+    }
+
+    if (hasDecimalsOverflow(toAmount, toToken)) {
+      return 'toAmountDecimalsOverflow'
+    }
+
+    // No balance-based validations to perform when FROM/native balances
+    // have not been fetched yet.
+    //
+    // TODO: balance refactor
+    // if (!fromAssetBalance || !nativeAssetBalance) {
+    //   return
+    // }
+
+    const fromAmountWeiWrapped = new Amount(fromAmount).multiplyByDecimals(fromToken.decimals)
+
+    // TODO: balance refactor
+    // if (fromAmountWeiWrapped.gt(fromAssetBalance)) {
+    //   return 'insufficientBalance'
+    // }
+
+    // TODO: balance refactor
+    // if (feesWrapped.gt(nativeAssetBalance)) {
+    //   return 'insufficientFundsForGas'
+    // }
+
+    // TODO: balance refactor
+    // if (fromToken.symbol === selectedNetwork.symbol && fromAmountWeiWrapped.plus(feesWrapped).gt(fromAssetBalance)) {
+    //   return 'insufficientFundsForGas'
+    // }
+
+    // 0x specific validations
+    if (selectedNetwork.coin === CoinType.Ethereum) {
+      if (fromToken.isErc20 && !zeroEx.hasAllowance) {
+        return 'insufficientAllowance'
+      }
+
+      if (zeroEx.error === undefined) {
+        return
+      }
+
+      const { code, validationErrors } = zeroEx.error
+      switch (code) {
+        case ZERO_EX_VALIDATION_ERROR_CODE:
+          if (validationErrors?.find(err => err.reason === 'INSUFFICIENT_ASSET_LIQUIDITY')) {
+            return 'insufficientLiquidity'
+          }
+          break
+
+        default:
+          return 'unknownError'
+      }
+    }
+
+    // Jupiter specific validations
+    if (selectedNetwork.coin === CoinType.Solana) {
+      if (jupiter.error === undefined) {
+        return
+      }
+
+      if (jupiter.error.message.includes('No routes found for the input and output mints')) {
+        return 'insufficientLiquidity'
+      }
+
+      return 'unknownError'
+    }
+
+    return undefined
+  }, [fromToken, fromAmount, toToken, toAmount, selectedNetwork, feesWrapped, zeroEx, jupiter])
+
+  const onSubmit = React.useCallback(async () => {
+    if (selectedNetwork?.coin === CoinType.Ethereum) {
+      if (zeroEx.hasAllowance) {
+        await zeroEx.exchange()
+      } else {
+        await zeroEx.approve()
+      }
+    } else if (selectedNetwork?.coin === CoinType.Solana) {
+      await jupiter.exchange()
+    }
+  }, [selectedNetwork, zeroEx, jupiter])
+
+  const submitButtonText = React.useMemo(() => {
+    if (!fromToken) {
+      return getLocale('braveSwapReviewOrder')
+    }
+
+    // TODO: balance refactor
+    //   replace with swapValidationError
+    if (new Amount(fromAmount).divideByDecimals(fromToken.decimals).gt(fromTokenBalance)) {
+      return getLocale('braveSwapInsufficientBalance').replace('$1', fromToken.symbol)
+    }
+
+    if (selectedNetwork?.coin === CoinType.Ethereum) {
+      if (swapValidationError === 'insufficientAllowance') {
+        return getLocale('braveSwapApproveToken').replace('$1', fromToken.symbol)
+      }
+    }
+
+    return getLocale('braveSwapReviewOrder')
+  }, [
+    zeroEx,
+    jupiter,
+    fromToken,
+    fromAmount,
+    fromTokenBalance,
+    selectedNetwork,
+    swapValidationError
+  ])
+
+  const isSubmitButtonDisabled = React.useMemo(() => {
+    return (
+      // Prevent an active CTA when current network has not loaded yet.
+      selectedNetwork === undefined ||
+      // Prevent creating a swap transaction with stale parameters if fetching
+      // of a new quote is in progress.
+      zeroEx.loading ||
+      jupiter.loading ||
+      // If 0x swap quote is empty, there's nothing to create the swap
+      // transaction with, so Swap button must be disabled.
+      (selectedNetwork.coin === CoinType.Ethereum && zeroEx.quote === undefined) ||
+      // If Jupiter quote is empty, there's nothing to create the swap
+      // transaction with, so Swap button must be disabled.
+      (selectedNetwork.coin === CoinType.Solana && jupiter.quote === undefined) ||
+      // FROM/TO assets may be undefined during initialization of the swap
+      // assets list.
+      fromToken === undefined ||
+      toToken === undefined ||
+      // Amounts must be defined by the user, or populated from the swap quote,
+      // for creating a transaction.
+      new Amount(toAmount).isUndefined() ||
+      new Amount(toAmount).isZero() ||
+      new Amount(fromAmount).isUndefined() ||
+      new Amount(fromAmount).isZero() ||
+      // Disable Swap button if native asset balance has not been fetched yet,
+      // to ensure insufficientFundsForGas error (if applicable) is accurate.
+      //
+      // TODO
+      // new Amount(nativeAssetBalance).isUndefined() ||
+
+      // Disable Swap button if FROM asset balance has not been fetched yet,
+      // to ensure insufficientBalance error (if applicable) is accurate.
+      //
+      // TODO
+      // new Amount(fromAssetBalance).isUndefined() ||
+
+      // Unless the validation error is insufficientAllowance, in which case
+      // the transaction is an ERC20Approve, Swap button must be disabled.
+      (swapValidationError &&
+        selectedNetwork.coin === CoinType.Ethereum &&
+        swapValidationError !== 'insufficientAllowance')
+    )
+  }, [
+    selectedNetwork,
+    zeroEx,
+    jupiter,
+    fromToken,
+    toToken,
+    fromAmount,
+    toAmount,
+    swapValidationError
+  ])
+
   return {
     fromToken,
     toToken,
@@ -412,7 +639,10 @@ export const useSwap = () => {
     setSelectedGasFeeOption,
     setSlippageTolerance,
     setUseDirectRoute,
-    setUseOptimizedFees
+    setUseOptimizedFees,
+    onSubmit,
+    submitButtonText,
+    isSubmitButtonDisabled
   }
 }
 export default useSwap

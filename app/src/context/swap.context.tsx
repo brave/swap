@@ -18,7 +18,11 @@ import {
   JupiterQuoteResponse,
   JupiterQuoteParams,
   JupiterSwapResponse,
-  ZeroExQuoteResponse
+  ZeroExQuoteResponse,
+  GasPrice1559,
+  ETHSendTransactionParams,
+  ApproveERC20Params,
+  SOLSendTransactionParams
 } from '~/constants/types'
 
 interface SwapContextInterface {
@@ -86,6 +90,16 @@ interface SwapContextInterface {
   getDefaultBaseCurrency?: () => Promise<{
     currency: string
   }>
+  ethWalletAdapter: {
+    getGasPrice: (chainId: string) => Promise<string>,
+    getGasPrice1559: (chainId: string) => Promise<GasPrice1559>
+    sendTransaction: (params: ETHSendTransactionParams) => Promise<void>
+    getERC20Allowance: (contractAddress: string, ownerAddress: string, spenderAddress: string) => Promise<string>
+    getERC20ApproveData: (params: ApproveERC20Params) => Promise<number[]>
+  }
+  solWalletAdapter: {
+    sendTransaction: (params: SOLSendTransactionParams) => Promise<void>
+  }
 }
 
 // Create Swap Context
@@ -111,6 +125,8 @@ const SwapProvider = (props: SwapProviderInterface) => {
     getExchanges,
     getNetworkFeeEstimate,
     getDefaultBaseCurrency,
+    ethWalletAdapter,
+    solWalletAdapter,
     swapService
   } = props
 
@@ -129,6 +145,8 @@ const SwapProvider = (props: SwapProviderInterface) => {
         getExchanges,
         getNetworkFeeEstimate,
         getDefaultBaseCurrency,
+        ethWalletAdapter,
+        solWalletAdapter,
         swapService
       }}
     >
