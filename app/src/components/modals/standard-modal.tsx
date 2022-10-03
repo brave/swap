@@ -11,14 +11,18 @@ interface Props {
   modalHeight?: 'standard' | 'full'
 }
 
-export const StandardModal = (props: Props) => {
-  const { children, modalHeight } = props
-  return (
-    <Wrapper>
-      <Modal modalHeight={modalHeight}>{children}</Modal>
-    </Wrapper>
-  )
-}
+export const StandardModal = React.forwardRef<HTMLDivElement, Props>(
+  (props: Props, forwardedRef) => {
+    const { children, modalHeight } = props
+    return (
+      <Wrapper>
+        <Modal ref={forwardedRef} modalHeight={modalHeight}>
+          {children}
+        </Modal>
+      </Wrapper>
+    )
+  }
+)
 
 const Wrapper = styled.div`
   background-color: var(--standard-modal-background-color);
