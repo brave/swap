@@ -20,6 +20,7 @@ import { NetworkSelector } from './network-selector'
 // Hooks
 import { useWalletState, useWalletDispatch } from '~/state/wallet'
 import { useNetworkFees } from '~/hooks/useNetworkFees'
+import { useOnClickOutside } from '~/hooks/useOnClickOutside'
 
 // Styled Components
 import { Row, HorizontalSpacer } from '~/components/shared.styles'
@@ -32,12 +33,12 @@ export const Header = () => {
   // Dispatch
   const { dispatch } = useWalletDispatch()
 
-  // Hooks
-  const { getNetworkFeeFiatEstimate } = useNetworkFees()
-
   // State
   const [showNetworkSelector, setShowNetworkSelector] =
     React.useState<boolean>(false)
+
+  // Refs
+  const networkSelectorRef = React.useRef<HTMLDivElement>(null)
 
   // Methods
   const onSelectNetwork = React.useCallback(
@@ -82,13 +83,21 @@ export const Header = () => {
     dispatch({ type: 'setIsConnected', payload: true })
   }, [dispatch])
 
+  // Hooks
+  const { getNetworkFeeFiatEstimate } = useNetworkFees()
+  useOnClickOutside(
+    networkSelectorRef,
+    () => setShowNetworkSelector(false),
+    showNetworkSelector
+  )
+
   return (
     <Wrapper>
       <BraveLogo />
       {selectedNetwork !== undefined && (
         <Row>
           <ThemeButton onClick={toggleTheme} />
-          <SelectorWrapper>
+          <SelectorWrapper ref={networkSelectorRef}>
             <SelectTokenOrNetworkButton
               onClick={() => setShowNetworkSelector((prev) => !prev)}
               text={selectedNetwork.chainName}

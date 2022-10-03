@@ -4,6 +4,7 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 import React from 'react'
+import styled from 'styled-components'
 
 // Types
 import { CoinType } from '~/constants/types'
@@ -14,6 +15,7 @@ import { useWalletState } from '~/state/wallet'
 
 // Hooks
 import { useSwap } from '~/hooks/useSwap'
+import { useOnClickOutside } from '~/hooks/useOnClickOutside'
 
 // Components
 import { StandardButton, FlipTokensButton } from '~/components/buttons'
@@ -93,12 +95,28 @@ export const Swap = () => {
   // State
   const [showSwapSettings, setShowSwapSettings] = React.useState<boolean>(false)
 
+  // Refs
+  const selectTokenModalRef = React.useRef<HTMLDivElement>(null)
+  const swapSettingsModalRef = React.useRef<HTMLDivElement>(null)
+
   const onToggleShowSwapSettings = React.useCallback(() => {
     setShowSwapSettings((prev) => !prev)
     if (slippageTolerance === '') {
       setSlippageTolerance('0.5')
     }
   }, [slippageTolerance])
+
+  // Hooks
+  useOnClickOutside(
+    selectTokenModalRef,
+    () => setSelectingFromOrTo(undefined),
+    selectingFromOrTo !== undefined
+  )
+  useOnClickOutside(
+    swapSettingsModalRef,
+    onToggleShowSwapSettings,
+    showSwapSettings
+  )
 
   // render
   return (
@@ -111,7 +129,25 @@ export const Swap = () => {
           marginBottom={18}
         >
           <Text isBold={true}>{getLocale('braveSwap')}</Text>
-          <IconButton icon={AdvancedIcon} onClick={onToggleShowSwapSettings} />
+          <SettingsWrapper ref={swapSettingsModalRef}>
+            <IconButton
+              icon={AdvancedIcon}
+              onClick={onToggleShowSwapSettings}
+            />
+            {showSwapSettings && (
+              <SwapSettingsModal
+                selectedGasFeeOption={selectedGasFeeOption}
+                slippageTolerance={slippageTolerance}
+                useDirectRoute={useDirectRoute}
+                useOptimizedFees={useOptimizedFees}
+                setSelectedGasFeeOption={setSelectedGasFeeOption}
+                setSlippageTolerance={setSlippageTolerance}
+                setUseDirectRoute={setUseDirectRoute}
+                setUseOptimizedFees={setUseOptimizedFees}
+                gasEstimates={gasEstimates}
+              />
+            )}
+          </SettingsWrapper>
         </Row>
         <FromSection
           onInputChange={handleOnSetFromAmount}
@@ -172,22 +208,10 @@ export const Swap = () => {
           verticalMargin={16}
           disabled={isSubmitButtonDisabled}
         />
-        {showSwapSettings && (
-          <SwapSettingsModal
-            selectedGasFeeOption={selectedGasFeeOption}
-            slippageTolerance={slippageTolerance}
-            useDirectRoute={useDirectRoute}
-            useOptimizedFees={useOptimizedFees}
-            setSelectedGasFeeOption={setSelectedGasFeeOption}
-            setSlippageTolerance={setSlippageTolerance}
-            setUseDirectRoute={setUseDirectRoute}
-            setUseOptimizedFees={setUseOptimizedFees}
-            gasEstimates={gasEstimates}
-          />
-        )}
       </SwapContainer>
       {selectingFromOrTo && (
         <SelectTokenModal
+          ref={selectTokenModalRef}
           onClose={() => setSelectingFromOrTo(undefined)}
           onSelectToken={
             selectingFromOrTo === 'from' ? onSelectFromToken : onSelectToToken
@@ -200,3 +224,8 @@ export const Swap = () => {
     </>
   )
 }
+
+const SettingsWrapper = styled.div`
+  display: flex;
+  position: relative;
+`

@@ -249,8 +249,8 @@ const Modal = styled.div`
   width: 370px;
   min-height: 370px;
   z-index: 20;
-  right: 16px;
-  top: 58px;
+  right: -16px;
+  top: 28px;
 `
 
 const ExchangesColumn = styled.div`
