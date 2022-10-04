@@ -4,14 +4,11 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Types
-import { Registry } from '~/constants/types'
+import { Registry } from '@brave/swap-interface'
 
 // Mock Data
 import { mockEthereumNetwork } from './mock-networks'
-import {
-  mockNativeTokenBalance,
-  mockERC721TokenBalances
-} from './mock-token-balances'
+import { mockNativeTokenBalance, mockERC721TokenBalances } from './mock-token-balances'
 import { mockAccount1 } from './mock-accounts'
 
 export const mockEVMNetworksData: Record<

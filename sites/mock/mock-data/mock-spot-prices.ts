@@ -4,7 +4,7 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Types
-import { Registry } from '~/constants/types'
+import { Registry } from '@brave/swap-interface'
 
 export const mockSpotPrices: Registry = {
   '': '1334.54',

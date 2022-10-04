@@ -8,19 +8,22 @@ import { Swap } from './views/swap'
 
 // Types
 import ITheme from './definitions/theme-interface'
+import { defaultTheme } from '~/theme/default-theme'
 
 // Providers
 import { ThemeProvider } from 'styled-components'
 import { SwapProvider, SwapProviderInterface } from './context/swap.context'
 import { WalletStateProvider } from './state/wallet'
 
+import './index.css'
+
 interface AppProps extends SwapProviderInterface {
-  defaultTheme: ITheme
+  theme?: ITheme
 }
 
-export const App = (props: AppProps) => {
+const App = (props: AppProps) => {
   const {
-    defaultTheme,
+    theme,
     getBalance,
     getERC20TokenBalance,
     getLocale,
@@ -39,7 +42,7 @@ export const App = (props: AppProps) => {
   } = props
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <ThemeProvider theme={theme || defaultTheme}>
       <SwapProvider
         getBalance={getBalance}
         getERC20TokenBalance={getERC20TokenBalance}

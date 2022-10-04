@@ -4,7 +4,7 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Types
-import { WalletAccount } from '~/constants/types'
+import { WalletAccount } from '@brave/swap-interface'
 
 export const mockAccount1: WalletAccount = {
   id: '1',
@@ -27,8 +27,4 @@ export const mockAccount3: WalletAccount = {
   coin: 60
 }
 
-export const mockAccounts: WalletAccount[] = [
-  mockAccount1,
-  mockAccount2,
-  mockAccount3
-]
+export const mockAccounts: WalletAccount[] = [mockAccount1, mockAccount2, mockAccount3]

@@ -1,0 +1,44 @@
+{
+  "name": "@brave/swap-interface",
+  "version": "0.1.0",
+  "type": "module",
+  "files": [
+    "dist",
+    "dist/style.css"
+  ],
+  "main": "./dist/index.umd.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.cjs"
+    },
+    "./style.css": {
+      "import": "./dist/style.css",
+      "require": "./dist/style.css"
+    }
+  },
+  "scripts": {
+    "dev": "tsc && vite build -w",
+    "build": "tsc && vite build"
+  },
+  "dependencies": {
+    "@brave/leo": "github:brave-experiments/leo",
+    "@types/styled-components": "^5.1.25",
+    "bignumber.js": "^9.1.0",
+    "ethereum-blockies": "github:brave/blockies",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "styled-components": "^5.3.5"
+  },
+  "devDependencies": {
+    "@types/node": "^18.7.20",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "@vitejs/plugin-react": "^2.0.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.0.0",
+    "vite-plugin-dts": "^1.6.4"
+  }
+}
