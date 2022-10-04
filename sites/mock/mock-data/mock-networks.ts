@@ -4,7 +4,7 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Types
-import { NetworkInfo, CoinType, ChainID } from '~/constants/types'
+import { NetworkInfo, CoinType, ChainID } from '@brave/swap-interface'
 
 // Icons
 import {
@@ -16,7 +16,7 @@ import {
   FTMIconUrl,
   CELOIconUrl,
   OPTIMISMIconUrl
-} from '~/assets/asset-icons'
+} from '../src/assets/asset-icons'
 
 export const mockEthereumNetwork: NetworkInfo = {
   blockExplorerUrls: ['https://etherscan.io'],

@@ -24,16 +24,11 @@ import {
   JupiterSwapParams,
   SOLSendTransactionParams,
   ZeroExSwapParams
-} from '~/constants/types'
+} from '@brave/swap-interface'
 
-const delay = (time: number) =>
-  new Promise(res => setTimeout(res, time))
+const delay = (time: number) => new Promise(res => setTimeout(res, time))
 
-export const getBalance = async (
-  address: string,
-  coin: number,
-  chainId: string
-) => {
+export const getBalance = async (address: string, coin: number, chainId: string) => {
   if (coin === mockEthereumNetwork.coin) {
     const balance = mockEVMNetworksData[address][chainId].nativeBalance
     return { balance: balance ?? '0', error: 0, errorMessage: '' }
@@ -50,16 +45,12 @@ export const getERC20TokenBalance = async (
   address: string,
   chainId: string
 ) => {
-  const balance =
-    mockEVMNetworksData[address][chainId].erc721Balances[contractAddress]
+  const balance = mockEVMNetworksData[address][chainId].erc721Balances[contractAddress]
   return { balance: balance ?? '0', error: 0, errorMessage: '' }
 }
 
 export const getAllTokens = async (chainId: string, coin: number) => {
-  if (
-    coin === mockEthereumNetwork.coin &&
-    chainId === mockEthereumNetwork.chainId
-  ) {
+  if (coin === mockEthereumNetwork.coin && chainId === mockEthereumNetwork.chainId) {
     return { tokens: mockEthereumTokens }
   }
   return { tokens: [] }
@@ -137,8 +128,8 @@ export const getDefaultBaseCurrency = async () => {
   return { currency: 'USD' }
 }
 
-export const ethWalletAdapter = ({
-  getGasPrice: async (chainId: string) => "0x0001" as string,
+export const ethWalletAdapter = {
+  getGasPrice: async (chainId: string) => '0x0001' as string,
   getGasPrice1559: async (chainId: string) => ({
     slowMaxPriorityFeePerGas: '0x1',
     slowMaxFeePerGas: '0x1',
@@ -155,11 +146,15 @@ export const ethWalletAdapter = ({
     await delay(1000)
     return [1, 2, 3] as number[]
   },
-  getERC20Allowance: async (contractAddress: string, ownerAddress: string, spenderAddress: string) => {
+  getERC20Allowance: async (
+    contractAddress: string,
+    ownerAddress: string,
+    spenderAddress: string
+  ) => {
     await delay(1000)
-    return "0x0" as string
+    return '0x0' as string
   }
-})
+}
 
 export const solWalletAdapter = {
   sendTransaction: async (params: SOLSendTransactionParams) => {

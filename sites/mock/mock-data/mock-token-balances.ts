@@ -4,11 +4,11 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 // Types
-import { Registry } from '~/constants/types'
+import { Registry } from '@brave/swap-interface'
 
 export const mockNativeTokenBalance = '1.674'
 
 export const mockERC721TokenBalances: Registry = {
   '': '5340000000000000000',
-  '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48': '24000000',
+  '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48': '24000000'
 }
