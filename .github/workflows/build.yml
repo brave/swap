@@ -1,0 +1,27 @@
+name: Build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install interface dependencies
+        run: npm ci
+        working-directory: ./interface
+
+      - name: Build interface
+        run: npm run build
+        working-directory: ./interface
+
+      - name: Install mock site dependencies
+        run: npm ci
+        working-directory: ./sites/mock
+
+      - name: Build mock sie
+        run: npm run build
+        working-directory: ./sites/mock

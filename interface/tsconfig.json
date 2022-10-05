@@ -19,6 +19,6 @@
       "~/*": ["./src/*", "./dist/*"]
     }
   },
-  "include": ["src", "mock-data"],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
