@@ -10,7 +10,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, 'src/lib.ts'),
       name: 'Swap',
-      fileName: 'index'
+      fileName: 'lib'
     },
     rollupOptions: {
       external: ['react', 'react-dom', 'styled-components'],
@@ -26,7 +26,7 @@ export default defineConfig({
   plugins: [
     react(),
     dts({
-      insertTypesEntry: true,
+      insertTypesEntry: true
     }),
   ],
   resolve: {
