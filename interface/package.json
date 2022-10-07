@@ -17,6 +17,9 @@
   ],
   "author": "Brave Software <dev@brave.com>",
   "homepage": "https://brave.com",
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=16.4.0"
   },
