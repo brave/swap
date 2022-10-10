@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
+import * as ReactDOM from 'react-dom'
 
 import { Swap } from '@brave/swap-interface'
 import '@brave/swap-interface/style.css'
@@ -22,7 +22,7 @@ import {
   swapService
 } from '../mock-data/mock-apis'
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+ReactDOM.render(
   <React.StrictMode>
     <Swap
       getLocale={getLocale}
@@ -41,5 +41,6 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       solWalletAdapter={solWalletAdapter}
       swapService={swapService}
     />
-  </React.StrictMode>
+  </React.StrictMode>,
+  document.getElementById('root') as HTMLElement
 )
