@@ -237,7 +237,12 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
               return
             }
             // Get ERC721 Token Balances
-            await getTokenBalance(token.contractAddress, selectedAccount.address, token.chainId)
+            await getTokenBalance(
+              token.contractAddress,
+              selectedAccount.address,
+              selectedAccount.coin,
+              token.chainId
+            )
               .then(result => {
                 balances[token.contractAddress] = Amount.normalize(result)
                 dispatch({ type: 'updateTokenBalances', payload: balances })

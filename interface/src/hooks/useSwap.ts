@@ -471,7 +471,7 @@ export const useSwap = () => {
 
     // 0x specific validations
     if (selectedNetwork.coin === CoinType.Ethereum) {
-      if (fromToken.isErc20 && !zeroEx.hasAllowance) {
+      if (fromToken.isToken && !zeroEx.hasAllowance) {
         return 'insufficientAllowance'
       }
 

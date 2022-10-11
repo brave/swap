@@ -38,11 +38,12 @@ export const getBalance = async (address: string, coin: number, chainId: string)
 }
 
 export const getTokenBalance = async (
-  contractAddress: string,
+  contract: string,
   address: string,
+  coin: number,
   chainId: string
 ) => {
-  const balance = mockEVMNetworksData[address][chainId].erc721Balances[contractAddress]
+  const balance = mockEVMNetworksData[address][chainId].erc721Balances[contract]
   return balance ?? '0'
 }
 

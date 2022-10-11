@@ -3,18 +3,16 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
-import Amount from "~/utils/amount";
+import Amount from '~/utils/amount'
 
 export type BlockchainToken = {
   contractAddress: string
   name: string
   logo: string
-  isErc20: boolean
-  isErc721: boolean
+  isToken: boolean
   visible: boolean
   decimals: number
   symbol: string
-  tokenId: string
   coingeckoId: string
   chainId: string
   coin: number
@@ -105,17 +103,15 @@ export type GasEstimate = {
   time?: string
 }
 
-export type AmountValidationErrorType =
-    | 'fromAmountDecimalsOverflow'
-    | 'toAmountDecimalsOverflow'
+export type AmountValidationErrorType = 'fromAmountDecimalsOverflow' | 'toAmountDecimalsOverflow'
 
 export type SwapValidationErrorType =
-    | AmountValidationErrorType
-    | 'insufficientBalance'
-    | 'insufficientFundsForGas'
-    | 'insufficientAllowance'
-    | 'insufficientLiquidity'
-    | 'unknownError'
+  | AmountValidationErrorType
+  | 'insufficientBalance'
+  | 'insufficientFundsForGas'
+  | 'insufficientAllowance'
+  | 'insufficientLiquidity'
+  | 'unknownError'
 
 export type SwapParams = {
   fromToken?: BlockchainToken
@@ -169,7 +165,7 @@ export interface ZeroExSwapResponse extends ZeroExQuoteResponse {
 export interface ZeroExErrorResponse {
   code: number
   reason: string
-  validationErrors?: Array<{ field: string, code: number, reason: string }>
+  validationErrors?: Array<{ field: string; code: number; reason: string }>
 }
 
 export type JupiterQuoteParams = {
@@ -232,11 +228,11 @@ export interface JupiterErrorResponse {
 
 // ETH Wallet Adapter
 export type GasPrice1559 = {
-  slowMaxPriorityFeePerGas: string,
+  slowMaxPriorityFeePerGas: string
   slowMaxFeePerGas: string
-  avgMaxPriorityFeePerGas: string,
+  avgMaxPriorityFeePerGas: string
   avgMaxFeePerGas: string
-  fastMaxPriorityFeePerGas: string,
+  fastMaxPriorityFeePerGas: string
   fastMaxFeePerGas: string
   baseFeePerGas: string
 }
@@ -266,8 +262,8 @@ export type SOLSendTransactionParams = {
   encodedTransaction: string
   from: string
   sendOptions?: {
-    maxRetries?: number,
-    preflightCommitment?: string,
+    maxRetries?: number
+    preflightCommitment?: string
     skipPreflight?: boolean
   }
 }
