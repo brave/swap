@@ -28,6 +28,7 @@ interface SelectTokenButtonStyleProps {
   moreRightPadding?: boolean
   hasBackground?: boolean
   hasShadow?: boolean
+  networkNotSupported?: boolean
 }
 
 interface Props extends SelectTokenButtonStyleProps {
@@ -50,7 +51,8 @@ export const SelectTokenOrNetworkButton = (props: Props) => {
     hasBackground,
     hasShadow,
     networkFeeFiatValue,
-    isHeader
+    isHeader,
+    networkNotSupported
   } = props
 
   // Context
@@ -73,38 +75,55 @@ export const SelectTokenOrNetworkButton = (props: Props) => {
       disabled={disabled}
       hasBackground={hasBackground}
       hasShadow={hasShadow}
+      networkNotSupported={networkNotSupported}
     >
-      <Row>
-        {text && icon && <ButtonImage src={icon} buttonSize={buttonSize} />}
-        <HiddenResponsiveRow dontHide={!isHeader}>
-          <Text
-            isBold={text !== undefined}
-            textColor={text ? 'text01' : 'text03'}
-            textSize={
-              buttonSize === 'small' || buttonSize === 'medium'
-                ? '14px'
-                : '18px'
-            }
-          >
-            {text ?? getLocale('braveSwapSelectToken')}
-          </Text>
-        </HiddenResponsiveRow>
-      </Row>
-      <HiddenResponsiveRow dontHide={!isHeader}>
-        {networkFeeFiatValue && (
-          <>
-            <HorizontalSpacer size={8} />
-            <GasBubble>
-              <FuelTank icon={FuelTankIcon} size={12} />
-              <Text textSize='14px' textColor='text01'>
-                {networkFeeFiatValue}
+      {!networkNotSupported && (
+        <>
+          <Row>
+            {text && icon && <ButtonImage src={icon} buttonSize={buttonSize} />}
+            <HiddenResponsiveRow dontHide={!isHeader}>
+              <Text
+                isBold={text !== undefined}
+                textColor={text ? 'text01' : 'text03'}
+                textSize={
+                  buttonSize === 'small' || buttonSize === 'medium'
+                    ? '14px'
+                    : '18px'
+                }
+              >
+                {text ?? getLocale('braveSwapSelectToken')}
               </Text>
-            </GasBubble>
-          </>
-        )}
-        {buttonSize !== 'small' && <HorizontalSpacer size={8} />}
-      </HiddenResponsiveRow>
-      <ButtonIcon size={12} icon={CaratDownIcon} />
+            </HiddenResponsiveRow>
+          </Row>
+          <HiddenResponsiveRow dontHide={!isHeader}>
+            {networkFeeFiatValue && (
+              <>
+                <HorizontalSpacer size={8} />
+                <GasBubble>
+                  <FuelTank icon={FuelTankIcon} size={12} />
+                  <Text textSize='14px' textColor='text01'>
+                    {networkFeeFiatValue}
+                  </Text>
+                </GasBubble>
+              </>
+            )}
+            {buttonSize !== 'small' && <HorizontalSpacer size={8} />}
+          </HiddenResponsiveRow>
+        </>
+      )}
+      {networkNotSupported && (
+        <>
+          <NotSupportedText isBold={true} textSize='14px'>
+            {getLocale('braveSwapSwitchNetwork')}
+          </NotSupportedText>
+          <HorizontalSpacer size={8} />
+        </>
+      )}
+      <ButtonIcon
+        networkNotSupported={networkNotSupported}
+        size={12}
+        icon={CaratDownIcon}
+      />
     </Button>
   )
 }
@@ -117,7 +136,11 @@ const Button = styled.button<SelectTokenButtonStyleProps>`
 
   /* Styles */
   background-color: ${(p) =>
-    p.hasBackground ? p.theme.color.legacy.background01 : 'transparent'};
+    p.hasBackground
+      ? p.networkNotSupported
+        ? p.theme.color.red80
+        : p.theme.color.legacy.background01
+      : 'transparent'};
   border-radius: 100px;
   box-shadow: ${(p) =>
     p.hasShadow ? '0px 0px 10px rgba(0, 0, 0, 0.05)' : 'none'};
@@ -136,14 +159,17 @@ const Button = styled.button<SelectTokenButtonStyleProps>`
   }
   &:hover:not([disabled]) {
     background-color: ${(p) =>
-      p.buttonType === 'secondary' || p.buttonSize === 'small'
+      p.networkNotSupported
+        ? p.theme.color.red80
+        : p.buttonType === 'secondary' || p.buttonSize === 'small'
         ? 'var(--token-or-network-button-background-hover-secondary)'
         : 'var(--token-or-network-button-background-hover-primary)'};
   }
 `
 
-const ButtonIcon = styled(Icon)`
-  background-color: ${(p) => p.theme.color.legacy.text01};
+const ButtonIcon = styled(Icon)<{ networkNotSupported?: boolean }>`
+  background-color: ${(p) =>
+    p.networkNotSupported ? p.theme.color.white : p.theme.color.legacy.text01};
 `
 
 const ButtonImage = styled.img<SelectTokenButtonStyleProps>`
@@ -163,4 +189,8 @@ const GasBubble = styled(Row)`
   padding: 2px 8px;
   border-radius: 8px;
   background-color: var(--token-or-network-bubble-background);
+`
+
+const NotSupportedText = styled(Text)`
+  color: ${(p) => p.theme.color.white};
 `
