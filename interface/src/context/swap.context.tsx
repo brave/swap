@@ -32,17 +32,11 @@ interface SwapContextInterface {
   getAllTokens: (
     chainId: string,
     coin: number
-  ) => Promise<{
-    tokens: BlockchainToken[]
-  }>
+  ) => Promise<BlockchainToken[]>
   getSelectedAccount: () => Promise<WalletAccount>
   getSelectedNetwork: () => Promise<NetworkInfo>
   getSupportedNetworks: () => Promise<NetworkInfo[]>
-  getTokenPrice: (contractAddress: string) => Promise<{
-    price: string
-    error: number
-    errorMessage: string
-  }>
+  getTokenPrice: (contractAddress: string) => Promise<string>
   swapService: {
     getZeroExPriceQuote: (params: ZeroExSwapParams) => Promise<{
       success: boolean
@@ -71,9 +65,7 @@ interface SwapContextInterface {
   getBraveWalletAccounts?: () => Promise<WalletAccount[]>
   getExchanges: () => Promise<Exchange[]>
   getNetworkFeeEstimate: (chainId: string) => Promise<GasEstimate>
-  getDefaultBaseCurrency?: () => Promise<{
-    currency: string
-  }>
+  getDefaultBaseCurrency?: () => Promise<string>
   ethWalletAdapter: {
     getGasPrice: (chainId: string) => Promise<string>
     getGasPrice1559: (chainId: string) => Promise<GasPrice1559>

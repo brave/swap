@@ -21,6 +21,8 @@ import CaratDownIcon from '~/assets/carat-down-icon.svg'
 // Styled Components
 import { VerticalSpacer, Column, IconButton } from '~/components/shared.styles'
 
+import Amount from '~/utils/amount'
+
 interface Props {
   options: QuoteOption[]
   selectedQuoteOptionIndex: number
@@ -46,7 +48,7 @@ export const QuoteOptions = (props: Props) => {
       getTokenPrice(options[selectedQuoteOptionIndex].toToken.contractAddress)
         .then((result) => {
           if (!ignore) {
-            setSpotPrice(Number(result.price))
+            setSpotPrice(Number(Amount.normalize(result)))
           }
         })
         .catch((error) => console.log(error))

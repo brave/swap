@@ -48,9 +48,9 @@ export const getTokenBalance = async (
 
 export const getAllTokens = async (chainId: string, coin: number) => {
   if (coin === mockEthereumNetwork.coin && chainId === mockEthereumNetwork.chainId) {
-    return { tokens: mockEthereumTokens }
+    return mockEthereumTokens
   }
-  return { tokens: [] }
+  return []
 }
 
 export const getSelectedAccount = async () => {
@@ -68,9 +68,10 @@ export const getSelectedNetwork = async () => {
 export const getTokenPrice = async (contractAddress: string) => {
   const price = mockSpotPrices[contractAddress]
   if (!price) {
-    return { price: '0', error: 1, errorMessage: 'Contract Address not found.' }
+    throw new Error('Contract address not found')
   }
-  return { price: price, error: 0, errorMessage: '' }
+
+  return price
 }
 
 export const getSupportedNetworks = async () => {
@@ -122,7 +123,7 @@ export const swapService = {
 }
 
 export const getDefaultBaseCurrency = async () => {
-  return { currency: 'USD' }
+  return 'USD'
 }
 
 export const ethWalletAdapter = {
