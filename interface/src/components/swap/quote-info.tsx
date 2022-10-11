@@ -25,6 +25,7 @@ import { constructCoinGeckoRateURL } from '~/utils/api-utils'
 // Assets
 import HorizontalArrowsIcon from '~/assets/horizontal-arrows-icon.svg'
 import FuelTankIcon from '~/assets/fuel-tank-icon.svg'
+import CaratDownIcon from '~/assets/carat-down-icon.svg'
 
 // Styled Components
 import {
@@ -57,13 +58,20 @@ export const QuoteInfo = (props: Props) => {
   const { state } = useWalletState()
   const { tokenSpotPrices, selectedNetwork } = state
 
+  // State
+  const [showAdvanced, setShowAdvanced] = React.useState<boolean>(false)
+
   // Memos
   const swapRate: string = React.useMemo(() => {
     if (selectedQuoteOption === undefined) {
       return ''
     }
 
-    return `1 ${selectedQuoteOption.fromToken.symbol} ≈ ${selectedQuoteOption.rate.format(6)} ${selectedQuoteOption.toToken.symbol}`
+    return `1 ${
+      selectedQuoteOption.fromToken.symbol
+    } ≈ ${selectedQuoteOption.rate.format(6)} ${
+      selectedQuoteOption.toToken.symbol
+    }`
   }, [selectedQuoteOption])
 
   const coinGeckoImpact: string = React.useMemo(() => {
@@ -96,9 +104,10 @@ export const QuoteInfo = (props: Props) => {
       return ''
     }
 
-    return selectedQuoteOption
-      .minimumToAmount
-      .formatAsAsset(6, selectedQuoteOption.toToken.symbol)
+    return selectedQuoteOption.minimumToAmount.formatAsAsset(
+      6,
+      selectedQuoteOption.toToken.symbol
+    )
   }, [selectedQuoteOption])
 
   // Methods
@@ -108,6 +117,10 @@ export const QuoteInfo = (props: Props) => {
     }
     return ''
   }, [fromToken, toToken])
+
+  const toggleShowAdvanced = React.useCallback(() => {
+    setShowAdvanced((prev) => !prev)
+  }, [])
 
   return (
     <Column columnHeight='dynamic' columnWidth='full'>
@@ -119,40 +132,72 @@ export const QuoteInfo = (props: Props) => {
           <HorizontalArrows icon={HorizontalArrowsIcon} size={12} />
         </Row>
       </Row>
-      <Row rowWidth='full' marginBottom={10} horizontalPadding={16}>
-        <HorizontalSpacer size={1} />
-        <Row>
-          <Text
-            textSize='14px'
-            textColor={coinGeckoImpact > swapImpact ? 'error' : 'text01'}
-          >
-            {`< ${coinGeckoImpact}%`} {getLocale('braveSwapCoinGecko')}
-          </Text>
-          <HorizontalSpacer size={4} />
-          <Link
-            rel='noopener noreferrer'
-            target='_blank'
-            href={coinGeckoAPIURL}
-          >
-            {getLocale('braveSwapAPI')} {`>`}
-          </Link>
-        </Row>
-      </Row>
-      <Row rowWidth='full' marginBottom={10} horizontalPadding={16}>
-        <Text textSize='14px'>{getLocale('braveSwapPriceImpact')}</Text>
-        <Text textSize='14px'>
-          {swapImpact === '0' ? `${swapImpact}%`: `< ${swapImpact}%`}
-        </Text>
-      </Row>
-      <Row rowWidth='full' marginBottom={8} horizontalPadding={16}>
-        <Text textSize='14px' textAlign='left'>
-          {getLocale('braveSwapMinimumReceivedAfterSlippage')}
-        </Text>
-        <Text textSize='14px' textAlign='right'>
-          {minimumReceived}
-        </Text>
-      </Row>
-      <Row rowWidth='full' marginBottom={8} horizontalPadding={16}>
+      {showAdvanced && (
+        <>
+          <Row rowWidth='full' marginBottom={10} horizontalPadding={16}>
+            <HorizontalSpacer size={1} />
+            <Row>
+              <Text
+                textSize='14px'
+                textColor={coinGeckoImpact > swapImpact ? 'error' : 'text01'}
+              >
+                {`< ${coinGeckoImpact}%`} {getLocale('braveSwapCoinGecko')}
+              </Text>
+              <HorizontalSpacer size={4} />
+              <Link
+                rel='noopener noreferrer'
+                target='_blank'
+                href={coinGeckoAPIURL}
+              >
+                {getLocale('braveSwapAPI')} {`>`}
+              </Link>
+            </Row>
+          </Row>
+
+          <Row rowWidth='full' marginBottom={10} horizontalPadding={16}>
+            <Text textSize='14px'>{getLocale('braveSwapPriceImpact')}</Text>
+            <Text textSize='14px'>
+              {swapImpact === '0' ? `${swapImpact}%` : `< ${swapImpact}%`}
+            </Text>
+          </Row>
+          <Row rowWidth='full' marginBottom={8} horizontalPadding={16}>
+            <Text textSize='14px' textAlign='left'>
+              {getLocale('braveSwapMinimumReceivedAfterSlippage')}
+            </Text>
+            <Text textSize='14px' textAlign='right'>
+              {minimumReceived}
+            </Text>
+          </Row>
+          {selectedQuoteOption && selectedQuoteOption.sources.length > 0 && (
+            <Row rowWidth='full' marginBottom={8} horizontalPadding={16}>
+              <Text textSize='14px'>
+                {getLocale('braveSwapLiquidityProvider')}
+              </Text>
+              <Row>
+                {selectedQuoteOption.sources.map((source, idx) => (
+                  <>
+                    <Bubble>
+                      <Text textSize='14px'>
+                        {source.name.split('_').join(' ')}
+                      </Text>
+                      {LPMetadata[source.name] ? (
+                        <LPIcon icon={LPMetadata[source.name]} size={16} />
+                      ) : null}
+                    </Bubble>
+
+                    {idx !== selectedQuoteOption.sources.length - 1 && (
+                      <LPSeparator textSize='14px'>
+                        {selectedQuoteOption.routing === 'split' ? '+' : '×'}
+                      </LPSeparator>
+                    )}
+                  </>
+                ))}
+              </Row>
+            </Row>
+          )}
+        </>
+      )}
+      <Row rowWidth='full' marginBottom={16} horizontalPadding={16}>
         <Text textSize='14px'>{getLocale('braveSwapNetworkFee')}</Text>
         <Bubble>
           <FuelTank icon={FuelTankIcon} size={12} />
@@ -161,33 +206,14 @@ export const QuoteInfo = (props: Props) => {
           </Text>
         </Bubble>
       </Row>
-
-      {selectedQuoteOption && selectedQuoteOption.sources.length > 0 &&
-        <Row rowWidth='full' marginBottom={16} horizontalPadding={16}>
-          <Text textSize='14px'>{getLocale('braveSwapLiquidityProvider')}</Text>
-          <Row>
-            {selectedQuoteOption.sources.map((source, idx) =>
-              <>
-                <Bubble>
-                  <Text textSize='14px'>
-                    {source.name.split('_').join(' ')}
-                  </Text>
-                  {LPMetadata[source.name]
-                    ? <LPIcon icon={LPMetadata[source.name]} size={16} />
-                    : null
-                  }
-                </Bubble>
-
-                {idx !== (selectedQuoteOption.sources.length - 1) &&
-                  <LPSeparator textSize='14px'>
-                    {selectedQuoteOption.routing === 'split' ? '+': '×'}
-                  </LPSeparator>
-                }
-              </>
-            )}
-          </Row>
-        </Row>
-      }
+      <VerticalDivider />
+      <Row rowWidth='full' horizontalAlign='center' verticalPadding={7} horizontalPadding={16}>
+        <AdvancedButton onClick={toggleShowAdvanced}>
+          <Text textSize='14px' textColor='text03'>{getLocale('braveSwapAdvanced')}</Text>
+          <HorizontalSpacer size={8} />
+          <Arrow icon={CaratDownIcon} isSelected={showAdvanced} size={12} />
+        </AdvancedButton>
+      </Row>
       <VerticalDivider />
     </Column>
   )
@@ -201,6 +227,16 @@ const HorizontalArrows = styled(Icon)`
 const FuelTank = styled(Icon)`
   background-color: ${(p) => p.theme.color.legacy.text02};
   margin-right: 6px;
+`
+
+const AdvancedButton = styled.button`
+  padding: 0px;
+`
+
+const Arrow = styled(Icon)<{ isSelected: boolean }>`
+  background-color: ${(p) => p.theme.color.legacy.text03};
+  transform: ${(p) => (p.isSelected ? 'rotate(180deg)' : 'unset')};
+  transition: transform 300ms ease;
 `
 
 const Bubble = styled(Row)`
