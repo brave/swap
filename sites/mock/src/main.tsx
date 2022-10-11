@@ -11,7 +11,7 @@ import {
   getBalance,
   getBraveWalletAccounts,
   getDefaultBaseCurrency,
-  getERC20TokenBalance,
+  getTokenBalance,
   getExchanges,
   getNetworkFeeEstimate,
   getSelectedAccount,
@@ -27,7 +27,7 @@ ReactDOM.render(
     <Swap
       getLocale={getLocale}
       getBalance={getBalance}
-      getERC20TokenBalance={getERC20TokenBalance}
+      getTokenBalance={getTokenBalance}
       getAllTokens={getAllTokens}
       getSelectedAccount={getSelectedAccount}
       getSelectedNetwork={getSelectedNetwork}

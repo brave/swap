@@ -25,7 +25,7 @@ const App = (props: AppProps) => {
   const {
     theme,
     getBalance,
-    getERC20TokenBalance,
+    getTokenBalance,
     getLocale,
     getAllTokens,
     getSelectedAccount,
@@ -45,7 +45,7 @@ const App = (props: AppProps) => {
     <ThemeProvider theme={theme || defaultTheme}>
       <SwapProvider
         getBalance={getBalance}
-        getERC20TokenBalance={getERC20TokenBalance}
+        getTokenBalance={getTokenBalance}
         getLocale={getLocale}
         getAllTokens={getAllTokens}
         getSelectedAccount={getSelectedAccount}

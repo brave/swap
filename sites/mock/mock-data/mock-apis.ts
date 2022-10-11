@@ -31,22 +31,19 @@ const delay = (time: number) => new Promise(res => setTimeout(res, time))
 export const getBalance = async (address: string, coin: number, chainId: string) => {
   if (coin === mockEthereumNetwork.coin) {
     const balance = mockEVMNetworksData[address][chainId].nativeBalance
-    return { balance: balance ?? '0', error: 0, errorMessage: '' }
+    return balance ?? '0'
   }
-  return {
-    balance: '0',
-    error: 1,
-    errorMessage: `Cointype ${coin} is not supported`
-  }
+
+  throw new Error(`Coin type ${coin} is not supported`)
 }
 
-export const getERC20TokenBalance = async (
+export const getTokenBalance = async (
   contractAddress: string,
   address: string,
   chainId: string
 ) => {
   const balance = mockEVMNetworksData[address][chainId].erc721Balances[contractAddress]
-  return { balance: balance ?? '0', error: 0, errorMessage: '' }
+  return balance ?? '0'
 }
 
 export const getAllTokens = async (chainId: string, coin: number) => {

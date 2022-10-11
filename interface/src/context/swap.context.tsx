@@ -27,24 +27,8 @@ import {
 
 interface SwapContextInterface {
   getLocale: (key: string) => string
-  getBalance: (
-    address: string,
-    coin: number,
-    chainId: string
-  ) => Promise<{
-    balance: string
-    error: number
-    errorMessage: string
-  }>
-  getERC20TokenBalance: (
-    contractAddress: string,
-    address: string,
-    chainId: string
-  ) => Promise<{
-    balance: string
-    error: number
-    errorMessage: string
-  }>
+  getBalance: (address: string, coin: number, chainId: string) => Promise<string>
+  getTokenBalance: (contractAddress: string, address: string, chainId: string) => Promise<string>
   getAllTokens: (
     chainId: string,
     coin: number
@@ -91,10 +75,14 @@ interface SwapContextInterface {
     currency: string
   }>
   ethWalletAdapter: {
-    getGasPrice: (chainId: string) => Promise<string>,
+    getGasPrice: (chainId: string) => Promise<string>
     getGasPrice1559: (chainId: string) => Promise<GasPrice1559>
     sendTransaction: (params: ETHSendTransactionParams) => Promise<void>
-    getERC20Allowance: (contractAddress: string, ownerAddress: string, spenderAddress: string) => Promise<string>
+    getERC20Allowance: (
+      contractAddress: string,
+      ownerAddress: string,
+      spenderAddress: string
+    ) => Promise<string>
     getERC20ApproveData: (params: ApproveERC20Params) => Promise<number[]>
   }
   solWalletAdapter: {
@@ -115,7 +103,7 @@ const SwapProvider = (props: SwapProviderInterface) => {
     children,
     getLocale,
     getBalance,
-    getERC20TokenBalance,
+    getTokenBalance,
     getAllTokens,
     getSelectedAccount,
     getSelectedNetwork,
@@ -135,7 +123,7 @@ const SwapProvider = (props: SwapProviderInterface) => {
       value={{
         getLocale,
         getBalance,
-        getERC20TokenBalance,
+        getTokenBalance,
         getAllTokens,
         getSelectedAccount,
         getSelectedNetwork,
