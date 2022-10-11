@@ -150,7 +150,7 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
       // Gets all tokens and then sets to state
       if (tokenList.length === 0 && selectedNetwork !== undefined) {
         getAllTokens(selectedNetwork.chainId, selectedNetwork?.coin)
-          .then(result => dispatch({ type: 'updateTokenList', payload: result.tokens }))
+          .then(result => dispatch({ type: 'updateTokenList', payload: result }))
           .catch(error => console.log(error))
       }
 
@@ -165,7 +165,7 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
           tokenList.map(async token => {
             getTokenPrice(token.contractAddress)
               .then(result => {
-                prices[token.contractAddress] = result.price
+                prices[token.contractAddress] = result
                 dispatch({ type: 'updateTokenSpotPrices', payload: prices })
               })
               .catch(error => console.log(error))
@@ -177,7 +177,7 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
           supportedNetworks.map(async network => {
             getTokenPrice(network.symbol)
               .then(result => {
-                prices[network.symbol] = result.price
+                prices[network.symbol] = result
                 dispatch({ type: 'updateTokenSpotPrices', payload: prices })
               })
               .catch(error => console.log(error))
@@ -251,7 +251,7 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
           .then(result =>
             dispatch({
               type: 'updateDefaultBaseCurrency',
-              payload: result.currency
+              payload: result
             })
           )
           .catch(error => console.log(error))
