@@ -16,7 +16,7 @@ export type WalletState = {
   tokenBalances: Registry
   tokenSpotPrices: Registry
   tokenList: BlockchainToken[]
-  selectedAccount: string
+  selectedAccount: WalletAccount | undefined
   selectedNetwork: NetworkInfo | undefined
   supportedNetworks: NetworkInfo[]
   isConnected: boolean
@@ -55,7 +55,7 @@ type UpdateSupportedNetworks = {
 
 type UpdateSelectedAccount = {
   type: 'updateSelectedAccount'
-  payload: string
+  payload: WalletAccount
 }
 
 type UpdateBraveWalletAccounts = {

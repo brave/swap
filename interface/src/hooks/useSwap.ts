@@ -100,7 +100,7 @@ export const useSwap = () => {
     slippagePercentage: new Amount(slippageTolerance).toNumber()
   })
   const zeroEx = useZeroEx({
-    takerAddress: selectedSwapSendAccount?.address || selectedAccount || '',
+    takerAddress: selectedSwapSendAccount?.address || selectedAccount?.address || '',
     fromAmount,
     toAmount: '',
     fromToken,

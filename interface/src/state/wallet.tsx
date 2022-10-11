@@ -30,7 +30,7 @@ const initialState: WalletState = {
   tokenBalances: {} as Registry,
   tokenSpotPrices: {} as Registry,
   tokenList: [],
-  selectedAccount: '',
+  selectedAccount: undefined,
   selectedNetwork: undefined,
   // ToDo: Add logic to updated if wallet is connected
   isConnected: false,
@@ -142,7 +142,7 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
       }
 
       // Gets Selected Account and then sets to state
-      if (selectedAccount === '') {
+      if (selectedAccount === undefined) {
         getSelectedAccount()
           .then((result) =>
             dispatch({ type: 'updateSelectedAccount', payload: result })
@@ -229,7 +229,8 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
       // Gets all balances and sets to state
       if (
         !tokenBalances[NATIVE_ASSET_CONTRACT_ADDRESS_0X] &&
-        selectedNetwork !== undefined
+        selectedNetwork !== undefined &&
+        selectedAccount !== undefined
       ) {
         let balances = tokenBalances
         Promise.all(
@@ -237,7 +238,7 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
             if (token.contractAddress === NATIVE_ASSET_CONTRACT_ADDRESS_0X) {
               // Get Native Token Balance
               await getBalance(
-                selectedAccount,
+                selectedAccount.address,
                 selectedNetwork.coin,
                 selectedNetwork.chainId
               )
@@ -251,7 +252,7 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
             // Get ERC721 Token Balances
             await getERC20TokenBalance(
               token.contractAddress,
-              selectedAccount,
+              selectedAccount.address,
               token.chainId
             )
               .then((result) => {

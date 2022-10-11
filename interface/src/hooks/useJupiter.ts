@@ -105,9 +105,12 @@ export function useJupiter (params: SwapParams) {
       if (!params.toToken) {
         return
       }
+      if (!selectedAccount) {
+          return
+      }
 
       const { success, response, errorResponse } = await swapService.getJupiterTransactionsPayload({
-        userPublicKey: selectedAccount,
+        userPublicKey: selectedAccount.address,
         route: selectedRoute || quote.routes[0],
         outputMint: params.toToken.contractAddress || WRAPPED_SOL_CONTRACT_ADDRESS
       })
@@ -118,7 +121,7 @@ export function useJupiter (params: SwapParams) {
         // Ignore setupTransaction and cleanupTransaction
         await solWalletAdapter.sendTransaction({
           encodedTransaction: swapTransaction,
-          from: selectedAccount,
+          from: selectedAccount.address,
           sendOptions: {
             skipPreflight: true
           }

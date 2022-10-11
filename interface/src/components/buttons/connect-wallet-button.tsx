@@ -34,22 +34,25 @@ export const ConnectWalletButton = (props: Props) => {
   // Memos
   const accountOrb: string = React.useMemo(() => {
     return create({
-      seed: selectedAccount.toLowerCase(),
+      seed: selectedAccount?.address.toLowerCase() || '',
       size: 8,
       scale: 16
     }).toDataURL()
   }, [selectedAccount])
 
   const accountName: string = React.useMemo(() => {
+    if (!selectedAccount) {
+      return ''
+    }
     return (
-      braveWalletAccounts.find((account) => account.address === selectedAccount)
+      braveWalletAccounts.find((account) => account.address === selectedAccount.address)
         ?.name ?? ''
     )
   }, [selectedAccount, braveWalletAccounts])
 
   return (
     <Button onClick={onClick} isConnected={isConnected}>
-      {isConnected ? (
+      {isConnected && selectedAccount ? (
         <>
           <AccountCircle orb={accountOrb} />{' '}
           <HiddenResponsiveRow>
@@ -59,7 +62,7 @@ export const ConnectWalletButton = (props: Props) => {
             <HorizontalSpacer size={4} />
           </HiddenResponsiveRow>
           <Text textSize='14px' textColor='text03' isBold={true}>
-            {reduceAddress(selectedAccount)}
+            {reduceAddress(selectedAccount.address)}
           </Text>
         </>
       ) : (
