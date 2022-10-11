@@ -51,7 +51,7 @@ interface SwapContextInterface {
   ) => Promise<{
     tokens: BlockchainToken[]
   }>
-  getSelectedAccount: () => Promise<string>
+  getSelectedAccount: () => Promise<WalletAccount>
   getSelectedNetwork: () => Promise<NetworkInfo>
   getSupportedNetworks: () => Promise<NetworkInfo[]>
   getTokenPrice: (contractAddress: string) => Promise<{

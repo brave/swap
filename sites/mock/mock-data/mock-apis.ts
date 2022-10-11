@@ -57,7 +57,7 @@ export const getAllTokens = async (chainId: string, coin: number) => {
 }
 
 export const getSelectedAccount = async () => {
-  return mockAccount1.address
+  return mockAccount1
 }
 
 export const getBraveWalletAccounts = async () => {

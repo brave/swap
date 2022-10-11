@@ -47,6 +47,9 @@ export function useZeroEx (params: SwapParams) {
       if (selectedNetwork?.coin !== CoinType.Ethereum) {
         return {}
       }
+      if (!selectedAccount) {
+          return {}
+      }
       if (!overriddenParams.fromToken || !overriddenParams.toToken) {
         return {}
       }
@@ -75,7 +78,7 @@ export function useZeroEx (params: SwapParams) {
           try {
             const allowance = await ethWalletAdapter.getERC20Allowance(
               response.sellTokenAddress,
-              selectedAccount,
+              selectedAccount.address,
               response.allowanceTarget
             )
             setHasAllowance(new Amount(allowance).gte(response.sellAmount))
@@ -103,7 +106,7 @@ export function useZeroEx (params: SwapParams) {
 
       return {}
     },
-    [selectedNetwork, params]
+    [selectedNetwork, selectedAccount, params]
   )
 
   const exchange = React.useCallback(
@@ -116,6 +119,9 @@ export function useZeroEx (params: SwapParams) {
       // Perform data validation and early-exit
       if (selectedNetwork?.coin !== CoinType.Ethereum) {
         return {}
+      }
+      if (!selectedAccount) {
+          return {}
       }
       if (!overriddenParams.fromToken || !overriddenParams.toToken) {
         return {}
@@ -142,7 +148,7 @@ export function useZeroEx (params: SwapParams) {
 
         try {
           await ethWalletAdapter.sendTransaction({
-            from: selectedAccount,
+            from: selectedAccount.address,
             to,
             value: new Amount(value).toHex(),
             gas: new Amount(estimatedGas).toHex(),
@@ -171,6 +177,9 @@ export function useZeroEx (params: SwapParams) {
     if (!quote || hasAllowance) {
       return
     }
+    if (!selectedAccount) {
+        return
+    }
 
     const { allowanceTarget, sellTokenAddress } = quote
     try {
@@ -180,7 +189,7 @@ export function useZeroEx (params: SwapParams) {
         allowance: new Amount(MAX_UINT256).toHex()
       })
       await ethWalletAdapter.sendTransaction({
-        from: selectedAccount,
+        from: selectedAccount.address,
         to: sellTokenAddress,
         value: '0x0',
         data
