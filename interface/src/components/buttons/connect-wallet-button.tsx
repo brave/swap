@@ -12,6 +12,7 @@ import { reduceAddress } from '~/utils/reduce-address'
 
 // Hooks
 import { useWalletState } from '~/state/wallet'
+import { useSwapContext } from '~/context/swap.context'
 
 // Styles
 import {
@@ -26,6 +27,9 @@ interface Props {
 
 export const ConnectWalletButton = (props: Props) => {
   const { onClick } = props
+
+  // context
+  const { getLocale } = useSwapContext()
 
   // Wallet State
   const { state } = useWalletState()
@@ -66,7 +70,7 @@ export const ConnectWalletButton = (props: Props) => {
           </Text>
         </>
       ) : (
-        'Connect Wallet'
+        getLocale('braveSwapConnectWallet')
       )}
     </Button>
   )
