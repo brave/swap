@@ -8,6 +8,7 @@ import styled from 'styled-components'
 
 // Types
 import { BlockchainToken } from '~/constants/types'
+import Amount from '~/utils/amount'
 
 // Styled Components
 import { Text, Column, Row } from '~/components/shared.styles'
@@ -15,7 +16,7 @@ import { Text, Column, Row } from '~/components/shared.styles'
 interface Props {
   onClick: (token: BlockchainToken) => void
   token: BlockchainToken
-  balance: string
+  balance: Amount
   disabled: boolean
   isConnected: boolean
 }
@@ -42,7 +43,7 @@ export const TokenListButton = (props: Props) => {
       </Row>
       {isConnected && (
         <Text isBold={true} textColor='text01' textSize='14px'>
-          {balance} {token.symbol}
+          {balance.divideByDecimals(token.decimals).formatAsAsset(6, token.symbol)}
         </Text>
       )}
     </Button>
@@ -50,7 +51,7 @@ export const TokenListButton = (props: Props) => {
 }
 
 const Button = styled.button`
-  background-color: ${(p) => p.theme.color.legacy.background01};
+  background-color: ${p => p.theme.color.legacy.background01};
   border-radius: 8px;
   justify-content: space-between;
   padding: 16px 8px;

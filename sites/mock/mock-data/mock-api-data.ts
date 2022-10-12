@@ -8,17 +8,17 @@ import { Registry } from '@brave/swap-interface'
 
 // Mock Data
 import { mockEthereumNetwork } from './mock-networks'
-import { mockNativeTokenBalance, mockERC721TokenBalances } from './mock-token-balances'
+import { mockNativeTokenBalance, mockERC20TokenBalances } from './mock-token-balances'
 import { mockAccount1 } from './mock-accounts'
 
 export const mockEVMNetworksData: Record<
   string,
-  Record<string, { nativeBalance: string; erc721Balances: Registry }>
+  Record<string, { nativeBalance: string; erc20Balances: Registry }>
 > = {
   [mockAccount1.address]: {
     [mockEthereumNetwork.chainId]: {
       nativeBalance: mockNativeTokenBalance,
-      erc721Balances: mockERC721TokenBalances
+      erc20Balances: mockERC20TokenBalances
     }
   }
 }
