@@ -9,24 +9,23 @@ import {
   NetworkInfo,
   WalletAccount,
   Exchange,
-  GasEstimate
+  GasEstimate,
+  SpotPrices
 } from '~/constants/types'
 
 export type WalletState = {
   tokenBalances: Registry
-  tokenSpotPrices: Registry
+  spotPrices: SpotPrices
   tokenList: BlockchainToken[]
   selectedAccount: WalletAccount | undefined
   selectedNetwork: NetworkInfo | undefined
   supportedNetworks: NetworkInfo[]
   isConnected: boolean
-  initialized: boolean
   braveWalletAccounts: WalletAccount[]
   supportedExchanges: Exchange[]
   userSelectedExchanges: Exchange[]
   networkFeeEstimates: Record<string, GasEstimate>
   defaultBaseCurrency: string
-  isNetworkSupported: boolean
 }
 
 type UpdateTokenBalances = {
@@ -34,9 +33,9 @@ type UpdateTokenBalances = {
   payload: Registry
 }
 
-type UpdateTokenSpotPrices = {
-  type: 'updateTokenSpotPrices'
-  payload: Registry
+type UpdateSpotPrices = {
+  type: 'updateSpotPrices'
+  payload: Partial<SpotPrices>
 }
 
 type UpdateTokenList = {
@@ -52,11 +51,6 @@ type UpdateSelectedNetwork = {
 type UpdateSupportedNetworks = {
   type: 'updateSupportedNetworks'
   payload: NetworkInfo[]
-}
-
-type UpdatedIsNetworkSupported = {
-  type: 'updateIsNetworkSupported'
-  payload: boolean
 }
 
 type UpdateSelectedAccount = {
@@ -79,11 +73,6 @@ type UpdateUserSelectedExchanges = {
   payload: Exchange[]
 }
 
-type UpdateNetworkFeeEstimates = {
-  type: 'updateNetworkFeeEstimates'
-  payload: Record<string, GasEstimate>
-}
-
 type UpdateDefaultBaseCurrency = {
   type: 'updateDefaultBaseCurrency'
   payload: string
@@ -94,24 +83,17 @@ type SetIsConnected = {
   payload: boolean
 }
 
-type SetInitialized = {
-  type: 'setInitialized'
-}
-
 export type WalletActions =
   | UpdateTokenBalances
-  | UpdateTokenSpotPrices
+  | UpdateSpotPrices
   | UpdateTokenList
   | UpdateSelectedNetwork
   | UpdateSelectedAccount
   | UpdateBraveWalletAccounts
-  | SetInitialized
   | UpdateSupportedNetworks
   | UpdateSupportedExchanges
   | UpdateUserSelectedExchanges
-  | UpdateNetworkFeeEstimates
   | SetIsConnected
   | UpdateDefaultBaseCurrency
-  | UpdatedIsNetworkSupported
 
 export type Dispatch = (action: WalletActions) => void

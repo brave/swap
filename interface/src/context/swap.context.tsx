@@ -28,11 +28,13 @@ import {
 interface SwapContextInterface {
   getLocale: (key: string) => string
   getBalance: (address: string, coin: number, chainId: string) => Promise<string>
-  getTokenBalance: (contractAddress: string, address: string, chainId: string) => Promise<string>
-  getAllTokens: (
-    chainId: string,
-    coin: number
-  ) => Promise<BlockchainToken[]>
+  getTokenBalance: (
+    contractAddress: string,
+    address: string,
+    coin: number,
+    chainId: string
+  ) => Promise<string>
+  getAllTokens: (chainId: string, coin: number) => Promise<BlockchainToken[]>
   getSelectedAccount: () => Promise<WalletAccount>
   getSelectedNetwork: () => Promise<NetworkInfo>
   getSupportedNetworks: () => Promise<NetworkInfo[]>

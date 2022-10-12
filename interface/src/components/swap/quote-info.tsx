@@ -55,7 +55,7 @@ export const QuoteInfo = (props: Props) => {
 
   // Wallet State
   const { state } = useWalletState()
-  const { tokenSpotPrices, selectedNetwork } = state
+  const { spotPrices, selectedNetwork } = state
 
   // Memos
   const swapRate: string = React.useMemo(() => {
@@ -70,11 +70,12 @@ export const QuoteInfo = (props: Props) => {
     if (
       fromToken !== undefined &&
       toToken !== undefined &&
-      tokenSpotPrices &&
+      spotPrices.makerAsset &&
+      spotPrices.takerAsset &&
       selectedQuoteOption !== undefined
     ) {
-      const fromTokenPrice = tokenSpotPrices[fromToken.contractAddress]
-      const toTokenPrice = tokenSpotPrices[toToken.contractAddress]
+      const fromTokenPrice = spotPrices.makerAsset
+      const toTokenPrice = spotPrices.takerAsset
       const coinGeckoRate = Number(toTokenPrice) / Number(fromTokenPrice)
       const coinGeckoMinimumReceived = Number(toAmount) * coinGeckoRate
       const impact =
@@ -82,7 +83,7 @@ export const QuoteInfo = (props: Props) => {
       return impact.toFixed(2)
     }
     return ''
-  }, [tokenSpotPrices, fromToken, toToken, selectedQuoteOption, toAmount])
+  }, [spotPrices, fromToken, toToken, selectedQuoteOption, toAmount])
 
   const swapImpact: string = React.useMemo(() => {
     if (selectedQuoteOption === undefined) {
