@@ -14,6 +14,7 @@ import { useWalletState } from '~/state/wallet'
 
 // Types
 import { BlockchainToken } from '~/constants/types'
+import Amount from '~/utils/amount'
 
 // Assets
 import CloseIcon from '~/assets/close-icon.svg'
@@ -24,31 +25,19 @@ import { SearchWithNetworkSelector } from './search-with-network-selector'
 import { StandardModal } from '~/components/modals'
 
 // Styled Components
-import {
-  Column,
-  Row,
-  Text,
-  VerticalDivider,
-  IconButton
-} from '~/components/shared.styles'
+import { Column, Row, Text, VerticalDivider, IconButton } from '~/components/shared.styles'
 
 interface Props {
   onClose: () => void
   onSelectToken: (token: BlockchainToken) => void
-  getTokenBalance: (token: BlockchainToken) => string
+  getAssetBalance: (token: BlockchainToken) => Amount
   disabledToken: BlockchainToken | undefined
   selectingFromOrTo: 'from' | 'to'
 }
 
 export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
   (props: Props, forwardedRef) => {
-    const {
-      onClose,
-      onSelectToken,
-      getTokenBalance,
-      disabledToken,
-      selectingFromOrTo
-    } = props
+    const { onClose, onSelectToken, getAssetBalance, disabledToken, selectingFromOrTo } = props
 
     // Context
     const { getLocale } = useSwapContext()
@@ -64,8 +53,8 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
     const [searchValue, setSearchValue] = React.useState<string>('')
 
     // Methods
-    const toggleHideTokensWithZerorBalances = React.useCallback(() => {
-      setHideTokensWithZeroBalances((prev) => !prev)
+    const toggleHideTokensWithZeroBalances = React.useCallback(() => {
+      setHideTokensWithZeroBalances(prev => !prev)
     }, [])
 
     const handleOnSearchChanged = React.useCallback((value: string) => {
@@ -91,10 +80,10 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
     }, [tokenList, searchValue])
 
     const tokenListWithBalances: BlockchainToken[] = React.useMemo(() => {
-      return filteredTokenListBySearch.filter(
-        (token: BlockchainToken) => Number(getTokenBalance(token)) > 0
+      return filteredTokenListBySearch.filter((token: BlockchainToken) =>
+        getAssetBalance(token).gt(0)
       )
-    }, [filteredTokenListBySearch, hideTokensWithZeroBalances])
+    }, [filteredTokenListBySearch, getAssetBalance])
 
     const filteredTokenList: BlockchainToken[] = React.useMemo(() => {
       if (tokenListWithBalances.length === 0 || !isConnected) {
@@ -104,12 +93,7 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
         return tokenListWithBalances
       }
       return filteredTokenListBySearch
-    }, [
-      filteredTokenListBySearch,
-      hideTokensWithZeroBalances,
-      tokenListWithBalances,
-      isConnected
-    ])
+    }, [filteredTokenListBySearch, hideTokensWithZeroBalances, tokenListWithBalances, isConnected])
 
     const showZeroBalanceButton: boolean = React.useMemo(() => {
       return tokenListWithBalances.length !== 0 && isConnected
@@ -124,10 +108,7 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
 
     // render
     return (
-      <Modal
-        ref={forwardedRef}
-        modalHeight={hideTokensWithZeroBalances ? 'standard' : 'full'}
-      >
+      <Modal ref={forwardedRef} modalHeight={hideTokensWithZeroBalances ? 'standard' : 'full'}>
         <Row rowWidth='full' horizontalPadding={24} verticalPadding={20}>
           <Text textSize='18px' isBold={true}>
             {getLocale('braveSwapSelectAToken')}
@@ -148,17 +129,15 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
           verticalAlign='flex-start'
           verticalPadding={8}
         >
-          {filteredTokenList.map((token) => (
+          {filteredTokenList.map(token => (
             <TokenListButton
               key={token.contractAddress}
               onClick={onSelectToken}
-              balance={getTokenBalance(token)}
+              balance={getAssetBalance(token)}
               isConnected={isConnected}
               token={token}
               disabled={
-                disabledToken
-                  ? disabledToken.contractAddress === token.contractAddress
-                  : false
+                disabledToken ? disabledToken.contractAddress === token.contractAddress : false
               }
             />
           ))}
@@ -166,7 +145,7 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
         {showZeroBalanceButton && (
           <Button
             buttonText={buttonText}
-            onClick={toggleHideTokensWithZerorBalances}
+            onClick={toggleHideTokensWithZeroBalances}
             buttonStyle='square'
             buttonWidth='full'
             horizontalMargin={0}

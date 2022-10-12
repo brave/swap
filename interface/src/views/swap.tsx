@@ -45,7 +45,6 @@ export const Swap = () => {
     toAmount,
     fromToken,
     toToken,
-    insufficientBalance,
     isFetchingQuote,
     quoteOptions,
     selectedQuoteOptionIndex,
@@ -62,7 +61,7 @@ export const Swap = () => {
     useDirectRoute,
     useOptimizedFees,
     gasEstimates,
-    getTokenBalance,
+    getAssetBalance,
     onSelectFromToken,
     onSelectToToken,
     onSelectQuoteOption,
@@ -81,7 +80,8 @@ export const Swap = () => {
     setUseOptimizedFees,
     onSubmit,
     submitButtonText,
-    isSubmitButtonDisabled
+    isSubmitButtonDisabled,
+    swapValidationError
   } = swap
 
   // Wallet State
@@ -100,7 +100,7 @@ export const Swap = () => {
   const swapSettingsModalRef = React.useRef<HTMLDivElement>(null)
 
   const onToggleShowSwapSettings = React.useCallback(() => {
-    setShowSwapSettings((prev) => !prev)
+    setShowSwapSettings(prev => !prev)
     if (slippageTolerance === '') {
       setSlippageTolerance('0.5')
     }
@@ -112,28 +112,16 @@ export const Swap = () => {
     () => setSelectingFromOrTo(undefined),
     selectingFromOrTo !== undefined
   )
-  useOnClickOutside(
-    swapSettingsModalRef,
-    onToggleShowSwapSettings,
-    showSwapSettings
-  )
+  useOnClickOutside(swapSettingsModalRef, onToggleShowSwapSettings, showSwapSettings)
 
   // render
   return (
     <>
       <SwapContainer>
-        <Row
-          rowWidth='full'
-          horizontalPadding={16}
-          verticalPadding={6}
-          marginBottom={18}
-        >
+        <Row rowWidth='full' horizontalPadding={16} verticalPadding={6} marginBottom={18}>
           <Text isBold={true}>{getLocale('braveSwap')}</Text>
           <SettingsWrapper ref={swapSettingsModalRef}>
-            <IconButton
-              icon={AdvancedIcon}
-              onClick={onToggleShowSwapSettings}
-            />
+            <IconButton icon={AdvancedIcon} onClick={onToggleShowSwapSettings} />
             {showSwapSettings && (
               <SwapSettingsModal
                 selectedGasFeeOption={selectedGasFeeOption}
@@ -155,7 +143,10 @@ export const Swap = () => {
           onClickSelectToken={() => setSelectingFromOrTo('from')}
           token={fromToken}
           tokenBalance={fromTokenBalance}
-          hasInputError={insufficientBalance}
+          hasInputError={
+            swapValidationError === 'insufficientBalance' ||
+            swapValidationError === 'fromAmountDecimalsOverflow'
+          }
           fiatValue={fiatValue}
         />
         <FlipTokensButton onClick={onClickFlipSwapTokens} />
@@ -165,18 +156,17 @@ export const Swap = () => {
             token={toToken}
             inputValue={toAmount}
             onInputChange={handleOnSetToAmount}
-            hasInputError={false}
+            hasInputError={swapValidationError === 'toAmountDecimalsOverflow'}
             isLoading={isFetchingQuote}
             disabled={selectedNetwork?.coin === CoinType.Solana}
           />
-          {selectedNetwork?.coin === CoinType.Solana &&
-            quoteOptions.length > 0 && (
-              <QuoteOptions
-                options={quoteOptions}
-                selectedQuoteOptionIndex={selectedQuoteOptionIndex}
-                onSelectQuoteOption={onSelectQuoteOption}
-              />
-            )}
+          {selectedNetwork?.coin === CoinType.Solana && quoteOptions.length > 0 && (
+            <QuoteOptions
+              options={quoteOptions}
+              selectedQuoteOptionIndex={selectedQuoteOptionIndex}
+              onSelectQuoteOption={onSelectQuoteOption}
+            />
+          )}
         </SwapSectionBox>
         {quoteOptions.length > 0 && (
           <>
@@ -213,11 +203,9 @@ export const Swap = () => {
         <SelectTokenModal
           ref={selectTokenModalRef}
           onClose={() => setSelectingFromOrTo(undefined)}
-          onSelectToken={
-            selectingFromOrTo === 'from' ? onSelectFromToken : onSelectToToken
-          }
+          onSelectToken={selectingFromOrTo === 'from' ? onSelectFromToken : onSelectToToken}
           disabledToken={selectingFromOrTo === 'from' ? toToken : fromToken}
-          getTokenBalance={getTokenBalance}
+          getAssetBalance={getAssetBalance}
           selectingFromOrTo={selectingFromOrTo}
         />
       )}

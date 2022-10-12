@@ -9,6 +9,7 @@ import { useWalletState } from '~/state/wallet'
 
 // Types
 import { BlockchainToken } from '~/constants/types'
+import Amount from '~/utils/amount'
 
 // Components
 import { SwapSectionBox } from '~/components/boxes'
@@ -24,7 +25,7 @@ interface Props {
   inputValue: string
   hasInputError: boolean
   token: BlockchainToken | undefined
-  tokenBalance: number | undefined
+  tokenBalance: Amount
   fiatValue: string | undefined
 }
 
@@ -43,18 +44,23 @@ export const FromSection = (props: Props) => {
   const { getLocale } = useSwapContext()
 
   // Wallet State
-  const { state: { isConnected } } = useWalletState()
+  const {
+    state: { isConnected }
+  } = useWalletState()
 
   // methods
   const onClickHalfPreset = () => {
-    const balance = tokenBalance ?? 0
-    const value = balance / 2
-    onInputChange(value.toString())
+    if (!token) {
+      return
+    }
+    onInputChange(tokenBalance.divideByDecimals(token.decimals).div(2).format())
   }
 
   const onClickMaxPreset = () => {
-    const value = tokenBalance ?? 0
-    onInputChange(value.toString())
+    if (!token) {
+      return
+    }
+    onInputChange(tokenBalance.divideByDecimals(token.decimals).format())
   }
 
   // render
@@ -71,14 +77,8 @@ export const FromSection = (props: Props) => {
           {token && (
             <Row>
               <HorizontalDivider height={28} marginLeft={8} marginRight={8} />
-              <PresetButton
-                buttonText={getLocale('braveSwapHalf')}
-                onClick={onClickHalfPreset}
-              />
-              <PresetButton
-                buttonText={getLocale('braveSwapMax')}
-                onClick={onClickMaxPreset}
-              />
+              <PresetButton buttonText={getLocale('braveSwapHalf')} onClick={onClickHalfPreset} />
+              <PresetButton buttonText={getLocale('braveSwapMax')} onClick={onClickMaxPreset} />
             </Row>
           )}
         </Row>
@@ -89,8 +89,10 @@ export const FromSection = (props: Props) => {
               textColor={hasInputError ? 'error' : 'text02'}
               maintainHeight={true}
             >
-              {tokenBalance !== undefined && isConnected
-                ? `${getLocale('braveSwapBalance')} ${tokenBalance}`
+              {!tokenBalance.isUndefined() && isConnected
+                ? `${getLocale('braveSwapBalance')} ${tokenBalance
+                  .divideByDecimals(token.decimals)
+                  .format(6)}`
                 : ''}
             </Text>
           )}
