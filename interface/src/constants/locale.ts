@@ -48,5 +48,6 @@ export const locale: Registry = {
   braveSwapCoinGecko: 'CoinGecko',
   braveSwapAPI: 'API',
   braveSwapName: 'Name',
-  braveSwapConnectWallet: 'Connect Wallet'
+  braveSwapConnectWallet: 'Connect Wallet',
+  braveSwapSwitchNetwork: 'Switch Network'
 }

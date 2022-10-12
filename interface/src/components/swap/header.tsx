@@ -28,7 +28,7 @@ import { Row, HorizontalSpacer } from '~/components/shared.styles'
 export const Header = () => {
   // Wallet State
   const { state } = useWalletState()
-  const { selectedNetwork } = state
+  const { selectedNetwork, isNetworkSupported } = state
 
   // Dispatch
   const { dispatch } = useWalletDispatch()
@@ -107,6 +107,7 @@ export const Header = () => {
               hasShadow={true}
               networkFeeFiatValue={getNetworkFeeFiatEstimate(selectedNetwork)}
               isHeader={true}
+              networkNotSupported={!isNetworkSupported}
             />
             {showNetworkSelector && (
               <NetworkSelector
