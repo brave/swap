@@ -12,9 +12,6 @@ import { Registry, GasEstimate } from '~/constants/types'
 // Context
 import { useSwapContext } from '~/context/swap.context'
 
-// Constants
-import { NATIVE_ASSET_CONTRACT_ADDRESS_0X } from '~/constants/magics'
-
 // Utils
 import Amount from '~/utils/amount'
 
@@ -27,7 +24,11 @@ const WalletStateDispatchContext = createContext<{ dispatch: Dispatch } | undefi
 // Wallet Initial State
 const initialState: WalletState = {
   tokenBalances: {} as Registry,
-  tokenSpotPrices: {} as Registry,
+  spotPrices: {
+    makerAsset: '',
+    takerAsset: '',
+    nativeAsset: ''
+  },
   tokenList: [],
   selectedAccount: undefined,
   selectedNetwork: undefined,
@@ -49,8 +50,8 @@ const WalletReducer = (state: WalletState, action: WalletActions): WalletState =
   switch (action.type) {
     case 'updateTokenBalances':
       return { ...state, tokenBalances: { ...state.tokenBalances, ...action.payload } }
-    case 'updateTokenSpotPrices':
-      return { ...state, tokenBalances: action.payload }
+    case 'updateSpotPrices':
+      return { ...state, spotPrices: { ...state.spotPrices, ...action.payload } }
     case 'updateTokenList':
       return { ...state, tokenList: action.payload }
     case 'updateSelectedNetwork':
@@ -67,8 +68,6 @@ const WalletReducer = (state: WalletState, action: WalletActions): WalletState =
       return { ...state, supportedExchanges: action.payload }
     case 'updateUserSelectedExchanges':
       return { ...state, userSelectedExchanges: action.payload }
-    case 'updateNetworkFeeEstimates':
-      return { ...state, networkFeeEstimates: action.payload }
     case 'updateDefaultBaseCurrency':
       return { ...state, defaultBaseCurrency: action.payload }
     case 'setIsConnected':
@@ -97,21 +96,12 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     getSupportedNetworks,
     getBraveWalletAccounts,
     getExchanges,
-    getNetworkFeeEstimate,
     getDefaultBaseCurrency
   } = useSwapContext()
 
   // Wallet State
   const [state, dispatch] = useReducer(WalletReducer, initialState)
-  const {
-    tokenList,
-    selectedAccount,
-    selectedNetwork,
-    supportedNetworks,
-    tokenSpotPrices,
-    networkFeeEstimates,
-    defaultBaseCurrency
-  } = state
+  const { tokenList, selectedAccount, selectedNetwork, supportedNetworks } = state
 
   React.useEffect(() => {
     // Gets Selected Network and then sets to state
@@ -167,53 +157,18 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
         .catch(error => console.log(error))
     }
 
-    // Gets all token spot prices and then sets to state
-    if (
-      tokenList.length !== 0 &&
-      !tokenSpotPrices[NATIVE_ASSET_CONTRACT_ADDRESS_0X] &&
-      supportedNetworks.length !== 0
-    ) {
-      let prices = tokenSpotPrices
-      Promise.all(
-        tokenList.map(async token => {
-          getTokenPrice(token.contractAddress)
-            .then(result => {
-              prices[token.contractAddress] = result
-              dispatch({ type: 'updateTokenSpotPrices', payload: prices })
-            })
-            .catch(error => console.log(error))
+    // Fetch spot price for native asset, and update the state. During
+    // initialisation, the default asset is always the native one.
+    if (selectedNetwork !== undefined) {
+      getTokenPrice(selectedNetwork.symbol).then(result => {
+        dispatch({
+          type: 'updateSpotPrices',
+          payload: {
+            nativeAsset: Amount.normalize(result),
+            makerAsset: Amount.normalize(result)
+          }
         })
-      )
-
-      // Gets all native asset spot prices for supported networks and sets to state
-      Promise.all(
-        supportedNetworks.map(async network => {
-          getTokenPrice(network.symbol)
-            .then(result => {
-              prices[network.symbol] = result
-              dispatch({ type: 'updateTokenSpotPrices', payload: prices })
-            })
-            .catch(error => console.log(error))
-        })
-      )
-    }
-
-    // Gets all supported network fee estimates and then sets to state
-    if (supportedNetworks.length !== 0) {
-      let estimates = networkFeeEstimates
-      Promise.all(
-        supportedNetworks.map(async network => {
-          getNetworkFeeEstimate(network.chainId)
-            .then(result => {
-              estimates[network.chainId] = result
-              dispatch({
-                type: 'updateNetworkFeeEstimates',
-                payload: estimates
-              })
-            })
-            .catch(error => console.log(error))
-        })
-      )
+      })
     }
 
     if (selectedNetwork !== undefined && selectedAccount !== undefined) {
@@ -246,9 +201,6 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
     selectedAccount,
     selectedNetwork,
     supportedNetworks,
-    tokenSpotPrices,
-    networkFeeEstimates,
-    getNetworkFeeEstimate,
     getTokenPrice,
     getAllTokens,
     getBalance,

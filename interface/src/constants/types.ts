@@ -57,6 +57,12 @@ export type QuoteOption = {
 
 export type Registry = Record<string, string>
 
+export type SpotPrices = {
+  nativeAsset: string
+  makerAsset: string
+  takerAsset: string
+}
+
 export type WalletAccount = {
   id: string
   name: string

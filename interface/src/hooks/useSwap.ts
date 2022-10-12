@@ -10,7 +10,7 @@ import { SwapAndSendOptions } from '~/options/select-and-send-options'
 import { gasFeeOptions } from '~/options/gas-fee-options'
 
 // Hooks
-import { useWalletState } from '~/state/wallet'
+import { useWalletDispatch, useWalletState } from '~/state/wallet'
 import { useJupiter } from './useJupiter'
 import { useZeroEx } from './useZeroEx'
 import { useSwapContext } from '~/context/swap.context'
@@ -54,13 +54,12 @@ export const useSwap = () => {
       selectedNetwork,
       selectedAccount,
       defaultBaseCurrency,
-      isConnected
+      isConnected,
+      spotPrices
     }
   } = useWalletState()
-  const { getLocale } = useSwapContext()
-
-  // ToDo: Setup useSwap hook where all this kind of state will be handled.
-  const price = 1519.28
+  const { getLocale, getTokenPrice } = useSwapContext()
+  const { dispatch } = useWalletDispatch()
 
   // State
   const [fromToken, setFromToken] = React.useState<BlockchainToken | undefined>(undefined)
@@ -216,6 +215,28 @@ export const useSwap = () => {
     [quoteOptions, jupiter.quote, zeroEx.quote, selectedNetwork]
   )
 
+  const refreshMakerAssetSpotPrice = React.useCallback(
+    async (token: BlockchainToken) => {
+      const price = await getTokenPrice(token.isToken ? token.contractAddress : token.symbol)
+      dispatch({
+        type: 'updateSpotPrices',
+        payload: token.isToken ? { makerAsset: price } : { makerAsset: price, nativeAsset: price }
+      })
+    },
+    [getTokenPrice]
+  )
+
+  const refreshTakerAssetSpotPrice = React.useCallback(
+    async (token: BlockchainToken) => {
+      const price = await getTokenPrice(token.isToken ? token.contractAddress : token.symbol)
+      dispatch({
+        type: 'updateSpotPrices',
+        payload: token.isToken ? { takerAsset: price } : { takerAsset: price, nativeAsset: price }
+      })
+    },
+    [getTokenPrice]
+  )
+
   // Methods
   const handleJupiterQuoteRefresh = React.useCallback(
     async (overrides: Partial<SwapParams>) => {
@@ -307,7 +328,11 @@ export const useSwap = () => {
 
   const onClickFlipSwapTokens = React.useCallback(async () => {
     setFromToken(toToken)
+    toToken && (await refreshMakerAssetSpotPrice(toToken))
+
     setToToken(fromToken)
+    fromToken && (await refreshTakerAssetSpotPrice(fromToken))
+
     await handleOnSetFromAmount('')
   }, [fromToken, toToken, handleOnSetFromAmount])
 
@@ -315,6 +340,7 @@ export const useSwap = () => {
     async (token: BlockchainToken) => {
       setToToken(token)
       setSelectingFromOrTo(undefined)
+      await refreshTakerAssetSpotPrice(token)
 
       if (selectedNetwork?.coin === CoinType.Solana) {
         await handleJupiterQuoteRefresh({
@@ -334,6 +360,7 @@ export const useSwap = () => {
     async (token: BlockchainToken) => {
       setFromToken(token)
       setSelectingFromOrTo(undefined)
+      await refreshMakerAssetSpotPrice(token)
 
       if (selectedNetwork?.coin === CoinType.Solana) {
         await handleJupiterQuoteRefresh({
@@ -376,11 +403,12 @@ export const useSwap = () => {
   }, [fromToken, tokenBalances, isConnected, getTokenBalance])
 
   const fiatValue: string | undefined = React.useMemo(() => {
-    if (fromAmount && price) {
-      return new Amount(fromAmount).times(price).formatAsFiat(defaultBaseCurrency)
+    if (fromAmount && spotPrices.makerAsset) {
+      return new Amount(fromAmount).times(spotPrices.makerAsset).formatAsFiat(defaultBaseCurrency)
     }
-  }, [price, fromAmount, defaultBaseCurrency])
+  }, [spotPrices.makerAsset, fromAmount, defaultBaseCurrency])
 
+  // FIXME - replace with swapValidationError
   const insufficientBalance: boolean = React.useMemo(() => {
     if (fromAmount && fromTokenBalance !== undefined) {
       return Number(fromAmount) > fromTokenBalance

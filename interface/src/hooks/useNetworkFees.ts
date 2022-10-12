@@ -17,7 +17,7 @@ import { NetworkInfo } from '~/constants/types'
 export const useNetworkFees = () => {
   // Wallet State
   const {
-    state: { tokenSpotPrices, networkFeeEstimates, defaultBaseCurrency }
+    state: { spotPrices, networkFeeEstimates, defaultBaseCurrency }
   } = useWalletState()
 
   const getNetworkFeeFiatEstimate = React.useCallback(
@@ -25,11 +25,15 @@ export const useNetworkFees = () => {
       if (!networkFeeEstimates[network.chainId]) {
         return ''
       }
-      return new Amount(tokenSpotPrices[network.symbol])
+      if (spotPrices.nativeAsset === '') {
+          return ''
+      }
+
+      return new Amount(spotPrices.nativeAsset)
         .times(networkFeeEstimates[network.chainId].gasFee)
         .formatAsFiat(defaultBaseCurrency)
     },
-    [tokenSpotPrices, networkFeeEstimates, defaultBaseCurrency]
+    [spotPrices, networkFeeEstimates, defaultBaseCurrency]
   )
 
   return {

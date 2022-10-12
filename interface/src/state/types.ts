@@ -9,12 +9,12 @@ import {
   NetworkInfo,
   WalletAccount,
   Exchange,
-  GasEstimate
+  GasEstimate, SpotPrices
 } from '~/constants/types'
 
 export type WalletState = {
   tokenBalances: Registry
-  tokenSpotPrices: Registry
+  spotPrices: SpotPrices
   tokenList: BlockchainToken[]
   selectedAccount: WalletAccount | undefined
   selectedNetwork: NetworkInfo | undefined
@@ -33,9 +33,9 @@ type UpdateTokenBalances = {
   payload: Registry
 }
 
-type UpdateTokenSpotPrices = {
-  type: 'updateTokenSpotPrices'
-  payload: Registry
+type UpdateSpotPrices = {
+  type: 'updateSpotPrices'
+  payload: Partial<SpotPrices>
 }
 
 type UpdateTokenList = {
@@ -78,11 +78,6 @@ type UpdateUserSelectedExchanges = {
   payload: Exchange[]
 }
 
-type UpdateNetworkFeeEstimates = {
-  type: 'updateNetworkFeeEstimates'
-  payload: Record<string, GasEstimate>
-}
-
 type UpdateDefaultBaseCurrency = {
   type: 'updateDefaultBaseCurrency'
   payload: string
@@ -95,7 +90,7 @@ type SetIsConnected = {
 
 export type WalletActions =
   | UpdateTokenBalances
-  | UpdateTokenSpotPrices
+  | UpdateSpotPrices
   | UpdateTokenList
   | UpdateSelectedNetwork
   | UpdateSelectedAccount
@@ -103,7 +98,6 @@ export type WalletActions =
   | UpdateSupportedNetworks
   | UpdateSupportedExchanges
   | UpdateUserSelectedExchanges
-  | UpdateNetworkFeeEstimates
   | SetIsConnected
   | UpdateDefaultBaseCurrency
   | UpdatedIsNetworkSupported

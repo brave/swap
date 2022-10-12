@@ -7,7 +7,6 @@
 import { Registry } from '@brave/swap-interface'
 
 export const mockSpotPrices: Registry = {
-  '': '1334.54',
   '0x0D8775F648430679A709E98d2b0Cb6250d2887EF': '0.303',
   '0xB8c77482e45F1F44dE1745F52C74426C631bDD52': '266.35',
   '0xD31a59c85aE9D8edEFeC411D448f90841571b89c': '31.47',
