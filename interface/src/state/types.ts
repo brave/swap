@@ -20,7 +20,6 @@ export type WalletState = {
   selectedNetwork: NetworkInfo | undefined
   supportedNetworks: NetworkInfo[]
   isConnected: boolean
-  initialized: boolean
   braveWalletAccounts: WalletAccount[]
   supportedExchanges: Exchange[]
   userSelectedExchanges: Exchange[]
@@ -94,10 +93,6 @@ type SetIsConnected = {
   payload: boolean
 }
 
-type SetInitialized = {
-  type: 'setInitialized'
-}
-
 export type WalletActions =
   | UpdateTokenBalances
   | UpdateTokenSpotPrices
@@ -105,7 +100,6 @@ export type WalletActions =
   | UpdateSelectedNetwork
   | UpdateSelectedAccount
   | UpdateBraveWalletAccounts
-  | SetInitialized
   | UpdateSupportedNetworks
   | UpdateSupportedExchanges
   | UpdateUserSelectedExchanges
