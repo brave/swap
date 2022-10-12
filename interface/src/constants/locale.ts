@@ -49,5 +49,6 @@ export const locale: Registry = {
   braveSwapAPI: 'API',
   braveSwapName: 'Name',
   braveSwapConnectWallet: 'Connect Wallet',
-  braveSwapSwitchNetwork: 'Switch Network'
+  braveSwapSwitchNetwork: 'Switch Network',
+  braveSwapAdanced: 'Advanced'
 }
