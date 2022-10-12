@@ -41,8 +41,7 @@ const initialState: WalletState = {
   // and other user prefs
   userSelectedExchanges: [],
   networkFeeEstimates: {} as Record<string, GasEstimate>,
-  defaultBaseCurrency: '',
-  isNetworkSupported: true
+  defaultBaseCurrency: ''
 }
 
 // Wallet State Reducer
@@ -58,8 +57,6 @@ const WalletReducer = (state: WalletState, action: WalletActions): WalletState =
       return { ...state, selectedNetwork: action.payload }
     case 'updateSupportedNetworks':
       return { ...state, supportedNetworks: action.payload }
-    case 'updateIsNetworkSupported':
-      return { ...state, isNetworkSupported: action.payload }
     case 'updateSelectedAccount':
       return { ...state, selectedAccount: action.payload }
     case 'updateBraveWalletAccounts':

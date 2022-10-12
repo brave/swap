@@ -28,7 +28,7 @@ import { Row, HorizontalSpacer } from '~/components/shared.styles'
 export const Header = () => {
   // Wallet State
   const { state } = useWalletState()
-  const { selectedNetwork, isNetworkSupported } = state
+  const { selectedNetwork, supportedNetworks } = state
 
   // Dispatch
   const { dispatch } = useWalletDispatch()
@@ -90,6 +90,10 @@ export const Header = () => {
     () => setShowNetworkSelector(false),
     showNetworkSelector
   )
+
+  const isNetworkSupported = React.useMemo(() => {
+    return supportedNetworks.some((network) => network.chainId === selectedNetwork?.chainId)
+  }, [selectedNetwork, supportedNetworks])
 
   return (
     <Wrapper>
