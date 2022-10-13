@@ -25,7 +25,7 @@ export const ConnectWalletButton = (props: Props) => {
   const { onClick } = props
 
   // context
-  const { getLocale, account, walletAccounts } = useSwapContext()
+  const { getLocale, account } = useSwapContext()
 
   // Wallet State
   const { state } = useWalletState()
@@ -40,10 +40,6 @@ export const ConnectWalletButton = (props: Props) => {
     }).toDataURL()
   }, [account])
 
-  const accountName: string = React.useMemo(() => {
-    return walletAccounts.find(account => account.address === account.address)?.name ?? ''
-  }, [account, walletAccounts])
-
   return (
     <Button onClick={onClick} isConnected={isConnected}>
       {isConnected ? (
@@ -51,7 +47,7 @@ export const ConnectWalletButton = (props: Props) => {
           <AccountCircle orb={accountOrb} />{' '}
           <HiddenResponsiveRow>
             <Text textSize='14px' textColor='text01' isBold={true}>
-              {accountName}
+              {account.name}
             </Text>
             <HorizontalSpacer size={4} />
           </HiddenResponsiveRow>

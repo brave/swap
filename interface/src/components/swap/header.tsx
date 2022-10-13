@@ -12,9 +12,10 @@ import { NetworkInfo } from '~/constants/types'
 // Components
 import { ThemeButton, SelectTokenOrNetworkButton, ConnectWalletButton } from '~/components/buttons'
 import { NetworkSelector } from './network-selector'
+import { AccountModal } from './account-modal/account-modal'
 
 // Hooks
-import { useWalletDispatch } from '~/state/wallet'
+import { useWalletState, useWalletDispatch } from '~/state/wallet'
 import { useSwapContext } from '~/context/swap.context'
 import { useNetworkFees } from '~/hooks/useNetworkFees'
 import { useOnClickOutside } from '~/hooks/useOnClickOutside'
@@ -24,6 +25,8 @@ import { Row, HorizontalSpacer } from '~/components/shared.styles'
 
 export const Header = () => {
   // Wallet State
+  const { state } = useWalletState()
+  const { isConnected } = state
   const { network, supportedNetworks, switchNetwork } = useSwapContext()
 
   // Dispatch
@@ -31,9 +34,11 @@ export const Header = () => {
 
   // State
   const [showNetworkSelector, setShowNetworkSelector] = React.useState<boolean>(false)
+  const [showAccountModal, setShowAccountModal] = React.useState<boolean>(false)
 
   // Refs
   const networkSelectorRef = React.useRef<HTMLDivElement>(null)
+  const accountModalRef = React.useRef<HTMLDivElement>(null)
 
   // Methods
   const onSelectNetwork = React.useCallback(async (network: NetworkInfo) => {
@@ -76,7 +81,20 @@ export const Header = () => {
 
   // Hooks
   const { getNetworkFeeFiatEstimate } = useNetworkFees()
-  useOnClickOutside(networkSelectorRef, () => setShowNetworkSelector(false), showNetworkSelector)
+
+  // Click away for network selector
+  useOnClickOutside(
+    networkSelectorRef,
+    () => setShowNetworkSelector(false),
+    showNetworkSelector
+  )
+
+  // Click away for account modal
+  useOnClickOutside(
+    accountModalRef,
+    () => setShowAccountModal(false),
+    showAccountModal
+  )
 
   const isNetworkSupported = React.useMemo(() => {
     return supportedNetworks.some(supportedNetwork => supportedNetwork.chainId === network.chainId)
@@ -104,7 +122,18 @@ export const Header = () => {
           )}
         </SelectorWrapper>
         <HorizontalSpacer size={15} />
-        <ConnectWalletButton onClick={connectWallet} />
+        <SelectorWrapper ref={accountModalRef}>
+            <ConnectWalletButton
+              onClick={
+                isConnected
+                  ? () => setShowAccountModal((prev) => !prev)
+                  : connectWallet
+              }
+            />
+            {showAccountModal && (
+              <AccountModal onHideModal={() => setShowAccountModal(false)} />
+            )}
+          </SelectorWrapper>
       </Row>
     </Wrapper>
   )
