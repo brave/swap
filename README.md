@@ -1,6 +1,6 @@
 # Brave Swap
 
-[![npm version](https://badge.fury.io/js/@brave%2Fswap.svg)](https://badge.fury.io/js/@brave%2Fswap)
+[![npm version](https://badge.fury.io/js/@brave%2Fswap-interface.svg)](https://badge.fury.io/js/@brave%2Fswap-interface)
 ![build](https://github.com/brave/swap/actions/workflows/build.yml/badge.svg)
 
 An open-source swap interface by Brave, focussed on usability and multi-chain
