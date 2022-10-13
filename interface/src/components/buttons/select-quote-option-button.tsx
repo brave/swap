@@ -7,7 +7,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Context
-import { useWalletState } from '~/state/wallet'
+import { useSwapContext } from '~/context/swap.context'
 
 // Types
 import { QuoteOption } from '~/constants/types'
@@ -27,9 +27,7 @@ export const SelectQuoteOptionButton = (props: Props) => {
   const { onClick, option, isSelected, isBest, spotPrice } = props
 
   // Wallet State
-  const {
-    state: { defaultBaseCurrency }
-  } = useWalletState()
+  const { defaultBaseCurrency } = useSwapContext()
 
   // Methods
   const onSelectToken = React.useCallback(() => {
@@ -37,26 +35,17 @@ export const SelectQuoteOptionButton = (props: Props) => {
   }, [option, onClick])
 
   const quoteFiatValue = React.useMemo(() => {
-    return option.toAmount
-      .times(spotPrice || 0)
-      .formatAsFiat(defaultBaseCurrency)
+    return option.toAmount.times(spotPrice || 0).formatAsFiat(defaultBaseCurrency)
   }, [spotPrice, option, defaultBaseCurrency])
 
   return (
     <Button onClick={onSelectToken} isSelected={isSelected}>
-      {isBest && (
-        <BestOptionBadge isSelected={isSelected}>Best</BestOptionBadge>
-      )}
+      {isBest && <BestOptionBadge isSelected={isSelected}>Best</BestOptionBadge>}
       <Text isBold={true} textColor='text01' textSize='14px' textAlign='left'>
         {option.label}
       </Text>
       <Column horizontalAlign='flex-end'>
-        <Text
-          isBold={true}
-          textColor='text01'
-          textSize='14px'
-          textAlign='right'
-        >
+        <Text isBold={true} textColor='text01' textSize='14px' textAlign='right'>
           {option.toAmount.formatAsAsset(6, option.toToken.symbol)}
         </Text>
         <Text textColor='text03' textSize='14px' textAlign='right'>
@@ -70,10 +59,8 @@ export const SelectQuoteOptionButton = (props: Props) => {
 const Button = styled.button<{
   isSelected: boolean
 }>`
-  --best-background: ${(p) =>
-    p.isSelected
-      ? p.theme.color.legacy.interactive05
-      : p.theme.color.legacy.focusBorder};
+  --best-background: ${p =>
+    p.isSelected ? p.theme.color.legacy.interactive05 : p.theme.color.legacy.focusBorder};
   background-color: var(--select-quote-button-background);
   border-radius: 8px;
   justify-content: space-between;
@@ -82,14 +69,11 @@ const Button = styled.button<{
   margin: 0px 0px 10px 10px;
   position: relative;
   box-sizing: border-box;
-  box-shadow: ${(p) =>
-    p.isSelected
-      ? `0px 0px 0px 1px ${p.theme.color.legacy.interactive05} inset`
-      : 'none'};
+  box-shadow: ${p =>
+    p.isSelected ? `0px 0px 0px 1px ${p.theme.color.legacy.interactive05} inset` : 'none'};
   &:hover {
-    --best-background: ${(p) => p.theme.color.legacy.interactive05};
-    box-shadow: 0px 0px 0px 1px ${(p) => p.theme.color.legacy.interactive05}
-      inset;
+    --best-background: ${p => p.theme.color.legacy.interactive05};
+    box-shadow: 0px 0px 0px 1px ${p => p.theme.color.legacy.interactive05} inset;
   }
 `
 
@@ -98,7 +82,7 @@ const BestOptionBadge = styled.div<{
 }>`
   font-size: 12px;
   line-height: 20px;
-  color: ${(p) => p.theme.color.white};
+  color: ${p => p.theme.color.white};
   border-radius: 7px 7px 7px 0px;
   background-color: var(--best-background);
   padding: 0px 16px;

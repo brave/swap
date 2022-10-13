@@ -7,6 +7,7 @@ import React from 'react'
 
 // Hooks
 import { useWalletState } from '~/state/wallet'
+import { useSwapContext } from '~/context/swap.context'
 
 // Utils
 import Amount from '~/utils/amount'
@@ -15,9 +16,11 @@ import Amount from '~/utils/amount'
 import { NetworkInfo } from '~/constants/types'
 
 export const useNetworkFees = () => {
+  const { defaultBaseCurrency } = useSwapContext()
+
   // Wallet State
   const {
-    state: { spotPrices, networkFeeEstimates, defaultBaseCurrency }
+    state: { spotPrices, networkFeeEstimates }
   } = useWalletState()
 
   const getNetworkFeeFiatEstimate = React.useCallback(
@@ -29,6 +32,9 @@ export const useNetworkFees = () => {
         return ''
       }
 
+      // FIXME - this should be coming from quotes
+      // networkFeeEstimates should be removed or kept purely
+      // for presentational purpose
       return new Amount(spotPrices.nativeAsset)
         .times(networkFeeEstimates[network.chainId].gasFee)
         .formatAsFiat(defaultBaseCurrency)

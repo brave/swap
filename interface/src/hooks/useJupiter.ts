@@ -21,11 +21,6 @@ import { useWalletState } from '~/state/wallet'
 // Constants
 import { WRAPPED_SOL_CONTRACT_ADDRESS } from '~/constants/magics'
 
-type Quote = {
-  quote?: JupiterQuoteResponse
-  error?: JupiterErrorResponse
-}
-
 export function useJupiter (params: SwapParams) {
   const [quote, setQuote] = React.useState<JupiterQuoteResponse | undefined>(undefined)
   const [error, setError] = React.useState<JupiterErrorResponse | undefined>(undefined)
@@ -33,12 +28,7 @@ export function useJupiter (params: SwapParams) {
   const [selectedRoute, setSelectedRoute] = React.useState<JupiterRoute | undefined>(undefined)
 
   // Context
-  const { swapService, solWalletAdapter } = useSwapContext()
-
-  // Wallet State
-  const {
-    state: { selectedNetwork, selectedAccount }
-  } = useWalletState()
+  const { swapService, solWalletAdapter, account, network } = useSwapContext()
 
   const refresh = React.useCallback(
     async function (
@@ -50,7 +40,7 @@ export function useJupiter (params: SwapParams) {
       }
 
       // Perform data validation and early-exit
-      if (selectedNetwork?.coin !== CoinType.Solana) {
+      if (network.coin !== CoinType.Solana) {
         return
       }
       if (!overriddenParams.fromToken || !overriddenParams.toToken) {
@@ -85,7 +75,7 @@ export function useJupiter (params: SwapParams) {
       setLoading(false)
       return response
     },
-    [selectedNetwork, params]
+    [network, params]
   )
 
   const exchange = React.useCallback(
@@ -94,13 +84,10 @@ export function useJupiter (params: SwapParams) {
       if (!quote || quote?.routes.length === 0) {
         return
       }
-      if (selectedNetwork?.coin !== CoinType.Solana) {
+      if (network.coin !== CoinType.Solana) {
         return
       }
       if (!params.toToken) {
-        return
-      }
-      if (!selectedAccount) {
         return
       }
 
@@ -108,7 +95,7 @@ export function useJupiter (params: SwapParams) {
       let response
       try {
         response = await swapService.getJupiterTransactionsPayload({
-          userPublicKey: selectedAccount.address,
+          userPublicKey: account.address,
           route: selectedRoute || quote.routes[0],
           outputMint: params.toToken.contractAddress || WRAPPED_SOL_CONTRACT_ADDRESS
         })
@@ -133,7 +120,7 @@ export function useJupiter (params: SwapParams) {
       try {
         await solWalletAdapter.sendTransaction({
           encodedTransaction: swapTransaction,
-          from: selectedAccount.address,
+          from: account.address,
           sendOptions: {
             skipPreflight: true
           }
@@ -145,7 +132,7 @@ export function useJupiter (params: SwapParams) {
 
       setLoading(false)
     },
-    [quote, selectedRoute, selectedAccount, selectedNetwork, params]
+    [quote, selectedRoute, account, network, params]
   )
 
   return {

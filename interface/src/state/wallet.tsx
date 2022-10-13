@@ -29,19 +29,12 @@ const initialState: WalletState = {
     takerAsset: '',
     nativeAsset: ''
   },
-  tokenList: [],
-  selectedAccount: undefined,
-  selectedNetwork: undefined,
   // ToDo: Add logic to updated if wallet is connected
   isConnected: false,
-  supportedNetworks: [],
-  braveWalletAccounts: [],
-  supportedExchanges: [],
   // ToDo: Set up local storage for userSelectedExchanges
   // and other user prefs
   userSelectedExchanges: [],
-  networkFeeEstimates: {} as Record<string, GasEstimate>,
-  defaultBaseCurrency: ''
+  networkFeeEstimates: {} as Record<string, GasEstimate>
 }
 
 // Wallet State Reducer
@@ -51,22 +44,8 @@ const WalletReducer = (state: WalletState, action: WalletActions): WalletState =
       return { ...state, tokenBalances: { ...state.tokenBalances, ...action.payload } }
     case 'updateSpotPrices':
       return { ...state, spotPrices: { ...state.spotPrices, ...action.payload } }
-    case 'updateTokenList':
-      return { ...state, tokenList: action.payload }
-    case 'updateSelectedNetwork':
-      return { ...state, selectedNetwork: action.payload }
-    case 'updateSupportedNetworks':
-      return { ...state, supportedNetworks: action.payload }
-    case 'updateSelectedAccount':
-      return { ...state, selectedAccount: action.payload }
-    case 'updateBraveWalletAccounts':
-      return { ...state, braveWalletAccounts: action.payload }
-    case 'updateSupportedExchanges':
-      return { ...state, supportedExchanges: action.payload }
     case 'updateUserSelectedExchanges':
       return { ...state, userSelectedExchanges: action.payload }
-    case 'updateDefaultBaseCurrency':
-      return { ...state, defaultBaseCurrency: action.payload }
     case 'setIsConnected':
       return { ...state, isConnected: action.payload }
     default:
@@ -83,127 +62,45 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
   const { children } = props
 
   // Swap Methods
-  const {
-    getAllTokens,
-    getBalance,
-    getTokenPrice,
-    getTokenBalance,
-    getSelectedNetwork,
-    getSelectedAccount,
-    getSupportedNetworks,
-    getBraveWalletAccounts,
-    getExchanges,
-    getDefaultBaseCurrency
-  } = useSwapContext()
+  const { assetsList, network, account, getBalance, getTokenPrice, getTokenBalance } =
+    useSwapContext()
 
   // Wallet State
   const [state, dispatch] = useReducer(WalletReducer, initialState)
-  const { tokenList, selectedAccount, selectedNetwork, supportedNetworks } = state
 
   React.useEffect(() => {
-    // Gets Selected Network and then sets to state
-    getSelectedNetwork()
-      .then(result => dispatch({ type: 'updateSelectedNetwork', payload: result }))
-      .catch(error => console.log(error))
-
-    // Get Supported Swap Networks and then sets to state
-    getSupportedNetworks()
-      .then(result => dispatch({ type: 'updateSupportedNetworks', payload: result }))
-      .catch(error => console.log(error))
-
-    // Gets Selected Account and then sets to state
-    getSelectedAccount()
-      .then(result => dispatch({ type: 'updateSelectedAccount', payload: result }))
-      .catch(error => console.log(error))
-
-    // Gets a list of Brave Wallet Accounts and sets to state
-    if (getBraveWalletAccounts) {
-      getBraveWalletAccounts()
-        .then(result => dispatch({ type: 'updateBraveWalletAccounts', payload: result }))
-        .catch(error => console.log(error))
-    }
-
-    if (getDefaultBaseCurrency) {
-      getDefaultBaseCurrency()
-        .then(result =>
-          dispatch({
-            type: 'updateDefaultBaseCurrency',
-            payload: result
-          })
-        )
-        .catch(error => console.log(error))
-    }
-
-    getExchanges()
-      .then(result => dispatch({ type: 'updateSupportedExchanges', payload: result }))
-      .catch(error => console.log(error))
-  }, [
-    getSelectedNetwork,
-    getSupportedNetworks,
-    getSelectedAccount,
-    getBraveWalletAccounts,
-    getDefaultBaseCurrency,
-    getExchanges
-  ])
-
-  React.useEffect(() => {
-    // Gets all tokens and then sets to state
-    if (tokenList.length === 0 && selectedNetwork !== undefined) {
-      getAllTokens(selectedNetwork.chainId, selectedNetwork?.coin)
-        .then(result => dispatch({ type: 'updateTokenList', payload: result }))
-        .catch(error => console.log(error))
-    }
-
     // Fetch spot price for native asset, and update the state. During
     // initialisation, the default asset is always the native one.
-    if (selectedNetwork !== undefined) {
-      getTokenPrice(selectedNetwork.symbol).then(result => {
-        dispatch({
-          type: 'updateSpotPrices',
-          payload: {
-            nativeAsset: Amount.normalize(result),
-            makerAsset: Amount.normalize(result)
-          }
-        })
-      })
-    }
-
-    if (selectedNetwork !== undefined && selectedAccount !== undefined) {
-      tokenList.map(async token => {
-        try {
-          const result = token.isToken
-            ? await getTokenBalance(
-              token.contractAddress,
-              selectedAccount.address,
-              selectedAccount.coin,
-              token.chainId
-            )
-            : await getBalance(
-              selectedAccount.address,
-              selectedNetwork.coin,
-              selectedNetwork.chainId
-            )
-
-          dispatch({
-            type: 'updateTokenBalances',
-            payload: { [token.contractAddress.toLowerCase()]: Amount.normalize(result) }
-          })
-        } catch (e) {
-          console.log(e)
+    getTokenPrice(network.symbol).then(result => {
+      dispatch({
+        type: 'updateSpotPrices',
+        payload: {
+          nativeAsset: Amount.normalize(result),
+          makerAsset: Amount.normalize(result)
         }
       })
-    }
-  }, [
-    tokenList,
-    selectedAccount,
-    selectedNetwork,
-    supportedNetworks,
-    getTokenPrice,
-    getAllTokens,
-    getBalance,
-    getTokenBalance,
-    dispatch
-  ])
+    })
+
+    assetsList.map(async asset => {
+      try {
+        const result = asset.isToken
+          ? await getTokenBalance(
+            asset.contractAddress,
+            account.address,
+            account.coin,
+            asset.chainId
+          )
+          : await getBalance(account.address, network.coin, network.chainId)
+
+        dispatch({
+          type: 'updateTokenBalances',
+          payload: { [asset.contractAddress.toLowerCase()]: Amount.normalize(result) }
+        })
+      } catch (e) {
+        console.log(e)
+      }
+    })
+  }, [assetsList, account, network, getTokenPrice, getBalance, getTokenBalance, dispatch])
 
   return (
     <WalletStateContext.Provider value={{ state }}>

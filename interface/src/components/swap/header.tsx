@@ -10,15 +10,12 @@ import styled from 'styled-components'
 import { NetworkInfo } from '~/constants/types'
 
 // Components
-import {
-  ThemeButton,
-  SelectTokenOrNetworkButton,
-  ConnectWalletButton
-} from '~/components/buttons'
+import { ThemeButton, SelectTokenOrNetworkButton, ConnectWalletButton } from '~/components/buttons'
 import { NetworkSelector } from './network-selector'
 
 // Hooks
-import { useWalletState, useWalletDispatch } from '~/state/wallet'
+import { useWalletDispatch } from '~/state/wallet'
+import { useSwapContext } from '~/context/swap.context'
 import { useNetworkFees } from '~/hooks/useNetworkFees'
 import { useOnClickOutside } from '~/hooks/useOnClickOutside'
 
@@ -27,27 +24,22 @@ import { Row, HorizontalSpacer } from '~/components/shared.styles'
 
 export const Header = () => {
   // Wallet State
-  const { state } = useWalletState()
-  const { selectedNetwork, supportedNetworks } = state
+  const { network, supportedNetworks, switchNetwork } = useSwapContext()
 
   // Dispatch
   const { dispatch } = useWalletDispatch()
 
   // State
-  const [showNetworkSelector, setShowNetworkSelector] =
-    React.useState<boolean>(false)
+  const [showNetworkSelector, setShowNetworkSelector] = React.useState<boolean>(false)
 
   // Refs
   const networkSelectorRef = React.useRef<HTMLDivElement>(null)
 
   // Methods
-  const onSelectNetwork = React.useCallback(
-    (network: NetworkInfo) => {
-      dispatch({ type: 'updateSelectedNetwork', payload: network })
-      setShowNetworkSelector(false)
-    },
-    [dispatch]
-  )
+  const onSelectNetwork = React.useCallback(async (network: NetworkInfo) => {
+    await switchNetwork(network)
+    setShowNetworkSelector(false)
+  }, [switchNetwork])
 
   const toggleTheme = React.useCallback(() => {
     // Sites local theme
@@ -55,8 +47,7 @@ export const Header = () => {
     const localTheme = document.documentElement.getAttribute('data-theme')
 
     // The opposite of the browsers default theme
-    const themeToChangeTo = window.matchMedia('(prefers-color-scheme: dark)')
-      .matches
+    const themeToChangeTo = window.matchMedia('(prefers-color-scheme: dark)').matches
       ? 'light'
       : 'dark'
 
@@ -85,45 +76,36 @@ export const Header = () => {
 
   // Hooks
   const { getNetworkFeeFiatEstimate } = useNetworkFees()
-  useOnClickOutside(
-    networkSelectorRef,
-    () => setShowNetworkSelector(false),
-    showNetworkSelector
-  )
+  useOnClickOutside(networkSelectorRef, () => setShowNetworkSelector(false), showNetworkSelector)
 
   const isNetworkSupported = React.useMemo(() => {
-    return supportedNetworks.some((network) => network.chainId === selectedNetwork?.chainId)
-  }, [selectedNetwork, supportedNetworks])
+    return supportedNetworks.some(supportedNetwork => supportedNetwork.chainId === network.chainId)
+  }, [network, supportedNetworks])
 
   return (
     <Wrapper>
       <BraveLogo />
-      {selectedNetwork !== undefined && (
-        <Row>
-          <ThemeButton onClick={toggleTheme} />
-          <SelectorWrapper ref={networkSelectorRef}>
-            <SelectTokenOrNetworkButton
-              onClick={() => setShowNetworkSelector((prev) => !prev)}
-              text={selectedNetwork.chainName}
-              icon={selectedNetwork.iconUrls[0]}
-              buttonSize='medium'
-              hasBackground={true}
-              hasShadow={true}
-              networkFeeFiatValue={getNetworkFeeFiatEstimate(selectedNetwork)}
-              isHeader={true}
-              networkNotSupported={!isNetworkSupported}
-            />
-            {showNetworkSelector && (
-              <NetworkSelector
-                isHeader={true}
-                onSelectNetwork={onSelectNetwork}
-              />
-            )}
-          </SelectorWrapper>
-          <HorizontalSpacer size={15} />
-          <ConnectWalletButton onClick={connectWallet} />
-        </Row>
-      )}
+      <Row>
+        <ThemeButton onClick={toggleTheme} />
+        <SelectorWrapper ref={networkSelectorRef}>
+          <SelectTokenOrNetworkButton
+            onClick={() => setShowNetworkSelector(prev => !prev)}
+            text={network.chainName}
+            icon={network.iconUrls[0]}
+            buttonSize='medium'
+            hasBackground={true}
+            hasShadow={true}
+            networkFeeFiatValue={getNetworkFeeFiatEstimate(network)}
+            isHeader={true}
+            networkNotSupported={!isNetworkSupported}
+          />
+          {showNetworkSelector && (
+            <NetworkSelector isHeader={true} onSelectNetwork={onSelectNetwork} />
+          )}
+        </SelectorWrapper>
+        <HorizontalSpacer size={15} />
+        <ConnectWalletButton onClick={connectWallet} />
+      </Row>
     </Wrapper>
   )
 }

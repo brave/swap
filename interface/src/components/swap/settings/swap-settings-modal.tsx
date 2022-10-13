@@ -67,14 +67,14 @@ export const SwapSettingsModal = (props: Props) => {
   } = props
 
   // Context
-  const { getLocale } = useSwapContext()
+  const { getLocale, network, exchanges } = useSwapContext()
 
   // Dispatch
   const { dispatch } = useWalletDispatch()
 
   // Wallet State
   const {
-    state: { selectedNetwork, supportedExchanges, userSelectedExchanges }
+    state: { userSelectedExchanges }
   } = useWalletState()
 
   // State
@@ -83,16 +83,16 @@ export const SwapSettingsModal = (props: Props) => {
   // Methods
   const handleCheckExchange = React.useCallback(
     (id: string, checked: boolean) => {
-      const exchange = supportedExchanges.find((e) => e.id === id)
+      const exchange = exchanges.find(e => e.id === id)
       if (checked && exchange !== undefined) {
         const addedList = [exchange, ...userSelectedExchanges]
         dispatch({ type: 'updateUserSelectedExchanges', payload: addedList })
         return
       }
-      const removedList = userSelectedExchanges.filter((e) => e.id !== id)
+      const removedList = userSelectedExchanges.filter(e => e.id !== id)
       dispatch({ type: 'updateUserSelectedExchanges', payload: removedList })
     },
-    [userSelectedExchanges, supportedExchanges, dispatch]
+    [userSelectedExchanges, exchanges, dispatch]
   )
 
   // Memos
@@ -101,9 +101,7 @@ export const SwapSettingsModal = (props: Props) => {
   }, [slippageTolerance])
 
   const modalTitle: string = React.useMemo(() => {
-    return showExchanges
-      ? getLocale('braveSwapExchanges')
-      : getLocale('braveSwapSettings')
+    return showExchanges ? getLocale('braveSwapExchanges') : getLocale('braveSwapSettings')
   }, [showExchanges])
 
   // render
@@ -115,11 +113,7 @@ export const SwapSettingsModal = (props: Props) => {
           {modalTitle}
         </Text>
         {showExchanges && (
-          <IconButton
-            icon={CloseIcon}
-            onClick={() => setShowExchanges(false)}
-            size={20}
-          />
+          <IconButton icon={CloseIcon} onClick={() => setShowExchanges(false)} size={20} />
         )}
       </Row>
 
@@ -128,12 +122,10 @@ export const SwapSettingsModal = (props: Props) => {
         <>
           <VerticalSpacer size={24} />
           <ExchangesColumn>
-            {supportedExchanges.map((exchange) => (
+            {exchanges.map(exchange => (
               <StandardCheckbox
                 id={exchange.id}
-                isChecked={userSelectedExchanges.some(
-                  (e) => e.id === exchange.id
-                )}
+                isChecked={userSelectedExchanges.some(e => e.id === exchange.id)}
                 label={exchange.name}
                 key={exchange.id}
                 onChange={handleCheckExchange}
@@ -155,7 +147,7 @@ export const SwapSettingsModal = (props: Props) => {
           >
             <Row marginBottom={22} rowWidth='full'>
               <Row horizontalAlign='flex-start'>
-                {slippagePresets.map((preset) => (
+                {slippagePresets.map(preset => (
                   <StandardButton
                     buttonText={`${preset}%`}
                     onClick={() => setSlippageTolerance(preset)}
@@ -168,16 +160,13 @@ export const SwapSettingsModal = (props: Props) => {
                   />
                 ))}
               </Row>
-              <SlippageInput
-                onChange={setSlippageTolerance}
-                value={customSlippageInputValue}
-              />
+              <SlippageInput onChange={setSlippageTolerance} value={customSlippageInputValue} />
             </Row>
           </ExpandSection>
           <VerticalDivider />
 
           {/* Ethereum Only Settings */}
-          {selectedNetwork?.coin === CoinType.Ethereum && (
+          {network.coin === CoinType.Ethereum && (
             <>
               {/* Exchanges */}
               <ExpandSection
@@ -191,10 +180,10 @@ export const SwapSettingsModal = (props: Props) => {
               <ExpandSection
                 label={getLocale('braveSwapNetworkFee')}
                 value={`$${gasEstimates.gasFeeFiat}`}
-                secondaryValue={`${gasEstimates.gasFee} ${selectedNetwork.symbol}`}
+                secondaryValue={`${gasEstimates.gasFee} ${network.symbol}`}
               >
                 <Column columnWidth='full'>
-                  {gasFeeOptions.map((option) => (
+                  {gasFeeOptions.map(option => (
                     <GasPresetButton
                       option={option}
                       isSelected={selectedGasFeeOption === option}
@@ -209,7 +198,7 @@ export const SwapSettingsModal = (props: Props) => {
           )}
 
           {/* Solana Only Settings */}
-          {selectedNetwork?.coin === CoinType.Solana && (
+          {network.coin === CoinType.Solana && (
             <>
               {/* Direct Route Toggle */}
               <ToggleSection
@@ -236,7 +225,7 @@ export const SwapSettingsModal = (props: Props) => {
 }
 
 const Modal = styled.div`
-  background-color: ${(p) => p.theme.color.legacy.background02};
+  background-color: ${p => p.theme.color.legacy.background02};
   border-radius: 16px;
   border: 1px solid var(--swap-settings-modal-border-color);
   box-shadow: var(--swap-settings-modal-box-shadow);

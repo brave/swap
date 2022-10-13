@@ -7,7 +7,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Hooks
-import { useWalletState } from '~/state/wallet'
+import { useSwapContext } from '~/context/swap.context'
 
 // Components
 import { Header } from './header'
@@ -19,9 +19,7 @@ interface Props {
 export const SwapContainer = (props: Props) => {
   const { children } = props
 
-  // Wallet State
-  const { state } = useWalletState()
-  const { selectedNetwork } = state
+  const { network } = useSwapContext()
 
   // State
   const [backgroundHeight, setBackgroundHeight] = React.useState<number>(0)
@@ -42,7 +40,7 @@ export const SwapContainer = (props: Props) => {
     setBackgroundOpacity(0.6)
     // Changes network background opacity back to 0.3 after 1 second
     setTimeout(() => setBackgroundOpacity(0.3), 1000)
-  }, [selectedNetwork])
+  }, [network])
 
   return (
     <Wrapper>
@@ -50,7 +48,7 @@ export const SwapContainer = (props: Props) => {
       <Container ref={ref}>{children}</Container>
       <Background
         height={backgroundHeight}
-        network={selectedNetwork?.chainName?.toLowerCase() ?? ''}
+        network={network.chainName?.toLowerCase() ?? ''}
         backgroundOpacity={backgroundOpacity}
       />
     </Wrapper>
@@ -82,11 +80,7 @@ const Background = styled.div<{
     rgb(93, 124, 209) 50%,
     rgb(122, 96, 232) 100%
   );
-  --ethereum: linear-gradient(
-    125deg,
-    rgb(98, 126, 234) 0%,
-    rgb(129, 152, 238) 100%
-  );
+  --ethereum: linear-gradient(125deg, rgb(98, 126, 234) 0%, rgb(129, 152, 238) 100%);
   --polygon: linear-gradient(
     125deg,
     rgb(130, 71, 229) 0%,
@@ -125,18 +119,18 @@ const Background = styled.div<{
   );
   filter: blur(150px);
   width: 512px;
-  height: ${(p) => p.height}px;
-  opacity: ${(p) => p.backgroundOpacity};
+  height: ${p => p.height}px;
+  opacity: ${p => p.backgroundOpacity};
   transition-delay: 0s;
   transition-duration: 1s;
   transition-timing-function: ease;
   position: absolute;
   z-index: 8;
-  background-image: var(--${(p) => p.network});
+  background-image: var(--${p => p.network});
 `
 
 const Container = styled.div`
-  background-color: ${(p) => p.theme.color.legacy.background01};
+  background-color: ${p => p.theme.color.legacy.background01};
   border-radius: 24px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;

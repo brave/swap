@@ -84,13 +84,8 @@ export const Swap = () => {
     swapValidationError
   } = swap
 
-  // Wallet State
-  const {
-    state: { selectedNetwork }
-  } = useWalletState()
-
   // Context
-  const { getLocale } = useSwapContext()
+  const { getLocale, network } = useSwapContext()
 
   // State
   const [showSwapSettings, setShowSwapSettings] = React.useState<boolean>(false)
@@ -158,9 +153,9 @@ export const Swap = () => {
             onInputChange={handleOnSetToAmount}
             hasInputError={swapValidationError === 'toAmountDecimalsOverflow'}
             isLoading={isFetchingQuote}
-            disabled={selectedNetwork?.coin === CoinType.Solana}
+            disabled={network?.coin === CoinType.Solana}
           />
-          {selectedNetwork?.coin === CoinType.Solana && quoteOptions.length > 0 && (
+          {network.coin === CoinType.Solana && quoteOptions.length > 0 && (
             <QuoteOptions
               options={quoteOptions}
               selectedQuoteOptionIndex={selectedQuoteOptionIndex}

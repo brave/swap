@@ -10,7 +10,6 @@ import styled from 'styled-components'
 import { useSwapContext } from '~/context/swap.context'
 
 // Hooks
-import { useWalletState } from '~/state/wallet'
 import { useWalletDispatch } from '~/state/wallet'
 
 // Types
@@ -34,26 +33,17 @@ export const SearchWithNetworkSelector = (props: Props) => {
   const { onSearchChanged, searchValue, networkSelectorDisabled } = props
 
   // Context
-  const { getLocale } = useSwapContext()
-
-  // Dispatch
-  const { dispatch } = useWalletDispatch()
-
-  // Wallet State
-  const {
-    state: { selectedNetwork }
-  } = useWalletState()
+  const { getLocale, network, switchNetwork } = useSwapContext()
 
   // State
-  const [showNetworkSelector, setShowNetworkSelector] =
-    React.useState<boolean>(false)
+  const [showNetworkSelector, setShowNetworkSelector] = React.useState<boolean>(false)
 
   const onSelectNetwork = React.useCallback(
-    (network: NetworkInfo) => {
-      dispatch({ type: 'updateSelectedNetwork', payload: network })
+    async (network: NetworkInfo) => {
+      await switchNetwork(network)
       setShowNetworkSelector(false)
     },
-    [dispatch]
+    [switchNetwork]
   )
 
   return (
@@ -67,23 +57,21 @@ export const SearchWithNetworkSelector = (props: Props) => {
       <HorizontalDivider marginRight={8} height={24} />
       <SelectorWrapper>
         <SelectTokenOrNetworkButton
-          icon={selectedNetwork?.iconUrls[0]}
-          onClick={() => setShowNetworkSelector((prev) => !prev)}
-          text={selectedNetwork?.chainName}
+          icon={network.iconUrls[0]}
+          onClick={() => setShowNetworkSelector(prev => !prev)}
+          text={network.chainName}
           buttonSize='small'
           disabled={networkSelectorDisabled}
         />
-        {showNetworkSelector && (
-          <NetworkSelector onSelectNetwork={onSelectNetwork} />
-        )}
+        {showNetworkSelector && <NetworkSelector onSelectNetwork={onSelectNetwork} />}
       </SelectorWrapper>
     </Wrapper>
   )
 }
 
 const Wrapper = styled.div`
-  background-color: ${(p) => p.theme.color.legacy.background01};
-  border: 1px solid ${(p) => p.theme.color.legacy.disabled};
+  background-color: ${p => p.theme.color.legacy.background01};
+  border: 1px solid ${p => p.theme.color.legacy.disabled};
   border-radius: 4px;
   box-sizing: border-box;
   flex-direction: row;

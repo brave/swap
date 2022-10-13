@@ -9,9 +9,6 @@ import styled from 'styled-components'
 // Context
 import { useSwapContext } from '~/context/swap.context'
 
-// Hooks
-import { useWalletState } from '~/state/wallet'
-
 // Types
 import { WalletAccount } from '~/constants/types'
 
@@ -42,12 +39,7 @@ export const AccountSelector = (props: Props) => {
   } = props
 
   // Context
-  const { getLocale } = useSwapContext()
-
-  // Wallet State
-  const {
-    state: { braveWalletAccounts }
-  } = useWalletState()
+  const { getLocale, walletAccounts } = useSwapContext()
 
   // Methods
   const onToggleShowAccountSelector = React.useCallback(() => {
@@ -66,20 +58,14 @@ export const AccountSelector = (props: Props) => {
     <SelectorWrapper>
       <SelectButton onClick={onToggleShowAccountSelector} disabled={disabled}>
         <Text textSize='12px' textColor='text02'>
-          {selectedAccount
-            ? selectedAccount.name
-            : getLocale('braveSwapSelectAccount')}
+          {selectedAccount ? selectedAccount.name : getLocale('braveSwapSelectAccount')}
         </Text>
         <StyledCaratDownIcon size={16} icon={CaratDownIcon} />
       </SelectButton>
       {showAccountSelector && (
         <SelectorBox>
-          {braveWalletAccounts.map((account) => (
-            <AccountListButton
-              account={account}
-              onClick={onClickSelectAccount}
-              key={account.id}
-            />
+          {walletAccounts.map(account => (
+            <AccountListButton account={account} onClick={onClickSelectAccount} key={account.id} />
           ))}
         </SelectorBox>
       )}
@@ -88,8 +74,8 @@ export const AccountSelector = (props: Props) => {
 }
 
 const SelectButton = styled.button`
-  background-color: ${(p) => p.theme.color.legacy.background01};
-  border: 1px solid ${(p) => p.theme.color.legacy.interactive08};
+  background-color: ${p => p.theme.color.legacy.background01};
+  border: 1px solid ${p => p.theme.color.legacy.interactive08};
   border-radius: 4px;
   box-sizing: border-box;
   flex-direction: row;
@@ -107,7 +93,7 @@ const SelectorWrapper = styled.div`
 `
 
 const SelectorBox = styled.div`
-  background-color: ${(p) => p.theme.color.legacy.background01};
+  background-color: ${p => p.theme.color.legacy.background01};
   width: 200px;
   position: absolute;
   z-index: 10;
@@ -120,5 +106,5 @@ const SelectorBox = styled.div`
 `
 
 const StyledCaratDownIcon = styled(Icon)`
-  background-color: ${(p) => p.theme.color.legacy.text01};
+  background-color: ${p => p.theme.color.legacy.text01};
 `
