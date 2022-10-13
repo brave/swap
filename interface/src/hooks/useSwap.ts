@@ -213,7 +213,7 @@ export const useSwap = () => {
 
   const refreshMakerAssetSpotPrice = React.useCallback(
     async (token: BlockchainToken) => {
-      const price = await getTokenPrice(token.isToken ? token.contractAddress : token.symbol)
+      const price = await getTokenPrice(token)
       dispatch({
         type: 'updateSpotPrices',
         payload: token.isToken ? { makerAsset: price } : { makerAsset: price, nativeAsset: price }
@@ -224,7 +224,7 @@ export const useSwap = () => {
 
   const refreshTakerAssetSpotPrice = React.useCallback(
     async (token: BlockchainToken) => {
-      const price = await getTokenPrice(token.isToken ? token.contractAddress : token.symbol)
+      const price = await getTokenPrice(token)
       dispatch({
         type: 'updateSpotPrices',
         payload: token.isToken ? { takerAsset: price } : { takerAsset: price, nativeAsset: price }

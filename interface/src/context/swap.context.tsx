@@ -40,7 +40,7 @@ interface SwapContextInterface {
   supportedNetworks: NetworkInfo[]
   switchAccount: (account: WalletAccount) => Promise<void>
   switchNetwork: (network: NetworkInfo) => Promise<void>
-  getTokenPrice: (contractAddress: string) => Promise<string>
+  getTokenPrice: (token: BlockchainToken) => Promise<string>
   swapService: {
     getZeroExPriceQuote: (params: ZeroExSwapParams) => Promise<ZeroExQuoteResponse>
     getZeroExTransactionPayload: (params: ZeroExSwapParams) => Promise<ZeroExSwapResponse>

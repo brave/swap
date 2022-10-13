@@ -14,6 +14,7 @@ import { useSwapContext } from '~/context/swap.context'
 
 // Utils
 import Amount from '~/utils/amount'
+import { makeNetworkAsset } from '~/utils/assets'
 
 // Create Wallet State Context
 const WalletStateContext = createContext<{ state: WalletState } | undefined>(undefined)
@@ -67,11 +68,12 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
 
   // Wallet State
   const [state, dispatch] = useReducer(WalletReducer, initialState)
+  const nativeAsset = React.useMemo(() => makeNetworkAsset(network), [network])
 
   React.useEffect(() => {
     // Fetch spot price for native asset, and update the state. During
     // initialisation, the default asset is always the native one.
-    getTokenPrice(network.symbol).then(result => {
+    getTokenPrice(nativeAsset).then(result => {
       dispatch({
         type: 'updateSpotPrices',
         payload: {
