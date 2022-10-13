@@ -15,7 +15,7 @@ import {
 } from './mock-quote-options'
 import { mockNetworkFeeEstimates } from './mock-network-fee-estimates'
 import {
-  ApproveERC20Params,
+  ApproveERC20Params, BlockchainToken,
   ETHSendTransactionParams,
   JupiterQuoteParams,
   JupiterSwapParams,
@@ -44,8 +44,8 @@ export const getTokenBalance = async (
   return balance ?? '0'
 }
 
-export const getTokenPrice = async (contractAddress: string) => {
-  const price = mockSpotPrices[contractAddress]
+export const getTokenPrice = async (token: BlockchainToken) => {
+  const price = mockSpotPrices[token.contractAddress]
   if (!price) {
     throw new Error('Contract address not found')
   }

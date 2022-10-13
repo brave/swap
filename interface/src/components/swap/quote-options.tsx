@@ -45,7 +45,7 @@ export const QuoteOptions = (props: Props) => {
   React.useEffect(() => {
     let ignore = false
     if (options[selectedQuoteOptionIndex] !== undefined) {
-      getTokenPrice(options[selectedQuoteOptionIndex].toToken.contractAddress)
+      getTokenPrice(options[selectedQuoteOptionIndex].toToken)
         .then((result) => {
           if (!ignore) {
             setSpotPrice(Number(Amount.normalize(result)))
