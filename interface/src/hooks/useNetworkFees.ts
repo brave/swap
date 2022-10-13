@@ -26,7 +26,7 @@ export const useNetworkFees = () => {
         return ''
       }
       if (spotPrices.nativeAsset === '') {
-          return ''
+        return ''
       }
 
       return new Amount(spotPrices.nativeAsset)

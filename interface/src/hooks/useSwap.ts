@@ -246,8 +246,8 @@ export const useSwap = () => {
   // Methods
   const handleJupiterQuoteRefresh = React.useCallback(
     async (overrides: Partial<SwapParams>) => {
-      const { quote, error } = await jupiter.refresh(overrides)
-      if (!quote || error || !toToken) {
+      const quote = await jupiter.refresh(overrides)
+      if (!quote || !toToken) {
         return
       }
 
@@ -262,8 +262,8 @@ export const useSwap = () => {
 
   const handleZeroExQuoteRefresh = React.useCallback(
     async (overrides: Partial<SwapParams>) => {
-      const { quote, error } = await zeroEx.refresh(overrides)
-      if (!quote || error) {
+      const quote = await zeroEx.refresh(overrides)
+      if (!quote) {
         return
       }
 
