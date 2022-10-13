@@ -52,11 +52,11 @@ export const QuoteInfo = (props: Props) => {
   const { getNetworkFeeFiatEstimate } = useNetworkFees()
 
   // Context
-  const { getLocale } = useSwapContext()
+  const { getLocale, network } = useSwapContext()
 
   // Wallet State
   const { state } = useWalletState()
-  const { spotPrices, selectedNetwork } = state
+  const { spotPrices } = state
 
   // State
   const [showAdvanced, setShowAdvanced] = React.useState<boolean>(false)
@@ -67,9 +67,7 @@ export const QuoteInfo = (props: Props) => {
       return ''
     }
 
-    return `1 ${
-      selectedQuoteOption.fromToken.symbol
-    } ≈ ${selectedQuoteOption.rate.format(6)} ${
+    return `1 ${selectedQuoteOption.fromToken.symbol} ≈ ${selectedQuoteOption.rate.format(6)} ${
       selectedQuoteOption.toToken.symbol
     }`
   }, [selectedQuoteOption])
@@ -86,8 +84,7 @@ export const QuoteInfo = (props: Props) => {
       const toTokenPrice = spotPrices.takerAsset
       const coinGeckoRate = Number(toTokenPrice) / Number(fromTokenPrice)
       const coinGeckoMinimumReceived = Number(toAmount) * coinGeckoRate
-      const impact =
-        selectedQuoteOption.toAmount.toNumber() / coinGeckoMinimumReceived
+      const impact = selectedQuoteOption.toAmount.toNumber() / coinGeckoMinimumReceived
       return impact.toFixed(2)
     }
     return ''
@@ -105,10 +102,7 @@ export const QuoteInfo = (props: Props) => {
       return ''
     }
 
-    return selectedQuoteOption.minimumToAmount.formatAsAsset(
-      6,
-      selectedQuoteOption.toToken.symbol
-    )
+    return selectedQuoteOption.minimumToAmount.formatAsAsset(6, selectedQuoteOption.toToken.symbol)
   }, [selectedQuoteOption])
 
   // Methods
@@ -120,7 +114,7 @@ export const QuoteInfo = (props: Props) => {
   }, [fromToken, toToken])
 
   const toggleShowAdvanced = React.useCallback(() => {
-    setShowAdvanced((prev) => !prev)
+    setShowAdvanced(prev => !prev)
   }, [])
 
   return (
@@ -138,18 +132,11 @@ export const QuoteInfo = (props: Props) => {
           <Row rowWidth='full' marginBottom={10} horizontalPadding={16}>
             <HorizontalSpacer size={1} />
             <Row>
-              <Text
-                textSize='14px'
-                textColor={coinGeckoImpact > swapImpact ? 'error' : 'text01'}
-              >
+              <Text textSize='14px' textColor={coinGeckoImpact > swapImpact ? 'error' : 'text01'}>
                 {`< ${coinGeckoImpact}%`} {getLocale('braveSwapCoinGecko')}
               </Text>
               <HorizontalSpacer size={4} />
-              <Link
-                rel='noopener noreferrer'
-                target='_blank'
-                href={coinGeckoAPIURL}
-              >
+              <Link rel='noopener noreferrer' target='_blank' href={coinGeckoAPIURL}>
                 {getLocale('braveSwapAPI')} {`>`}
               </Link>
             </Row>
@@ -171,16 +158,12 @@ export const QuoteInfo = (props: Props) => {
           </Row>
           {selectedQuoteOption && selectedQuoteOption.sources.length > 0 && (
             <Row rowWidth='full' marginBottom={8} horizontalPadding={16}>
-              <Text textSize='14px'>
-                {getLocale('braveSwapLiquidityProvider')}
-              </Text>
+              <Text textSize='14px'>{getLocale('braveSwapLiquidityProvider')}</Text>
               <Row>
                 {selectedQuoteOption.sources.map((source, idx) => (
                   <>
                     <Bubble>
-                      <Text textSize='14px'>
-                        {source.name.split('_').join(' ')}
-                      </Text>
+                      <Text textSize='14px'>{source.name.split('_').join(' ')}</Text>
                       {LPMetadata[source.name] ? (
                         <LPIcon icon={LPMetadata[source.name]} size={16} />
                       ) : null}
@@ -202,15 +185,15 @@ export const QuoteInfo = (props: Props) => {
         <Text textSize='14px'>{getLocale('braveSwapNetworkFee')}</Text>
         <Bubble>
           <FuelTank icon={FuelTankIcon} size={12} />
-          <Text textSize='14px'>
-            {selectedNetwork ? getNetworkFeeFiatEstimate(selectedNetwork) : ''}
-          </Text>
+          <Text textSize='14px'>{getNetworkFeeFiatEstimate(network)}</Text>
         </Bubble>
       </Row>
       <VerticalDivider />
       <Row rowWidth='full' horizontalAlign='center' verticalPadding={7} horizontalPadding={16}>
         <AdvancedButton onClick={toggleShowAdvanced}>
-          <Text textSize='14px' textColor='text03'>{getLocale('braveSwapAdvanced')}</Text>
+          <Text textSize='14px' textColor='text03'>
+            {getLocale('braveSwapAdvanced')}
+          </Text>
           <HorizontalSpacer size={8} />
           <Arrow icon={CaratDownIcon} isSelected={showAdvanced} size={12} />
         </AdvancedButton>
@@ -221,12 +204,12 @@ export const QuoteInfo = (props: Props) => {
 }
 
 const HorizontalArrows = styled(Icon)`
-  background-color: ${(p) => p.theme.color.legacy.text03};
+  background-color: ${p => p.theme.color.legacy.text03};
   margin-left: 8px;
 `
 
 const FuelTank = styled(Icon)`
-  background-color: ${(p) => p.theme.color.legacy.text02};
+  background-color: ${p => p.theme.color.legacy.text02};
   margin-right: 6px;
 `
 
@@ -235,8 +218,8 @@ const AdvancedButton = styled.button`
 `
 
 const Arrow = styled(Icon)<{ isSelected: boolean }>`
-  background-color: ${(p) => p.theme.color.legacy.text03};
-  transform: ${(p) => (p.isSelected ? 'rotate(180deg)' : 'unset')};
+  background-color: ${p => p.theme.color.legacy.text03};
+  transform: ${p => (p.isSelected ? 'rotate(180deg)' : 'unset')};
   transition: transform 300ms ease;
 `
 
@@ -258,12 +241,12 @@ const Link = styled.a`
 `
 
 const LPIcon = styled.div<{ icon: string; size: number }>`
-  background-image: url(${(p) => p.icon});
+  background-image: url(${p => p.icon});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  height: ${(p) => p.size}px;
-  width: ${(p) => p.size}px;
+  height: ${p => p.size}px;
+  width: ${p => p.size}px;
   margin-left: 6px;
   border-radius: 50px;
 `

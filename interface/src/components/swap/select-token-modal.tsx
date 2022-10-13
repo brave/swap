@@ -40,11 +40,11 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
     const { onClose, onSelectToken, getAssetBalance, disabledToken, selectingFromOrTo } = props
 
     // Context
-    const { getLocale } = useSwapContext()
+    const { getLocale, assetsList } = useSwapContext()
 
     // Wallet State
     const {
-      state: { isConnected, tokenList }
+      state: { isConnected }
     } = useWalletState()
 
     // State
@@ -70,14 +70,14 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
 
     const filteredTokenListBySearch: BlockchainToken[] = React.useMemo(() => {
       if (searchValue === '') {
-        return tokenList
+        return assetsList
       }
-      return tokenList.filter(
+      return assetsList.filter(
         (token: BlockchainToken) =>
           token.name.toLowerCase().startsWith(searchValue.toLowerCase()) ||
           token.symbol.toLowerCase().startsWith(searchValue.toLowerCase())
       )
-    }, [tokenList, searchValue])
+    }, [assetsList, searchValue])
 
     const tokenListWithBalances: BlockchainToken[] = React.useMemo(() => {
       return filteredTokenListBySearch.filter((token: BlockchainToken) =>

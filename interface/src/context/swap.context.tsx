@@ -34,10 +34,12 @@ interface SwapContextInterface {
     coin: number,
     chainId: string
   ) => Promise<string>
-  getAllTokens: (chainId: string, coin: number) => Promise<BlockchainToken[]>
-  getSelectedAccount: () => Promise<WalletAccount>
-  getSelectedNetwork: () => Promise<NetworkInfo>
-  getSupportedNetworks: () => Promise<NetworkInfo[]>
+  assetsList: BlockchainToken[]
+  account: WalletAccount
+  network: NetworkInfo
+  supportedNetworks: NetworkInfo[]
+  switchAccount: (account: WalletAccount) => Promise<void>
+  switchNetwork: (network: NetworkInfo) => Promise<void>
   getTokenPrice: (contractAddress: string) => Promise<string>
   swapService: {
     getZeroExPriceQuote: (params: ZeroExSwapParams) => Promise<ZeroExQuoteResponse>
@@ -46,10 +48,10 @@ interface SwapContextInterface {
     getJupiterTransactionsPayload: (params: JupiterSwapParams) => Promise<JupiterSwapResponse>
     isSwapSupported: (chainId: string) => Promise<boolean>
   }
-  getBraveWalletAccounts?: () => Promise<WalletAccount[]>
-  getExchanges: () => Promise<Exchange[]>
+  walletAccounts: WalletAccount[]
+  exchanges: Exchange[]
   getNetworkFeeEstimate: (chainId: string) => Promise<GasEstimate>
-  getDefaultBaseCurrency?: () => Promise<string>
+  defaultBaseCurrency: string
   ethWalletAdapter: {
     getGasPrice: (chainId: string) => Promise<string>
     getGasPrice1559: (chainId: string) => Promise<GasPrice1559>
@@ -77,18 +79,20 @@ export interface SwapProviderInterface extends SwapContextInterface {
 const SwapProvider = (props: SwapProviderInterface) => {
   const {
     children,
+    assetsList,
+    network,
+    account,
+    supportedNetworks,
+    exchanges,
+    walletAccounts,
+    defaultBaseCurrency,
+    switchAccount,
+    switchNetwork,
     getLocale,
     getBalance,
     getTokenBalance,
-    getAllTokens,
-    getSelectedAccount,
-    getSelectedNetwork,
     getTokenPrice,
-    getSupportedNetworks,
-    getBraveWalletAccounts,
-    getExchanges,
     getNetworkFeeEstimate,
-    getDefaultBaseCurrency,
     ethWalletAdapter,
     solWalletAdapter,
     swapService
@@ -97,18 +101,20 @@ const SwapProvider = (props: SwapProviderInterface) => {
   return (
     <SwapContext.Provider
       value={{
+        assetsList,
+        network,
+        account,
+        supportedNetworks,
+        exchanges,
+        walletAccounts,
+        defaultBaseCurrency,
+        switchAccount,
+        switchNetwork,
         getLocale,
         getBalance,
         getTokenBalance,
-        getAllTokens,
-        getSelectedAccount,
-        getSelectedNetwork,
         getTokenPrice,
-        getSupportedNetworks,
-        getBraveWalletAccounts,
-        getExchanges,
         getNetworkFeeEstimate,
-        getDefaultBaseCurrency,
         ethWalletAdapter,
         solWalletAdapter,
         swapService

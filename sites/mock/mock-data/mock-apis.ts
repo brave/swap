@@ -5,9 +5,7 @@
 
 // Mock Data
 import { mockEVMNetworksData } from './mock-api-data'
-import { mockEthereumNetwork, mockNetworks } from './mock-networks'
-import { mockEthereumTokens } from './mock-tokens'
-import { mockAccount1, mockAccounts } from './mock-accounts'
+import { mockEthereumNetwork } from './mock-networks'
 import { mockSpotPrices } from './mock-spot-prices'
 import {
   mockJupiterQuote,
@@ -15,7 +13,6 @@ import {
   mockZeroExQuoteResponse,
   mockZeroExSwapResponse
 } from './mock-quote-options'
-import { mockExchanges } from './mock-exchanges'
 import { mockNetworkFeeEstimates } from './mock-network-fee-estimates'
 import {
   ApproveERC20Params,
@@ -47,25 +44,6 @@ export const getTokenBalance = async (
   return balance ?? '0'
 }
 
-export const getAllTokens = async (chainId: string, coin: number) => {
-  if (coin === mockEthereumNetwork.coin && chainId === mockEthereumNetwork.chainId) {
-    return mockEthereumTokens
-  }
-  return []
-}
-
-export const getSelectedAccount = async () => {
-  return mockAccount1
-}
-
-export const getBraveWalletAccounts = async () => {
-  return mockAccounts
-}
-
-export const getSelectedNetwork = async () => {
-  return mockEthereumNetwork
-}
-
 export const getTokenPrice = async (contractAddress: string) => {
   const price = mockSpotPrices[contractAddress]
   if (!price) {
@@ -73,14 +51,6 @@ export const getTokenPrice = async (contractAddress: string) => {
   }
 
   return price
-}
-
-export const getSupportedNetworks = async () => {
-  return mockNetworks
-}
-
-export const getExchanges = async () => {
-  return mockExchanges
 }
 
 export const getNetworkFeeEstimate = async (chainId: string) => {
@@ -105,10 +75,6 @@ export const swapService = {
   isSwapSupported: async (chainId: string) => {
     return true
   }
-}
-
-export const getDefaultBaseCurrency = async () => {
-  return 'USD'
 }
 
 export const ethWalletAdapter = {

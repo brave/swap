@@ -26,11 +26,7 @@ export const GasPresetButton = (props: Props) => {
   const { onClick, isSelected, option, gasEstimates } = props
 
   // Context
-  const { getLocale } = useSwapContext()
-
-  // Wallet State
-  const { state } = useWalletState()
-  const { selectedNetwork } = state
+  const { getLocale, network } = useSwapContext()
 
   return (
     <Button onClick={onClick} isSelected={isSelected}>
@@ -52,7 +48,7 @@ export const GasPresetButton = (props: Props) => {
           {gasEstimates.gasFeeGwei} {getLocale('braveSwapGwei')}
         </Text>
         <Text textColor='text03' textSize='12px' isBold={false}>
-          {gasEstimates.gasFee} {selectedNetwork?.symbol}
+          {gasEstimates.gasFee} {network?.symbol}
         </Text>
       </Column>
     </Button>
@@ -65,13 +61,11 @@ const Button = styled.button<{
   display: flex;
   justify-content: space-between;
   width: 100%;
-  background-color: ${(p) => p.theme.color.legacy.background01};
+  background-color: ${p => p.theme.color.legacy.background01};
   border-radius: 8px;
   border: 1px solid
-    ${(p) =>
-      p.isSelected
-        ? 'var(--gas-preset-button-border-selected)'
-        : p.theme.color.legacy.divider01};
+    ${p =>
+      p.isSelected ? 'var(--gas-preset-button-border-selected)' : p.theme.color.legacy.divider01};
   padding: 12px 16px;
   margin-bottom: 8px;
   &:hover {

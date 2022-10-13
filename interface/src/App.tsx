@@ -24,18 +24,20 @@ interface AppProps extends SwapProviderInterface {
 const App = (props: AppProps) => {
   const {
     theme,
+    assetsList,
+    account,
+    network,
+    supportedNetworks,
+    defaultBaseCurrency,
+    exchanges,
+    walletAccounts,
+    switchAccount,
+    switchNetwork,
     getBalance,
     getTokenBalance,
     getLocale,
-    getAllTokens,
-    getSelectedAccount,
-    getSelectedNetwork,
     getTokenPrice,
-    getSupportedNetworks,
-    getBraveWalletAccounts,
-    getExchanges,
     getNetworkFeeEstimate,
-    getDefaultBaseCurrency,
     ethWalletAdapter,
     solWalletAdapter,
     swapService
@@ -44,18 +46,20 @@ const App = (props: AppProps) => {
   return (
     <ThemeProvider theme={theme || defaultTheme}>
       <SwapProvider
+        network={network}
+        account={account}
+        assetsList={assetsList}
+        supportedNetworks={supportedNetworks}
+        defaultBaseCurrency={defaultBaseCurrency}
+        exchanges={exchanges}
+        walletAccounts={walletAccounts}
+        switchAccount={switchAccount}
+        switchNetwork={switchNetwork}
         getBalance={getBalance}
         getTokenBalance={getTokenBalance}
         getLocale={getLocale}
-        getAllTokens={getAllTokens}
-        getSelectedAccount={getSelectedAccount}
-        getSelectedNetwork={getSelectedNetwork}
         getTokenPrice={getTokenPrice}
-        getSupportedNetworks={getSupportedNetworks}
-        getBraveWalletAccounts={getBraveWalletAccounts}
-        getExchanges={getExchanges}
         getNetworkFeeEstimate={getNetworkFeeEstimate}
-        getDefaultBaseCurrency={getDefaultBaseCurrency}
         ethWalletAdapter={ethWalletAdapter}
         solWalletAdapter={solWalletAdapter}
         swapService={swapService}

@@ -15,11 +15,7 @@ import { useWalletState } from '~/state/wallet'
 import { useSwapContext } from '~/context/swap.context'
 
 // Styles
-import {
-  Text,
-  HorizontalSpacer,
-  HiddenResponsiveRow
-} from '~/components/shared.styles'
+import { Text, HorizontalSpacer, HiddenResponsiveRow } from '~/components/shared.styles'
 
 interface Props {
   onClick: () => void
@@ -29,34 +25,28 @@ export const ConnectWalletButton = (props: Props) => {
   const { onClick } = props
 
   // context
-  const { getLocale } = useSwapContext()
+  const { getLocale, account, walletAccounts } = useSwapContext()
 
   // Wallet State
   const { state } = useWalletState()
-  const { selectedAccount, isConnected, braveWalletAccounts } = state
+  const { isConnected } = state
 
   // Memos
   const accountOrb: string = React.useMemo(() => {
     return create({
-      seed: selectedAccount?.address.toLowerCase() || '',
+      seed: account.address.toLowerCase() || '',
       size: 8,
       scale: 16
     }).toDataURL()
-  }, [selectedAccount])
+  }, [account])
 
   const accountName: string = React.useMemo(() => {
-    if (!selectedAccount) {
-      return ''
-    }
-    return (
-      braveWalletAccounts.find((account) => account.address === selectedAccount.address)
-        ?.name ?? ''
-    )
-  }, [selectedAccount, braveWalletAccounts])
+    return walletAccounts.find(account => account.address === account.address)?.name ?? ''
+  }, [account, walletAccounts])
 
   return (
     <Button onClick={onClick} isConnected={isConnected}>
-      {isConnected && selectedAccount ? (
+      {isConnected ? (
         <>
           <AccountCircle orb={accountOrb} />{' '}
           <HiddenResponsiveRow>
@@ -66,7 +56,7 @@ export const ConnectWalletButton = (props: Props) => {
             <HorizontalSpacer size={4} />
           </HiddenResponsiveRow>
           <Text textSize='14px' textColor='text03' isBold={true}>
-            {reduceAddress(selectedAccount.address)}
+            {reduceAddress(account.address)}
           </Text>
         </>
       ) : (
@@ -77,24 +67,22 @@ export const ConnectWalletButton = (props: Props) => {
 }
 
 const Button = styled.button<{ isConnected: boolean }>`
-  background-color: ${(p) =>
+  background-color: ${p =>
     p.isConnected
       ? `var(--connect-wallet-button-background-connected)`
       : `var(--connect-wallet-button-background-disconnected)`};
   border-radius: 48px;
-  color: ${(p) =>
-    p.isConnected ? p.theme.color.legacy.text01 : p.theme.color.white};
+  color: ${p => (p.isConnected ? p.theme.color.legacy.text01 : p.theme.color.white)};
   font-size: 14px;
-  padding: ${(p) => (p.isConnected ? '8px 16px' : `10px 22px`)};
-  box-shadow: ${(p) =>
-    p.isConnected ? '0px 0px 10px rgba(0, 0, 0, 0.05)' : 'none'};
+  padding: ${p => (p.isConnected ? '8px 16px' : `10px 22px`)};
+  box-shadow: ${p => (p.isConnected ? '0px 0px 10px rgba(0, 0, 0, 0.05)' : 'none')};
 `
 
 const AccountCircle = styled.div<{ orb: string }>`
   width: 24px;
   height: 24px;
   border-radius: 100%;
-  background-image: url(${(p) => p.orb});
+  background-image: url(${p => p.orb});
   background-size: cover;
   margin-right: 8px;
 `

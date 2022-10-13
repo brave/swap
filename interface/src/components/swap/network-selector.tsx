@@ -9,7 +9,6 @@ import styled from 'styled-components'
 import { useSwapContext } from '~/context/swap.context'
 
 // Hooks
-import { useWalletState } from '~/state/wallet'
 import { useNetworkFees } from '~/hooks/useNetworkFees'
 
 // Types
@@ -33,12 +32,7 @@ export const NetworkSelector = (props: Props) => {
   const { getNetworkFeeFiatEstimate } = useNetworkFees()
 
   // Context
-  const { getLocale } = useSwapContext()
-
-  // Wallet State
-  const {
-    state: { supportedNetworks }
-  } = useWalletState()
+  const { getLocale, supportedNetworks } = useSwapContext()
 
   return (
     <SelectorBox isHeader={isHeader}>
@@ -54,12 +48,8 @@ export const NetworkSelector = (props: Props) => {
       <VerticalSpacer size={8} />
       <VerticalDivider />
       <VerticalSpacer size={4} />
-      {supportedNetworks.map((network) => (
-        <NetworkListButton
-          key={network.chainId}
-          onClick={onSelectNetwork}
-          network={network}
-        />
+      {supportedNetworks.map(network => (
+        <NetworkListButton key={network.chainId} onClick={onSelectNetwork} network={network} />
       ))}
     </SelectorBox>
   )
@@ -68,16 +58,16 @@ export const NetworkSelector = (props: Props) => {
 const SelectorBox = styled.div<{
   isHeader?: boolean
 }>`
-  background-color: ${(p) => p.theme.color.legacy.background01};
+  background-color: ${p => p.theme.color.legacy.background01};
   width: 222px;
   position: absolute;
   padding-bottom: 4px;
   z-index: 10;
-  top: ${(p) => (p.isHeader ? 42 : 40)}px;
+  top: ${p => (p.isHeader ? 42 : 40)}px;
   box-shadow: 0px 0px 16px var(--network-selector-shadow-color);
-  right: ${(p) => (p.isHeader ? 'unset' : '-10px')};
-  border-radius: ${(p) => (p.isHeader ? 16 : 4)}px;
+  right: ${p => (p.isHeader ? 'unset' : '-10px')};
+  border-radius: ${p => (p.isHeader ? 16 : 4)}px;
   @media screen and (max-width: 800px) {
-    left: ${(p) => (p.isHeader ? '0px' : 'unset')};
+    left: ${p => (p.isHeader ? '0px' : 'unset')};
   }
 `

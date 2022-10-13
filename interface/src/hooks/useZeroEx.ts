@@ -24,12 +24,7 @@ export function useZeroEx (params: SwapParams) {
   const [loading, setLoading] = React.useState<boolean>(false)
 
   // Context
-  const { swapService, ethWalletAdapter } = useSwapContext()
-
-  // Wallet State
-  const {
-    state: { selectedNetwork, selectedAccount }
-  } = useWalletState()
+  const { swapService, ethWalletAdapter, account, network } = useSwapContext()
 
   const refresh = React.useCallback(
     async function (overrides: Partial<SwapParams> = {}): Promise<ZeroExQuoteResponse | undefined> {
@@ -39,10 +34,7 @@ export function useZeroEx (params: SwapParams) {
       }
 
       // Perform data validation and early-exit
-      if (selectedNetwork?.coin !== CoinType.Ethereum) {
-        return
-      }
-      if (!selectedAccount) {
+      if (network.coin !== CoinType.Ethereum) {
         return
       }
       if (!overriddenParams.fromToken || !overriddenParams.toToken) {
@@ -95,7 +87,7 @@ export function useZeroEx (params: SwapParams) {
       try {
         const allowance = await ethWalletAdapter.getERC20Allowance(
           response.sellTokenAddress,
-          selectedAccount.address,
+          account.address,
           response.allowanceTarget
         )
         setHasAllowance(new Amount(allowance).gte(response.sellAmount))
@@ -107,7 +99,7 @@ export function useZeroEx (params: SwapParams) {
       setLoading(false)
       return response
     },
-    [selectedNetwork, selectedAccount, params]
+    [network, account, params]
   )
 
   const exchange = React.useCallback(
@@ -118,10 +110,7 @@ export function useZeroEx (params: SwapParams) {
       }
 
       // Perform data validation and early-exit
-      if (selectedNetwork?.coin !== CoinType.Ethereum) {
-        return
-      }
-      if (!selectedAccount) {
+      if (network.coin !== CoinType.Ethereum) {
         return
       }
       if (!overriddenParams.fromToken || !overriddenParams.toToken) {
@@ -165,7 +154,7 @@ export function useZeroEx (params: SwapParams) {
 
       try {
         await ethWalletAdapter.sendTransaction({
-          from: selectedAccount.address,
+          from: account.address,
           to,
           value: new Amount(value).toHex(),
           gas: new Amount(estimatedGas).toHex(),
@@ -178,14 +167,11 @@ export function useZeroEx (params: SwapParams) {
         console.error(`Error creating 0x transaction: ${e}`)
       }
     },
-    [selectedNetwork, selectedAccount, params]
+    [network, account, params]
   )
 
   const approve = React.useCallback(async () => {
     if (!quote || hasAllowance) {
-      return
-    }
-    if (!selectedAccount) {
       return
     }
 
@@ -197,7 +183,7 @@ export function useZeroEx (params: SwapParams) {
         allowance: new Amount(MAX_UINT256).toHex()
       })
       await ethWalletAdapter.sendTransaction({
-        from: selectedAccount.address,
+        from: account.address,
         to: sellTokenAddress,
         value: '0x0',
         data
@@ -206,7 +192,7 @@ export function useZeroEx (params: SwapParams) {
       // bubble up error
       console.error(`Error creating ERC20 approve transaction: ${e}`)
     }
-  }, [selectedAccount, quote, hasAllowance])
+  }, [account, quote, hasAllowance])
 
   return {
     quote,
