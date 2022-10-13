@@ -90,36 +90,20 @@ export const getNetworkFeeEstimate = async (chainId: string) => {
 export const swapService = {
   getZeroExPriceQuote: async (params: ZeroExSwapParams) => {
     await delay(2000)
-    return {
-      success: true,
-      response: mockZeroExQuoteResponse,
-      errorResponse: ''
-    }
+    return mockZeroExQuoteResponse
   },
   getZeroExTransactionPayload: async (params: ZeroExSwapParams) => {
-    return {
-      success: true,
-      response: mockZeroExSwapResponse,
-      errorResponse: ''
-    }
+    return mockZeroExSwapResponse
   },
   getJupiterQuote: async (params: JupiterQuoteParams) => {
     await delay(2000)
-    return {
-      success: true,
-      response: mockJupiterQuote,
-      errorResponse: ''
-    }
+    return mockJupiterQuote
   },
   getJupiterTransactionsPayload: async (params: JupiterSwapParams) => {
-    return {
-      success: true,
-      response: mockJupiterSwapTransactions,
-      errorResponse: ''
-    }
+    return mockJupiterSwapTransactions
   },
   isSwapSupported: async (chainId: string) => {
-    return { result: true }
+    return true
   }
 }
 

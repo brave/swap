@@ -40,29 +40,11 @@ interface SwapContextInterface {
   getSupportedNetworks: () => Promise<NetworkInfo[]>
   getTokenPrice: (contractAddress: string) => Promise<string>
   swapService: {
-    getZeroExPriceQuote: (params: ZeroExSwapParams) => Promise<{
-      success: boolean
-      response: ZeroExQuoteResponse
-      errorResponse: string
-    }>
-    getZeroExTransactionPayload: (params: ZeroExSwapParams) => Promise<{
-      success: boolean
-      response: ZeroExSwapResponse
-      errorResponse: string
-    }>
-    getJupiterQuote: (params: JupiterQuoteParams) => Promise<{
-      success: boolean
-      response: JupiterQuoteResponse
-      errorResponse: string
-    }>
-    getJupiterTransactionsPayload: (params: JupiterSwapParams) => Promise<{
-      success: boolean
-      response: JupiterSwapResponse
-      errorResponse: string
-    }>
-    isSwapSupported: (chainId: string) => Promise<{
-      result: boolean
-    }>
+    getZeroExPriceQuote: (params: ZeroExSwapParams) => Promise<ZeroExQuoteResponse>
+    getZeroExTransactionPayload: (params: ZeroExSwapParams) => Promise<ZeroExSwapResponse>
+    getJupiterQuote: (params: JupiterQuoteParams) => Promise<JupiterQuoteResponse>
+    getJupiterTransactionsPayload: (params: JupiterSwapParams) => Promise<JupiterSwapResponse>
+    isSwapSupported: (chainId: string) => Promise<boolean>
   }
   getBraveWalletAccounts?: () => Promise<WalletAccount[]>
   getExchanges: () => Promise<Exchange[]>

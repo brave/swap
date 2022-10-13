@@ -17,11 +17,6 @@ import { useWalletState } from '~/state/wallet'
 import Amount from '~/utils/amount'
 import { hexStrToNumberArray } from '~/utils/hex-utils'
 
-type Quote = {
-  quote?: ZeroExQuoteResponse
-  error?: ZeroExErrorResponse
-}
-
 export function useZeroEx (params: SwapParams) {
   const [quote, setQuote] = React.useState<ZeroExQuoteResponse | undefined>(undefined)
   const [error, setError] = React.useState<ZeroExErrorResponse | undefined>(undefined)
@@ -37,7 +32,7 @@ export function useZeroEx (params: SwapParams) {
   } = useWalletState()
 
   const refresh = React.useCallback(
-    async function (overrides: Partial<SwapParams> = {}): Promise<Quote> {
+    async function (overrides: Partial<SwapParams> = {}): Promise<ZeroExQuoteResponse | undefined> {
       const overriddenParams: SwapParams = {
         ...params,
         ...overrides
@@ -45,26 +40,28 @@ export function useZeroEx (params: SwapParams) {
 
       // Perform data validation and early-exit
       if (selectedNetwork?.coin !== CoinType.Ethereum) {
-        return {}
+        return
       }
       if (!selectedAccount) {
-          return {}
+        return
       }
       if (!overriddenParams.fromToken || !overriddenParams.toToken) {
-        return {}
+        return
       }
       if (!overriddenParams.fromAmount && !overriddenParams.toAmount) {
         setQuote(undefined)
         setError(undefined)
-        return {}
+        return
       }
       if (!overriddenParams.takerAddress) {
-        return {}
+        return
       }
 
       setLoading(true)
+      setHasAllowance(false)
+      let response
       try {
-        const { success, response, errorResponse } = await swapService.getZeroExPriceQuote({
+        response = await swapService.getZeroExPriceQuote({
           takerAddress: overriddenParams.takerAddress,
           sellAmount: overriddenParams.fromAmount,
           buyAmount: overriddenParams.toAmount,
@@ -73,44 +70,48 @@ export function useZeroEx (params: SwapParams) {
           slippagePercentage: overriddenParams.slippagePercentage,
           gasPrice: ''
         })
-        if (success && response) {
-          setQuote(response)
-          try {
-            const allowance = await ethWalletAdapter.getERC20Allowance(
-              response.sellTokenAddress,
-              selectedAccount.address,
-              response.allowanceTarget
-            )
-            setHasAllowance(new Amount(allowance).gte(response.sellAmount))
-          } catch (e) {
-            // bubble up error
-          }
-
-          return { quote: response, error: undefined }
-        } else if (errorResponse) {
-          try {
-            const err = JSON.parse(errorResponse) as ZeroExErrorResponse
-            setError(err)
-            return { quote: undefined, error: err }
-          } catch (e) {
-            console.error(`Error parsing 0x response: ${e}`)
-          } finally {
-            console.error(`Error calling getZeroExPriceQuote(): ${errorResponse}`)
-          }
-        }
+        setQuote(response)
       } catch (e) {
-        console.error(`Error getting 0x quote: ${e}`)
-      } finally {
-        setLoading(false)
+        console.log(`Error getting 0x quote: ${e}`)
+        try {
+          const err = JSON.parse((e as Error).message) as ZeroExErrorResponse
+          setError(err)
+        } catch (e) {
+          console.error(`Error parsing 0x response: ${e}`)
+        }
       }
 
-      return {}
+      // Native asset does not have allowance requirements, so we always
+      // default to true.
+      if (!overriddenParams.fromToken.isToken) {
+        setHasAllowance(true)
+      }
+
+      if (!response) {
+        setLoading(false)
+        return
+      }
+
+      try {
+        const allowance = await ethWalletAdapter.getERC20Allowance(
+          response.sellTokenAddress,
+          selectedAccount.address,
+          response.allowanceTarget
+        )
+        setHasAllowance(new Amount(allowance).gte(response.sellAmount))
+      } catch (e) {
+        // bubble up error
+        console.log(`Error getting ERC20 allowance: ${e}`)
+      }
+
+      setLoading(false)
+      return response
     },
     [selectedNetwork, selectedAccount, params]
   )
 
   const exchange = React.useCallback(
-    async function (overrides: Partial<SwapParams> = {}) {
+    async function (overrides: Partial<SwapParams> = {}): Promise<void> {
       const overriddenParams: SwapParams = {
         ...params,
         ...overrides
@@ -118,56 +119,63 @@ export function useZeroEx (params: SwapParams) {
 
       // Perform data validation and early-exit
       if (selectedNetwork?.coin !== CoinType.Ethereum) {
-        return {}
+        return
       }
       if (!selectedAccount) {
-          return {}
+        return
       }
       if (!overriddenParams.fromToken || !overriddenParams.toToken) {
-        return {}
+        return
       }
       if (!overriddenParams.fromAmount && !overriddenParams.toAmount) {
-        return {}
+        return
       }
       if (!overriddenParams.takerAddress) {
-        return {}
+        return
       }
 
-      const { success, response, errorResponse } = await swapService.getZeroExTransactionPayload({
-        takerAddress: overriddenParams.takerAddress,
-        sellAmount: overriddenParams.fromAmount,
-        buyAmount: overriddenParams.toAmount,
-        buyToken: overriddenParams.toToken.contractAddress,
-        sellToken: overriddenParams.fromToken.contractAddress,
-        slippagePercentage: overriddenParams.slippagePercentage,
-        gasPrice: ''
-      })
-
-      if (success && response) {
-        const { data, to, value, estimatedGas } = response
-
+      setLoading(true)
+      let response
+      try {
+        response = await swapService.getZeroExTransactionPayload({
+          takerAddress: overriddenParams.takerAddress,
+          sellAmount: overriddenParams.fromAmount,
+          buyAmount: overriddenParams.toAmount,
+          buyToken: overriddenParams.toToken.contractAddress,
+          sellToken: overriddenParams.fromToken.contractAddress,
+          slippagePercentage: overriddenParams.slippagePercentage,
+          gasPrice: ''
+        })
+      } catch (e) {
+        console.log(`Error getting 0x swap quote: ${e}`)
         try {
-          await ethWalletAdapter.sendTransaction({
-            from: selectedAccount.address,
-            to,
-            value: new Amount(value).toHex(),
-            gas: new Amount(estimatedGas).toHex(),
-            data: hexStrToNumberArray(data)
-          })
-
-          setQuote(undefined)
-        } catch (e) {
-          // bubble up error
-        }
-      } else if (errorResponse) {
-        try {
-          const err = JSON.parse(errorResponse) as ZeroExErrorResponse
+          const err = JSON.parse((e as Error).message) as ZeroExErrorResponse
           setError(err)
         } catch (e) {
           console.error(`Error parsing 0x response: ${e}`)
-        } finally {
-          console.error(`Error calling getZeroExTransactionPayload(): ${errorResponse}`)
         }
+      }
+
+      if (!response) {
+        setLoading(false)
+        return
+      }
+
+      const { data, to, value, estimatedGas } = response
+
+      try {
+        await ethWalletAdapter.sendTransaction({
+          from: selectedAccount.address,
+          to,
+          value: new Amount(value).toHex(),
+          gas: new Amount(estimatedGas).toHex(),
+          data: hexStrToNumberArray(data)
+        })
+
+        setQuote(undefined)
+      } catch (e) {
+        // bubble up error
+        console.error(`Error creating 0x transaction: ${e}`)
       }
     },
     [selectedNetwork, selectedAccount, params]
@@ -178,7 +186,7 @@ export function useZeroEx (params: SwapParams) {
       return
     }
     if (!selectedAccount) {
-        return
+      return
     }
 
     const { allowanceTarget, sellTokenAddress } = quote
@@ -196,6 +204,7 @@ export function useZeroEx (params: SwapParams) {
       })
     } catch (e) {
       // bubble up error
+      console.error(`Error creating ERC20 approve transaction: ${e}`)
     }
   }, [selectedAccount, quote, hasAllowance])
 

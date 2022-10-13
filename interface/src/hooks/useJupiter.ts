@@ -41,7 +41,9 @@ export function useJupiter (params: SwapParams) {
   } = useWalletState()
 
   const refresh = React.useCallback(
-    async function (overrides: Partial<SwapParams> = {}): Promise<Quote> {
+    async function (
+      overrides: Partial<SwapParams> = {}
+    ): Promise<JupiterQuoteResponse | undefined> {
       const overriddenParams: SwapParams = {
         ...params,
         ...overrides
@@ -49,46 +51,39 @@ export function useJupiter (params: SwapParams) {
 
       // Perform data validation and early-exit
       if (selectedNetwork?.coin !== CoinType.Solana) {
-        return {}
+        return
       }
       if (!overriddenParams.fromToken || !overriddenParams.toToken) {
-        return {}
+        return
       }
       if (!overriddenParams.fromAmount) {
         setQuote(undefined)
         setError(undefined)
-        return {}
+        return
       }
 
       setLoading(true)
+      let response
       try {
-        const { success, response, errorResponse } = await swapService.getJupiterQuote({
+        response = await swapService.getJupiterQuote({
           inputMint: overriddenParams.fromToken.contractAddress || WRAPPED_SOL_CONTRACT_ADDRESS,
           outputMint: overriddenParams.toToken.contractAddress || WRAPPED_SOL_CONTRACT_ADDRESS,
           amount: overriddenParams.fromAmount,
           slippagePercentage: overriddenParams.slippagePercentage
         })
-        if (success && response) {
-          setQuote(response)
-          return { quote: response, error: undefined }
-        } else if (errorResponse) {
-          try {
-            const err = JSON.parse(errorResponse) as JupiterErrorResponse
-            setError(err)
-            return { quote: undefined, error: err }
-          } catch (e) {
-            console.error(`Error parsing Jupiter response: ${e}`)
-          } finally {
-            console.error(`Error calling getJupiterQuote(): ${errorResponse}`)
-          }
-        }
+        setQuote(response)
       } catch (e) {
-        console.error(`Error getting Jupiter quote: ${e}`)
-      } finally {
-        setLoading(false)
+        console.log(`Error getting Jupiter quote: ${e}`)
+        try {
+          const err = JSON.parse((e as Error).message) as JupiterErrorResponse
+          setError(err)
+        } catch (e) {
+          console.error(`Error parsing Jupiter response: ${e}`)
+        }
       }
 
-      return {}
+      setLoading(false)
+      return response
     },
     [selectedNetwork, params]
   )
@@ -106,19 +101,36 @@ export function useJupiter (params: SwapParams) {
         return
       }
       if (!selectedAccount) {
-          return
+        return
       }
 
-      const { success, response, errorResponse } = await swapService.getJupiterTransactionsPayload({
-        userPublicKey: selectedAccount.address,
-        route: selectedRoute || quote.routes[0],
-        outputMint: params.toToken.contractAddress || WRAPPED_SOL_CONTRACT_ADDRESS
-      })
+      setLoading(true)
+      let response
+      try {
+        response = await swapService.getJupiterTransactionsPayload({
+          userPublicKey: selectedAccount.address,
+          route: selectedRoute || quote.routes[0],
+          outputMint: params.toToken.contractAddress || WRAPPED_SOL_CONTRACT_ADDRESS
+        })
+      } catch (e) {
+        console.log(`Error getting Jupiter swap transactions: ${e}`)
+        try {
+          const err = JSON.parse((e as Error).message) as JupiterErrorResponse
+          setError(err)
+        } catch (e) {
+          console.error(`Error parsing Jupiter response: ${e}`)
+        }
+      }
 
-      if (success && response) {
-        const { setupTransaction, swapTransaction, cleanupTransaction } = response
+      if (!response) {
+        setLoading(false)
+        return
+      }
 
-        // Ignore setupTransaction and cleanupTransaction
+      // Ignore setupTransaction and cleanupTransaction
+      const { setupTransaction, swapTransaction, cleanupTransaction } = response
+
+      try {
         await solWalletAdapter.sendTransaction({
           encodedTransaction: swapTransaction,
           from: selectedAccount.address,
@@ -126,16 +138,12 @@ export function useJupiter (params: SwapParams) {
             skipPreflight: true
           }
         })
-      } else if (errorResponse) {
-        try {
-          const err = JSON.parse(errorResponse) as JupiterErrorResponse
-          setError(err)
-        } catch (e) {
-          console.error(`Error parsing Jupiter response: ${e}`)
-        } finally {
-          console.error(`Error calling getJupiterTransactionsPayload(): ${errorResponse}`)
-        }
+      } catch (e) {
+        // Bubble up error
+        console.error(`Error creating Solana transaction: ${e}`)
       }
+
+      setLoading(false)
     },
     [quote, selectedRoute, selectedAccount, selectedNetwork, params]
   )
