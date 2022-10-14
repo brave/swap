@@ -28,7 +28,7 @@ export const CreateIconWithPlaceholder = (props: Props) => {
       return asset.logo === ''
     }
     if (network !== undefined) {
-      return network?.iconUrls[0] === '' || network.iconUrls[0] === undefined
+      return network?.logo === '' || network.logo === undefined
     }
     return true
   }, [network, asset])
@@ -69,7 +69,7 @@ export const CreateIconWithPlaceholder = (props: Props) => {
         return asset.logo
       }
       if (network !== undefined) {
-        return network.iconUrls[0]
+        return network.logo
       }
     }
     return ''

@@ -19,104 +19,96 @@ import {
 } from '../src/assets/asset-icons'
 
 export const mockEthereumNetwork: NetworkInfo = {
-  blockExplorerUrls: ['https://etherscan.io'],
+  blockExplorerUrl: 'https://etherscan.io',
   chainId: ChainID.ETHEREUM_MAINNET,
   chainName: 'Ethereum',
   coin: CoinType.Ethereum,
   decimals: 18,
-  iconUrls: [ETHIconUrl],
-  rpcUrls: [''],
+  logo: ETHIconUrl,
   symbol: 'ETH',
   symbolName: 'Ethereum',
   isEIP1559: true
 }
 
 export const mockBinanceNetwork: NetworkInfo = {
-  blockExplorerUrls: ['https://bscscan.com'],
+  blockExplorerUrl: 'https://bscscan.com',
   chainId: ChainID.BINANCE_SMART_CHAIN,
   chainName: 'Binance',
   coin: CoinType.Ethereum,
   decimals: 18,
-  iconUrls: [BNBIconUrl],
-  rpcUrls: [''],
+  logo: BNBIconUrl,
   symbol: 'BNB',
   symbolName: 'Binance',
   isEIP1559: false
 }
 
 export const mockPolygonNetwork: NetworkInfo = {
-  blockExplorerUrls: ['https://polygonscan.com'],
+  blockExplorerUrl: 'https://polygonscan.com',
   chainId: ChainID.POLYGON,
   chainName: 'Polygon',
   coin: CoinType.Ethereum,
   decimals: 18,
-  iconUrls: [MATICIconUrl],
-  rpcUrls: [''],
+  logo: MATICIconUrl,
   symbol: 'MATIC',
   symbolName: 'Polygon',
   isEIP1559: true
 }
 
 export const mockAvalancheNetwork: NetworkInfo = {
-  blockExplorerUrls: ['https://snowtrace.io'],
+  blockExplorerUrl: 'https://snowtrace.io',
   chainId: ChainID.AVALANCHE,
   chainName: 'Avalanche',
   coin: CoinType.Ethereum,
   decimals: 18,
-  iconUrls: [AVAXIconUrl],
-  rpcUrls: [''],
+  logo: AVAXIconUrl,
   symbol: 'AVAX',
   symbolName: 'Avalanche',
   isEIP1559: true
 }
 
 export const mockCeloNetwork: NetworkInfo = {
-  blockExplorerUrls: ['https://explorer.celo.org'],
+  blockExplorerUrl: 'https://explorer.celo.org',
   chainId: ChainID.CELO,
   chainName: 'Celo',
   coin: CoinType.Ethereum,
   decimals: 18,
-  iconUrls: [CELOIconUrl],
-  rpcUrls: [''],
+  logo: CELOIconUrl,
   symbol: 'CELO',
   symbolName: 'CELO',
   isEIP1559: false
 }
 
 export const mockFantomNetwork: NetworkInfo = {
-  blockExplorerUrls: ['https://ftmscan.com'],
+  blockExplorerUrl: 'https://ftmscan.com',
   chainId: ChainID.FANTOM,
   chainName: 'Fantom',
   coin: CoinType.Ethereum,
   decimals: 18,
-  iconUrls: [FTMIconUrl],
-  rpcUrls: [''],
+  logo: FTMIconUrl,
   symbol: 'FTM',
   symbolName: 'Fantom',
   isEIP1559: true
 }
 
 export const mockOptimismNetwork: NetworkInfo = {
-  blockExplorerUrls: ['https://optimistic.etherscan.io'],
+  blockExplorerUrl: 'https://optimistic.etherscan.io',
   chainId: ChainID.OPTIMISM,
   chainName: 'Optimism',
   coin: CoinType.Ethereum,
   decimals: 18,
-  iconUrls: [OPTIMISMIconUrl],
-  rpcUrls: [''],
+  logo: OPTIMISMIconUrl,
   symbol: 'ETH',
   symbolName: 'Ether',
   isEIP1559: false
 }
 
 export const mockSolanaNetwork: NetworkInfo = {
-  blockExplorerUrls: ['https://explorer.solana.com/'],
+  blockExplorerUrl: 'https://explorer.solana.com/',
   chainId: ChainID.SOLANA_MAINNET,
   chainName: 'Solana',
   coin: CoinType.Solana,
   decimals: 18,
-  iconUrls: [SOLIconUrl],
-  rpcUrls: [''],
+  logo: SOLIconUrl,
   symbol: 'SOL',
   symbolName: 'Solana',
   isEIP1559: false
