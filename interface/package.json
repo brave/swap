@@ -60,6 +60,6 @@
     "@vitejs/plugin-react": "2.1.0",
     "typescript": "^4.6.4",
     "vite": "^3.0.0",
-    "vite-plugin-dts": "^1.6.4"
+    "vite-plugin-dts": "1.6.6"
   }
 }
