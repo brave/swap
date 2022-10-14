@@ -5,7 +5,7 @@ export const makeNetworkAsset = (network: NetworkInfo): BlockchainToken => {
     contractAddress: '',
     name: network.symbolName,
     symbol: network.symbol,
-    logo: '', // Currently, we don't need logo for use-cases of makeNetworkAsset()
+    logo: network.logo,
     isToken: false,
     decimals: network.decimals,
     visible: true,

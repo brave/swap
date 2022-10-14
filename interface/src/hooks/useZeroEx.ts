@@ -55,10 +55,14 @@ export function useZeroEx (params: SwapParams) {
       try {
         response = await swapService.getZeroExPriceQuote({
           takerAddress: overriddenParams.takerAddress,
-          sellAmount: overriddenParams.fromAmount,
-          buyAmount: overriddenParams.toAmount,
-          buyToken: overriddenParams.toToken.contractAddress || NATIVE_ASSET_CONTRACT_ADDRESS_0X,
+          sellAmount: new Amount(overriddenParams.fromAmount)
+            .multiplyByDecimals(overriddenParams.fromToken.decimals)
+            .format(),
           sellToken: overriddenParams.fromToken.contractAddress || NATIVE_ASSET_CONTRACT_ADDRESS_0X,
+          buyAmount: new Amount(overriddenParams.toAmount)
+            .multiplyByDecimals(overriddenParams.toToken.decimals)
+            .format(),
+          buyToken: overriddenParams.toToken.contractAddress || NATIVE_ASSET_CONTRACT_ADDRESS_0X,
           slippagePercentage: overriddenParams.slippagePercentage,
           gasPrice: ''
         })

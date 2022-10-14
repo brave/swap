@@ -21,6 +21,9 @@ import { useWalletState } from '~/state/wallet'
 // Constants
 import { WRAPPED_SOL_CONTRACT_ADDRESS } from '~/constants/magics'
 
+// Utils
+import Amount from '~/utils/amount'
+
 export function useJupiter (params: SwapParams) {
   const [quote, setQuote] = React.useState<JupiterQuoteResponse | undefined>(undefined)
   const [error, setError] = React.useState<JupiterErrorResponse | undefined>(undefined)
@@ -58,7 +61,9 @@ export function useJupiter (params: SwapParams) {
         response = await swapService.getJupiterQuote({
           inputMint: overriddenParams.fromToken.contractAddress || WRAPPED_SOL_CONTRACT_ADDRESS,
           outputMint: overriddenParams.toToken.contractAddress || WRAPPED_SOL_CONTRACT_ADDRESS,
-          amount: overriddenParams.fromAmount,
+          amount: new Amount(overriddenParams.fromAmount)
+            .multiplyByDecimals(overriddenParams.fromToken.decimals)
+            .format(),
           slippagePercentage: overriddenParams.slippagePercentage
         })
         setQuote(response)
