@@ -9,6 +9,9 @@ import styled from 'styled-components'
 // Types
 import { NetworkInfo } from '~/constants/types'
 
+// Utils
+import { reduceNetworkDisplayName } from '~/utils/reduce-network-name'
+
 // Components
 import { ThemeButton, SelectTokenOrNetworkButton, ConnectWalletButton } from '~/components/buttons'
 import { NetworkSelector } from './network-selector'
@@ -108,7 +111,7 @@ export const Header = () => {
         <SelectorWrapper ref={networkSelectorRef}>
           <SelectTokenOrNetworkButton
             onClick={() => setShowNetworkSelector(prev => !prev)}
-            text={network.chainName}
+            text={reduceNetworkDisplayName(network.chainName)}
             network={network}
             buttonSize='medium'
             hasBackground={true}

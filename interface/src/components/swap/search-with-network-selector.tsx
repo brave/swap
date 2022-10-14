@@ -6,6 +6,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
+// Utils
+import { reduceNetworkDisplayName } from '~/utils/reduce-network-name'
+
 // Context
 import { useSwapContext } from '~/context/swap.context'
 
@@ -56,7 +59,7 @@ export const SearchWithNetworkSelector = (props: Props) => {
         <SelectTokenOrNetworkButton
           network={network}
           onClick={() => setShowNetworkSelector(prev => !prev)}
-          text={network.chainName}
+          text={reduceNetworkDisplayName(network.chainName)}
           buttonSize='small'
           disabled={networkSelectorDisabled}
         />
