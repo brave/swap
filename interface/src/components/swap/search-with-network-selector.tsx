@@ -9,9 +9,6 @@ import styled from 'styled-components'
 // Context
 import { useSwapContext } from '~/context/swap.context'
 
-// Hooks
-import { useWalletDispatch } from '~/state/wallet'
-
 // Types
 import { NetworkInfo } from '~/constants/types'
 
@@ -57,7 +54,7 @@ export const SearchWithNetworkSelector = (props: Props) => {
       <HorizontalDivider marginRight={8} height={24} />
       <SelectorWrapper>
         <SelectTokenOrNetworkButton
-          icon={network.iconUrls[0]}
+          network={network}
           onClick={() => setShowNetworkSelector(prev => !prev)}
           text={network.chainName}
           buttonSize='small'

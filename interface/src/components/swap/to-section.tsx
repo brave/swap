@@ -62,7 +62,7 @@ export const ToSection = (props: Props) => {
       <Row rowWidth='full'>
         <SelectTokenOrNetworkButton
           onClick={onClickSelectToken}
-          icon={token?.logo}
+          asset={token}
           text={token?.symbol}
           buttonType='secondary'
         />

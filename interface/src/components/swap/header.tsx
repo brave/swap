@@ -109,7 +109,7 @@ export const Header = () => {
           <SelectTokenOrNetworkButton
             onClick={() => setShowNetworkSelector(prev => !prev)}
             text={network.chainName}
-            icon={network.iconUrls[0]}
+            network={network}
             buttonSize='medium'
             hasBackground={true}
             hasShadow={true}

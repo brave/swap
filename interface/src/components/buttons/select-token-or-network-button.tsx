@@ -6,12 +6,18 @@
 import React from 'react'
 import styled from 'styled-components'
 
+// Types
+import { BlockchainToken, NetworkInfo } from '~/constants/types'
+
 // Context
 import { useSwapContext } from '~/context/swap.context'
 
 // Assets
 import CaratDownIcon from '~/assets/carat-down-icon.svg'
 import FuelTankIcon from '~/assets/fuel-tank-icon.svg'
+
+// Components
+import { CreateIconWithPlaceholder } from '~/components/placeholders'
 
 // Styled Components
 import {
@@ -33,11 +39,12 @@ interface SelectTokenButtonStyleProps {
 
 interface Props extends SelectTokenButtonStyleProps {
   onClick: () => void
-  icon: string | undefined
   text: string | undefined
   disabled?: boolean
   networkFeeFiatValue?: string
   isHeader?: boolean
+  asset?: BlockchainToken
+  network?: NetworkInfo
 }
 
 export const SelectTokenOrNetworkButton = (props: Props) => {
@@ -45,14 +52,15 @@ export const SelectTokenOrNetworkButton = (props: Props) => {
     onClick,
     buttonType,
     buttonSize,
-    icon,
     text,
     disabled,
     hasBackground,
     hasShadow,
     networkFeeFiatValue,
     isHeader,
-    networkNotSupported
+    networkNotSupported,
+    asset,
+    network
   } = props
 
   // Context
@@ -80,7 +88,16 @@ export const SelectTokenOrNetworkButton = (props: Props) => {
       {!networkNotSupported && (
         <>
           <Row>
-            {text && icon && <ButtonImage src={icon} buttonSize={buttonSize} />}
+            {text && (
+              <CreateIconWithPlaceholder
+                asset={asset}
+                network={network}
+                size={
+                  buttonSize === 'small' || buttonSize === 'medium' ? 24 : 40
+                }
+                marginRight={8}
+              />
+            )}
             <HiddenResponsiveRow dontHide={!isHeader}>
               <Text
                 isBold={text !== undefined}
@@ -170,14 +187,6 @@ const Button = styled.button<SelectTokenButtonStyleProps>`
 const ButtonIcon = styled(Icon)<{ networkNotSupported?: boolean }>`
   background-color: ${(p) =>
     p.networkNotSupported ? p.theme.color.white : p.theme.color.legacy.text01};
-`
-
-const ButtonImage = styled.img<SelectTokenButtonStyleProps>`
-  height: ${(p) =>
-    p.buttonSize === 'small' || p.buttonSize === 'medium' ? 24 : 40}px;
-  margin-right: 8px;
-  width: ${(p) =>
-    p.buttonSize === 'small' || p.buttonSize === 'medium' ? 24 : 40}px;
 `
 
 const FuelTank = styled(Icon)`

@@ -12,6 +12,9 @@ import { NetworkInfo } from '~/constants/types'
 // Hooks
 import { useNetworkFees } from '~/hooks/useNetworkFees'
 
+// Components
+import { CreateIconWithPlaceholder } from '~/components/placeholders'
+
 // Styled Components
 import { Text, Row } from '~/components/shared.styles'
 
@@ -34,7 +37,11 @@ export const NetworkListButton = (props: Props) => {
   return (
     <Button onClick={onSelectNetwork}>
       <Row>
-        <ButtonImage src={network.iconUrls[0]} />
+        <CreateIconWithPlaceholder
+          size={24}
+          marginRight={8}
+          network={network}
+        />
         <Text isBold={true} textSize='14px'>
           {network.chainName}
         </Text>
@@ -53,10 +60,4 @@ const Button = styled.button`
   &:hover {
     color: ${(p) => p.theme.color.legacy.text01};
   }
-`
-
-const ButtonImage = styled.img`
-  height: 24px;
-  margin-right: 8px;
-  width: 24px;
 `

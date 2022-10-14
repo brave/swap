@@ -10,6 +10,9 @@ import styled from 'styled-components'
 import { BlockchainToken } from '~/constants/types'
 import Amount from '~/utils/amount'
 
+// Components
+import { CreateIconWithPlaceholder } from '~/components/placeholders'
+
 // Styled Components
 import { Text, Column, Row } from '~/components/shared.styles'
 
@@ -31,7 +34,7 @@ export const TokenListButton = (props: Props) => {
   return (
     <Button onClick={onSelectToken} disabled={disabled}>
       <Row>
-        <TokenIcon src={token.logo} />
+        <CreateIconWithPlaceholder asset={token} size={40} marginRight={12} />
         <Column horizontalAlign='flex-start'>
           <Text isBold={true} textColor='text01' textSize='14px'>
             {token.name}
@@ -65,10 +68,4 @@ const Button = styled.button`
     z-index: 20px;
     position: relative;
   }
-`
-
-const TokenIcon = styled.img`
-  margin-right: 12px;
-  height: 40px;
-  width: 40px;
 `
