@@ -70,7 +70,7 @@ export const FromSection = (props: Props) => {
         <Row>
           <SelectTokenOrNetworkButton
             onClick={onClickSelectToken}
-            icon={token?.logo}
+            asset={token}
             text={token?.symbol}
             buttonType='primary'
           />
