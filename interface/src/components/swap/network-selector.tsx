@@ -9,7 +9,7 @@ import styled from 'styled-components'
 import { useSwapContext } from '~/context/swap.context'
 
 // Hooks
-import { useNetworkFees } from '~/hooks/useNetworkFees'
+// import { useNetworkFees } from '~/hooks/useNetworkFees'
 
 // Types
 import { NetworkInfo } from '~/constants/types'
@@ -18,7 +18,12 @@ import { NetworkInfo } from '~/constants/types'
 import { NetworkListButton } from '~/components/buttons'
 
 // Styled Components
-import { Text, Row, VerticalDivider, VerticalSpacer } from '~/components/shared.styles'
+import {
+  // Text,
+  // Row,
+  // VerticalDivider,
+  VerticalSpacer
+} from '~/components/shared.styles'
 
 interface Props {
   onSelectNetwork: (network: NetworkInfo) => void
@@ -29,14 +34,20 @@ export const NetworkSelector = (props: Props) => {
   const { onSelectNetwork, isHeader } = props
 
   // Hooks
-  const { getNetworkFeeFiatEstimate } = useNetworkFees()
+  // const { getNetworkFeeFiatEstimate } = useNetworkFees()
 
   // Context
-  const { getLocale, supportedNetworks } = useSwapContext()
+  const {
+    // getLocale,
+    supportedNetworks
+  } = useSwapContext()
 
   return (
     <SelectorBox isHeader={isHeader}>
-      <VerticalSpacer size={12} />
+
+      {/* Disabling this until we support fee estimates */}
+
+      {/* <VerticalSpacer size={12} />
       <Row horizontalPadding={12} rowWidth='full'>
         <Text textSize='12px' textColor='text03' isBold={false}>
           {getLocale('braveSwapName')}
@@ -46,7 +57,7 @@ export const NetworkSelector = (props: Props) => {
         </Text>
       </Row>
       <VerticalSpacer size={8} />
-      <VerticalDivider />
+      <VerticalDivider /> */}
       <VerticalSpacer size={4} />
       {supportedNetworks.map(network => (
         <NetworkListButton key={network.chainId} onClick={onSelectNetwork} network={network} />
@@ -59,7 +70,7 @@ const SelectorBox = styled.div<{
   isHeader?: boolean
 }>`
   background-color: ${p => p.theme.color.legacy.background01};
-  width: 222px;
+  min-width: 222px;
   position: absolute;
   padding-bottom: 4px;
   z-index: 10;
@@ -68,6 +79,6 @@ const SelectorBox = styled.div<{
   right: ${p => (p.isHeader ? 'unset' : '-10px')};
   border-radius: ${p => (p.isHeader ? 16 : 4)}px;
   @media screen and (max-width: 800px) {
-    left: ${p => (p.isHeader ? '0px' : 'unset')};
+    right: ${p => (p.isHeader ? '0px' : 'unset')};
   }
 `
