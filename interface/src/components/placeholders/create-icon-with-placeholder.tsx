@@ -10,6 +10,9 @@ import { background } from 'ethereum-blockies'
 // Types
 import { BlockchainToken, NetworkInfo } from '~/constants/types'
 
+// Utils
+import { isValidIconExtension } from '~/utils/string-utils'
+
 // Styled Components
 import { Text } from '~/components/shared.styles'
 
@@ -25,10 +28,10 @@ export const CreateIconWithPlaceholder = (props: Props) => {
 
   const needsPlaceholder = React.useMemo(() => {
     if (asset !== undefined) {
-      return asset.logo === ''
+      return !isValidIconExtension(asset.logo)
     }
     if (network !== undefined) {
-      return network?.logo === '' || network.logo === undefined
+      return !isValidIconExtension(network.logo)
     }
     return true
   }, [network, asset])
