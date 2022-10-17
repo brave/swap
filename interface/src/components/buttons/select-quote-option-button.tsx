@@ -27,7 +27,7 @@ export const SelectQuoteOptionButton = (props: Props) => {
   const { onClick, option, isSelected, isBest, spotPrice } = props
 
   // Wallet State
-  const { defaultBaseCurrency } = useSwapContext()
+  const { defaultBaseCurrency, getLocale } = useSwapContext()
 
   // Methods
   const onSelectToken = React.useCallback(() => {
@@ -40,7 +40,7 @@ export const SelectQuoteOptionButton = (props: Props) => {
 
   return (
     <Button onClick={onSelectToken} isSelected={isSelected}>
-      {isBest && <BestOptionBadge isSelected={isSelected}>Best</BestOptionBadge>}
+      {isBest && <BestOptionBadge isSelected={isSelected}>{getLocale('braveSwapBest')}</BestOptionBadge>}
       <Text isBold={true} textColor='text01' textSize='14px' textAlign='left'>
         {option.label}
       </Text>
