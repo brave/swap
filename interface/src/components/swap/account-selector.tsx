@@ -9,6 +9,9 @@ import styled from 'styled-components'
 // Context
 import { useSwapContext } from '~/context/swap.context'
 
+// Hooks
+import { useOnClickOutside } from '~/hooks/useOnClickOutside'
+
 // Types
 import { WalletAccount } from '~/constants/types'
 
@@ -19,7 +22,7 @@ import CaratDownIcon from '~/assets/carat-down-icon.svg'
 import { AccountListButton } from '~/components/buttons'
 
 // Styled Components
-import { Text, Icon } from '~/components/shared.styles'
+import { Text, Icon, HorizontalSpacer } from '~/components/shared.styles'
 
 interface Props {
   disabled?: boolean
@@ -41,6 +44,9 @@ export const AccountSelector = (props: Props) => {
   // Context
   const { getLocale, walletAccounts } = useSwapContext()
 
+  // Refs
+  const accountSelectorRef = React.useRef<HTMLDivElement>(null)
+
   // Methods
   const onToggleShowAccountSelector = React.useCallback(() => {
     setShowAccountSelector(!showAccountSelector)
@@ -54,12 +60,20 @@ export const AccountSelector = (props: Props) => {
     [onSelectAccount, setShowAccountSelector]
   )
 
+    // Hooks
+    useOnClickOutside(
+      accountSelectorRef,
+      () => setShowAccountSelector(false),
+      showAccountSelector
+    )
+
   return (
-    <SelectorWrapper>
+    <SelectorWrapper ref={accountSelectorRef}>
       <SelectButton onClick={onToggleShowAccountSelector} disabled={disabled}>
         <Text textSize='12px' textColor='text02'>
           {selectedAccount ? selectedAccount.name : getLocale('braveSwapSelectAccount')}
         </Text>
+        <HorizontalSpacer size={8} />
         <StyledCaratDownIcon size={16} icon={CaratDownIcon} />
       </SelectButton>
       {showAccountSelector && (
@@ -81,7 +95,7 @@ const SelectButton = styled.button`
   flex-direction: row;
   justify-content: space-between;
   padding: 7px 12px;
-  width: 200px;
+  min-width: 200px;
   :disabled {
     opacity: 0.3;
   }
@@ -94,7 +108,7 @@ const SelectorWrapper = styled.div`
 
 const SelectorBox = styled.div`
   background-color: ${p => p.theme.color.legacy.background01};
-  width: 200px;
+  min-width: 200px;
   position: absolute;
   z-index: 10;
   top: 36px;
