@@ -35,7 +35,7 @@ import { SwapSectionBox } from '~/components/boxes'
 import AdvancedIcon from '~/assets/advanced-icon.svg'
 
 // Styled Components
-import { Row, Text, IconButton } from '~/components/shared.styles'
+import { Row, Text, IconButton, StyledDiv } from '~/components/shared.styles'
 
 export const Swap = () => {
   // Hooks
@@ -208,7 +208,7 @@ export const Swap = () => {
   )
 }
 
-const SettingsWrapper = styled.div`
+const SettingsWrapper = styled(StyledDiv)`
   display: flex;
   position: relative;
 `

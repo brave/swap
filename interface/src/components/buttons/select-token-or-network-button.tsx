@@ -25,7 +25,8 @@ import {
   Icon,
   HorizontalSpacer,
   Row,
-  HiddenResponsiveRow
+  HiddenResponsiveRow, 
+  StyledButton
 } from '~/components/shared.styles'
 
 interface SelectTokenButtonStyleProps {
@@ -145,7 +146,7 @@ export const SelectTokenOrNetworkButton = (props: Props) => {
   )
 }
 
-const Button = styled.button<SelectTokenButtonStyleProps>`
+const Button = styled(StyledButton)<SelectTokenButtonStyleProps>`
   /* Variables */
   --big-padding: 10px ${(p) => (p.moreRightPadding ? 12 : 10)}px 10px 12px;
   --medium-padding: 8px 16px;

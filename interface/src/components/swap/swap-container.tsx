@@ -12,6 +12,9 @@ import { useSwapContext } from '~/context/swap.context'
 // Components
 import { Header } from './header'
 
+// Styled Components
+import { StyledDiv } from '~/components/shared.styles'
+
 interface Props {
   children?: React.ReactNode
 }
@@ -55,7 +58,7 @@ export const SwapContainer = (props: Props) => {
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled(StyledDiv)`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -67,9 +70,13 @@ const Wrapper = styled.div`
   bottom: 0;
   overflow-y: scroll;
   position: absolute;
+  background-color: ${p => p.theme.color.legacy.background01};
+  @media (prefers-color-scheme: dark) {
+    background-color: ${p => p.theme.color.legacy.background02};
+}
 `
 
-const Background = styled.div<{
+const Background = styled(StyledDiv)<{
   height: number
   network: string
   backgroundOpacity: number
@@ -129,7 +136,7 @@ const Background = styled.div<{
   background-image: var(--${p => p.network});
 `
 
-const Container = styled.div`
+const Container = styled(StyledDiv)`
   background-color: ${p => p.theme.color.legacy.background01};
   border-radius: 24px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);

@@ -24,7 +24,7 @@ import { useNetworkFees } from '~/hooks/useNetworkFees'
 import { useOnClickOutside } from '~/hooks/useOnClickOutside'
 
 // Styled Components
-import { Row, HorizontalSpacer } from '~/components/shared.styles'
+import { Row, HorizontalSpacer, StyledDiv } from '~/components/shared.styles'
 
 export const Header = () => {
   // Wallet State
@@ -142,7 +142,7 @@ export const Header = () => {
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled(StyledDiv)`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -156,14 +156,14 @@ const Wrapper = styled.div`
   z-index: 10;
 `
 
-const BraveLogo = styled.div`
+const BraveLogo = styled(StyledDiv)`
   height: 30px;
   width: 100px;
   background-image: var(--header-icon);
   background-size: cover;
 `
 
-const SelectorWrapper = styled.div`
+const SelectorWrapper = styled(StyledDiv)`
   display: flex;
   position: relative;
 `

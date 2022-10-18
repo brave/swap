@@ -28,7 +28,8 @@ import {
   Row,
   Column,
   VerticalDivider,
-  HorizontalSpacer
+  HorizontalSpacer,
+  StyledDiv
 } from '~/components/shared.styles'
 
 interface Props {
@@ -123,7 +124,7 @@ export const AccountModal = (props: Props) => {
   )
 }
 
-const ModalBox = styled.div`
+const ModalBox = styled(StyledDiv)`
   background-color: ${(p) => p.theme.color.legacy.background01};
   width: 280px;
   position: absolute;

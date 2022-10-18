@@ -22,7 +22,7 @@ import CaratDownIcon from '~/assets/carat-down-icon.svg'
 import { AccountListButton } from '~/components/buttons'
 
 // Styled Components
-import { Text, Icon, HorizontalSpacer } from '~/components/shared.styles'
+import { Text, Icon, HorizontalSpacer, StyledButton, StyledDiv } from '~/components/shared.styles'
 
 interface Props {
   disabled?: boolean
@@ -87,7 +87,7 @@ export const AccountSelector = (props: Props) => {
   )
 }
 
-const SelectButton = styled.button`
+const SelectButton = styled(StyledButton)`
   background-color: ${p => p.theme.color.legacy.background01};
   border: 1px solid ${p => p.theme.color.legacy.interactive08};
   border-radius: 4px;
@@ -101,12 +101,11 @@ const SelectButton = styled.button`
   }
 `
 
-const SelectorWrapper = styled.div`
-  display: flex;
+const SelectorWrapper = styled(StyledDiv)`
   position: relative;
 `
 
-const SelectorBox = styled.div`
+const SelectorBox = styled(StyledDiv)`
   background-color: ${p => p.theme.color.legacy.background01};
   min-width: 200px;
   position: absolute;

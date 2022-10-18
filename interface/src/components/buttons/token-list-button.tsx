@@ -14,7 +14,7 @@ import Amount from '~/utils/amount'
 import { CreateIconWithPlaceholder } from '~/components/placeholders'
 
 // Styled Components
-import { Text, Column, Row } from '~/components/shared.styles'
+import { Text, Column, Row, StyledButton } from '~/components/shared.styles'
 
 interface Props {
   onClick: (token: BlockchainToken) => void
@@ -53,7 +53,7 @@ export const TokenListButton = (props: Props) => {
   )
 }
 
-const Button = styled.button`
+const Button = styled(StyledButton)`
   background-color: ${p => p.theme.color.legacy.background01};
   border-radius: 8px;
   justify-content: space-between;

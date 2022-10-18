@@ -13,7 +13,7 @@ import { WalletAccount } from '~/constants/types'
 import { reduceAddress } from '~/utils/reduce-address'
 
 // Styled Components
-import { Text, Row, HorizontalSpacer } from '~/components/shared.styles'
+import { Text, Row, HorizontalSpacer, StyledButton } from '~/components/shared.styles'
 
 interface Props {
   onClick: (network: WalletAccount) => void
@@ -42,7 +42,7 @@ export const AccountListButton = (props: Props) => {
   )
 }
 
-const Button = styled.button`
+const Button = styled(StyledButton)`
   border-radius: 4px;
   justify-content: space-between;
   padding: 5px 18px;

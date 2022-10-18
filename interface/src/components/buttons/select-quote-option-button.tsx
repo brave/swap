@@ -13,7 +13,7 @@ import { useSwapContext } from '~/context/swap.context'
 import { QuoteOption } from '~/constants/types'
 
 // Styled Components
-import { Text, Column } from '~/components/shared.styles'
+import { Text, Column, StyledDiv, StyledButton } from '~/components/shared.styles'
 
 interface Props {
   onClick: (option: QuoteOption) => void
@@ -56,7 +56,7 @@ export const SelectQuoteOptionButton = (props: Props) => {
   )
 }
 
-const Button = styled.button<{
+const Button = styled(StyledButton)<{
   isSelected: boolean
 }>`
   --best-background: ${p =>
@@ -77,7 +77,7 @@ const Button = styled.button<{
   }
 `
 
-const BestOptionBadge = styled.div<{
+const BestOptionBadge = styled(StyledDiv)<{
   isSelected: boolean
 }>`
   font-size: 12px;

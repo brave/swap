@@ -7,7 +7,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Styled Components
-import { Icon, Row } from '~/components/shared.styles'
+import { Icon, Row, StyledDiv, StyledInput, StyledLabel } from '~/components/shared.styles'
 
 // Assets
 import CheckIcon from '~/assets/check-icon.svg'
@@ -53,7 +53,7 @@ export const StandardCheckbox = (props: Props) => {
   )
 }
 
-export const HiddenCheckBox = styled.input`
+export const HiddenCheckBox = styled(StyledInput)`
   border: 0;
   clip: rect(0 0 0 0);
   height: 1px;
@@ -69,7 +69,7 @@ const StyledIcon = styled(Icon)`
   background-color: ${(p) => p.theme.color.white};
 `
 
-const StyledCheckbox = styled.div<{ isChecked: boolean }>`
+const StyledCheckbox = styled(StyledDiv)<{ isChecked: boolean }>`
   width: 20px;
   height: 20px;
   background: ${(p) =>
@@ -83,7 +83,7 @@ const StyledCheckbox = styled.div<{ isChecked: boolean }>`
       : `inset 0px 0px 0px 1px ${p.theme.color.legacy.interactive08}`};
 `
 
-const Label = styled.label<{
+const Label = styled(StyledLabel)<{
   isChecked: boolean
   labelSize?: '12px' | '14px'
   isBold?: boolean

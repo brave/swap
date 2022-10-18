@@ -6,6 +6,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
+// Styled Components
+import { StyledDiv, StyledInput, StyledLabel } from '~/components/shared.styles'
+
 interface Props {
   label: string
   id: string
@@ -37,7 +40,7 @@ export const StandardRadio = (props: Props) => {
   )
 }
 
-export const Radio = styled.input`
+export const Radio = styled(StyledInput)`
   -webkit-appearance: none;
   appearance: none;
   margin: 0;
@@ -62,12 +65,12 @@ export const Radio = styled.input`
   }
 `
 
-const Wrapper = styled.div`
+const Wrapper = styled(StyledDiv)`
   flex-direction: row;
   gap: 12px;
 `
 
-const Label = styled.label<{ isChecked: boolean }>`
+const Label = styled(StyledLabel)<{ isChecked: boolean }>`
   cursor: pointer;
   color: ${(p) =>
     p.isChecked ? p.theme.color.legacy.text01 : p.theme.color.legacy.text03};

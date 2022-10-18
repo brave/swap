@@ -6,6 +6,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
+// Styled Components
+import { StyledInput } from '~/components/shared.styles'
+
 interface Props {
   onChange: (value: string) => void
   hasError: boolean
@@ -38,7 +41,7 @@ export const SwapInput = (props: Props) => {
   )
 }
 
-const Input = styled.input<{
+const Input = styled(StyledInput)<{
   hasError: boolean
 }>`
   color: ${(p) => (p.hasError ? p.theme.color.red80 : 'inherit')};

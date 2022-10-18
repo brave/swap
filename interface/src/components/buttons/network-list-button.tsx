@@ -16,7 +16,7 @@ import { useNetworkFees } from '~/hooks/useNetworkFees'
 import { CreateIconWithPlaceholder } from '~/components/placeholders'
 
 // Styled Components
-import { Text, Row } from '~/components/shared.styles'
+import { Text, Row, StyledButton } from '~/components/shared.styles'
 
 interface Props {
   onClick: (network: NetworkInfo) => void
@@ -51,7 +51,7 @@ export const NetworkListButton = (props: Props) => {
   )
 }
 
-const Button = styled.button`
+const Button = styled(StyledButton)`
   justify-content: space-between;
   padding: 8px 12px;
   white-space: nowrap;

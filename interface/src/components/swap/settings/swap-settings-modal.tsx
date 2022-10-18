@@ -36,7 +36,8 @@ import {
   Text,
   VerticalDivider,
   IconButton,
-  VerticalSpacer
+  VerticalSpacer,
+  StyledDiv
 } from '~/components/shared.styles'
 
 const slippagePresets = ['0.1', '0.5', '1.0']
@@ -224,7 +225,7 @@ export const SwapSettingsModal = (props: Props) => {
   )
 }
 
-const Modal = styled.div`
+const Modal = styled(StyledDiv)`
   background-color: ${p => p.theme.color.legacy.background02};
   border-radius: 16px;
   border: 1px solid var(--swap-settings-modal-border-color);
@@ -242,7 +243,7 @@ const Modal = styled.div`
   top: 28px;
 `
 
-const ExchangesColumn = styled.div`
+const ExchangesColumn = styled(StyledDiv)`
   display: grid;
   width: 100%;
   grid-template-columns: repeat(2, 1fr);

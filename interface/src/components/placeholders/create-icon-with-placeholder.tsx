@@ -14,7 +14,7 @@ import { BlockchainToken, NetworkInfo } from '~/constants/types'
 import { isValidIconExtension } from '~/utils/string-utils'
 
 // Styled Components
-import { Text } from '~/components/shared.styles'
+import { Text, StyledDiv } from '~/components/shared.styles'
 
 interface Props {
   asset?: BlockchainToken
@@ -89,7 +89,7 @@ export const CreateIconWithPlaceholder = (props: Props) => {
   return <Icon size={size} src={logo} marginRight={marginRight} />
 }
 
-const IconWrapper = styled.div<{
+const IconWrapper = styled(StyledDiv)<{
   size: number
   panelBackground?: string
   marginRight?: number

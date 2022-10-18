@@ -6,6 +6,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
+// Styled Components
+import { StyledDiv, StyledInput, StyledLabel } from '~/components/shared.styles'
+
 interface Props {
   isChecked: boolean
   onSetIsChecked: (isChecked: boolean) => void
@@ -25,13 +28,13 @@ export const StandardSwitch = (props: Props) => {
   )
 }
 
-const Label = styled.label`
+const Label = styled(StyledLabel)`
   display: flex;
   align-items: center;
   cursor: pointer;
 `
 
-const Switch = styled.div`
+const Switch = styled(StyledDiv)`
   position: relative;
   box-sizing: border-box;
   width: 48px;
@@ -55,7 +58,7 @@ const Switch = styled.div`
   }
 `
 
-const Input = styled.input`
+const Input = styled(StyledInput)`
   display: none;
 
   &:checked + ${Switch} {

@@ -6,6 +6,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
+// Styled Components
+import { StyledInput } from '~/components/shared.styles'
+
 interface Props {
   onChange: (value: string) => void
   value: string
@@ -36,7 +39,7 @@ export const StandardInput = (props: Props) => {
   )
 }
 
-const Input = styled.input`
+const Input = styled(StyledInput)`
   width: 100%;
   height: 32px;
   border: 1px solid ${(p) => p.theme.color.legacy.interactive08};

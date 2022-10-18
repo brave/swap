@@ -22,7 +22,8 @@ import {
   // Text,
   // Row,
   // VerticalDivider,
-  VerticalSpacer
+  VerticalSpacer,
+  StyledDiv
 } from '~/components/shared.styles'
 
 interface Props {
@@ -66,7 +67,7 @@ export const NetworkSelector = (props: Props) => {
   )
 }
 
-const SelectorBox = styled.div<{
+const SelectorBox = styled(StyledDiv)<{
   isHeader?: boolean
 }>`
   background-color: ${p => p.theme.color.legacy.background01};
