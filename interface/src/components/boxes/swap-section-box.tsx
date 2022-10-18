@@ -6,6 +6,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
+// Styled Components
+import { StyledDiv } from '~/components/shared.styles'
+
 interface BoxStyleProps {
   boxType: 'primary' | 'secondary'
 }
@@ -20,7 +23,7 @@ export const SwapSectionBox = (props: Props) => {
   return <Wrapper boxType={boxType}>{children}</Wrapper>
 }
 
-const Wrapper = styled.div<BoxStyleProps>`
+const Wrapper = styled(StyledDiv)<BoxStyleProps>`
   background-color: ${(p) =>
     p.boxType === 'primary'
       ? 'var(--box-background-primary)'

@@ -35,7 +35,9 @@ import {
   VerticalSpacer,
   VerticalDivider,
   HorizontalSpacer,
-  Icon
+  Icon,
+  StyledDiv,
+  StyledButton
 } from '~/components/shared.styles'
 
 interface Props {
@@ -213,7 +215,7 @@ const FuelTank = styled(Icon)`
   margin-right: 6px;
 `
 
-const AdvancedButton = styled.button`
+const AdvancedButton = styled(StyledButton)`
   padding: 0px;
 `
 
@@ -238,9 +240,12 @@ const Link = styled.a`
   color: var(--quote-info-link-color);
   text-decoration: none;
   display: block;
+  :hover {
+    color: #535bf2;
+  }
 `
 
-const LPIcon = styled.div<{ icon: string; size: number }>`
+const LPIcon = styled(StyledDiv)<{ icon: string; size: number }>`
   background-image: url(${p => p.icon});
   background-size: cover;
   background-position: center;

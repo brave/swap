@@ -5,6 +5,9 @@
 
 import styled from 'styled-components'
 
+// Styled Components
+import { StyledButton } from '~/components/shared.styles'
+
 interface StandardButtonStyleProps {
   isSelected?: boolean
   buttonSize?: 'normal' | 'small'
@@ -55,7 +58,7 @@ export const StandardButton = (props: Props) => {
   )
 }
 
-const Button = styled.button<StandardButtonStyleProps>`
+const Button = styled(StyledButton)<StandardButtonStyleProps>`
   --button-background: ${(p) =>
     p.buttonStyle === 'square'
       ? p.theme.color.legacy.divider01

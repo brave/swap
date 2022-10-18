@@ -6,7 +6,7 @@
 import styled from 'styled-components'
 
 // Styled Components
-import { Icon } from '~/components/shared.styles'
+import { Icon, StyledButton } from '~/components/shared.styles'
 
 interface Props {
   icon: string
@@ -25,7 +25,7 @@ export const AccountModalButton = (props: Props) => {
   )
 }
 
-const Button = styled.button`
+const Button = styled(StyledButton)`
   display: flex;
   justify-content: flex-start;
   font-weight: 500;

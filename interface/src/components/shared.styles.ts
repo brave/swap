@@ -16,16 +16,31 @@ export const Text = styled.span<{
   --text02: ${(p) => p.theme.color.legacy.text02};
   --text03: ${(p) => p.theme.color.legacy.text03};
   --error: ${(p) => p.theme.color.red80};
-  color: ${(p) => (p.textColor ? `var(--${p.textColor})` : 'inherit')};
+  font-family: 'Poppins';
+  color: ${(p) =>
+    p.textColor ? `var(--${p.textColor})` : p.theme.color.legacy.text01};
   font-size: ${(p) => (p.textSize ? p.textSize : '18px')};
   font-weight: ${(p) => (p.isBold ? 500 : 400)};
   height: ${(p) => (p.maintainHeight ? '20px' : 'unset')};
-  line-height: ${(p) => (p.textSize === '12px' ? '18px' : 'inherit')};
+  line-height: ${(p) => (p.textSize === '12px' ? '18px' : '20px')};
   letter-spacing: 0.02em;
   text-align: ${(p) => (p.textAlign ? p.textAlign : 'center')};
 `
 
-export const Row = styled.div<{
+export const StyledDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-family: 'Poppins';
+  color: ${(p) => p.theme.color.legacy.text01};
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 20px;
+  letter-spacing: 0.02em;
+`
+
+export const Row = styled(StyledDiv)<{
   rowWidth?: 'dynamic' | 'full'
   rowHeight?: 'dynamic' | 'full'
   marginBottom?: number
@@ -46,7 +61,7 @@ export const Row = styled.div<{
   height: ${(p) => (p.rowHeight === 'full' ? '100%' : 'unset')};
 `
 
-export const Column = styled.div<{
+export const Column = styled(StyledDiv)<{
   columnWidth?: 'dynamic' | 'full'
   columnHeight?: 'dynamic' | 'full'
   horizontalAlign?: 'flex-start' | 'center' | 'flex-end'
@@ -66,21 +81,21 @@ export const Column = styled.div<{
   width: ${(p) => (p.columnWidth === 'full' ? '100%' : 'unset')};
 `
 
-export const HorizontalSpacer = styled.div<{
+export const HorizontalSpacer = styled(StyledDiv)<{
   size: number
 }>`
   height: 100%;
   width: ${(p) => p.size}px;
 `
 
-export const VerticalSpacer = styled.div<{
+export const VerticalSpacer = styled(StyledDiv)<{
   size: number
 }>`
   height: ${(p) => p.size}px;
   width: 100%;
 `
 
-export const HorizontalDivider = styled.div<{
+export const HorizontalDivider = styled(StyledDiv)<{
   height?: number
   marginLeft?: number
   marginRight?: number
@@ -92,7 +107,7 @@ export const HorizontalDivider = styled.div<{
   width: 2px;
 `
 
-export const VerticalDivider = styled.div<{
+export const VerticalDivider = styled(StyledDiv)<{
   width?: number
   marginTop?: number
   marginBottom?: number
@@ -104,7 +119,7 @@ export const VerticalDivider = styled.div<{
   width: ${(p) => (p.width ? `${p.width}px` : '100%')};
 `
 
-export const Icon = styled.div<{
+export const Icon = styled(StyledDiv)<{
   size: number
   icon: string
 }>`
@@ -115,7 +130,7 @@ export const Icon = styled.div<{
   width: ${(p) => p.size}px;
 `
 
-export const Loader = styled.div`
+export const Loader = styled(StyledDiv)`
   animation: spin 0.75s linear infinite;
   border: 2px solid transparent;
   border-top: 2px solid ${(p) => p.theme.color.legacy.text03};
@@ -133,7 +148,27 @@ export const Loader = styled.div`
   }
 `
 
-export const IconButton = styled.button<{
+export const StyledButton = styled.button`
+  display: flex;
+  font-family: 'Poppins';
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.02em;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  color: ${(p) => p.theme.color.legacy.text01};
+  :disabled {
+    cursor: not-allowed;
+  }
+`
+
+export const IconButton = styled(StyledButton)<{
   size?: number
   icon: string
 }>`
@@ -150,4 +185,44 @@ export const HiddenResponsiveRow = styled(Row)<{ dontHide?: boolean }>`
   @media screen and (max-width: 800px) {
     display: ${(p) => (p.dontHide ? 'flex' : 'none')};
   }
+`
+
+export const StyledInput = styled.input`
+  font-family: 'Poppins';
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  outline: none;
+  background-image: none;
+  box-shadow: none;
+  border: none;
+  color: ${(p) => p.theme.color.legacy.text01};
+  padding: 0px;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  background-color: transparent;
+  letter-spacing: 0.02em;
+  ::placeholder {
+    color: ${(p) => p.theme.color.legacy.text01};
+  }
+  :focus {
+    outline: none;
+  }
+  ::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  ::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+`
+
+export const StyledLabel = styled.label`
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: ${(p) => p.theme.color.legacy.text01};
 `

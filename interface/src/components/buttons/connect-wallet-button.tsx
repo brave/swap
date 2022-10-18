@@ -14,8 +14,8 @@ import { reduceAddress } from '~/utils/reduce-address'
 import { useWalletState } from '~/state/wallet'
 import { useSwapContext } from '~/context/swap.context'
 
-// Styles
-import { Text, HorizontalSpacer, HiddenResponsiveRow } from '~/components/shared.styles'
+// Styled Components
+import { Text, HorizontalSpacer, HiddenResponsiveRow, StyledDiv, StyledButton } from '~/components/shared.styles'
 
 interface Props {
   onClick: () => void
@@ -62,7 +62,7 @@ export const ConnectWalletButton = (props: Props) => {
   )
 }
 
-const Button = styled.button<{ isConnected: boolean }>`
+const Button = styled(StyledButton)<{ isConnected: boolean }>`
   background-color: ${p =>
     p.isConnected
       ? `var(--connect-wallet-button-background-connected)`
@@ -74,7 +74,7 @@ const Button = styled.button<{ isConnected: boolean }>`
   box-shadow: ${p => (p.isConnected ? '0px 0px 10px rgba(0, 0, 0, 0.05)' : 'none')};
 `
 
-const AccountCircle = styled.div<{ orb: string }>`
+const AccountCircle = styled(StyledDiv)<{ orb: string }>`
   width: 24px;
   height: 24px;
   border-radius: 100%;

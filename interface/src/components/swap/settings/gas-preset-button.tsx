@@ -12,8 +12,8 @@ import { GasFeeOption, GasEstimate } from '~/constants/types'
 import { useSwapContext } from '~/context/swap.context'
 import { useWalletState } from '~/state/wallet'
 
-// Styles
-import { Column, Row, Text, Icon } from '~/components/shared.styles'
+// Styled Components
+import { Column, Row, Text, Icon, StyledDiv, StyledButton } from '~/components/shared.styles'
 
 interface Props {
   isSelected: boolean
@@ -55,7 +55,7 @@ export const GasPresetButton = (props: Props) => {
   )
 }
 
-const Button = styled.button<{
+const Button = styled(StyledButton)<{
   isSelected: boolean
 }>`
   display: flex;
@@ -73,7 +73,7 @@ const Button = styled.button<{
   }
 `
 
-const IconWrapper = styled.div`
+const IconWrapper = styled(StyledDiv)`
   width: 32px;
   height: 32px;
   border-radius: 100%;

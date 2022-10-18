@@ -6,6 +6,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
+// Styled Components
+import { StyledDiv } from '~/components/shared.styles'
+
 interface Props {
   children?: React.ReactNode
   modalHeight?: 'standard' | 'full'
@@ -24,7 +27,7 @@ export const StandardModal = React.forwardRef<HTMLDivElement, Props>(
   }
 )
 
-const Wrapper = styled.div`
+const Wrapper = styled(StyledDiv)`
   background-color: var(--standard-modal-background-color);
   bottom: 0%;
   left: 0%;
@@ -34,7 +37,7 @@ const Wrapper = styled.div`
   z-index: 10;
 `
 
-const Modal = styled.div<{
+const Modal = styled(StyledDiv)<{
   modalHeight?: 'standard' | 'full'
 }>`
   background-color: ${(p) => p.theme.color.legacy.background01};

@@ -5,6 +5,9 @@
 
 import styled from 'styled-components'
 
+// Styled Components
+import { StyledButton } from '~/components/shared.styles'
+
 interface Props {
   buttonText: string
   onClick: () => void
@@ -16,7 +19,7 @@ export const PresetButton = (props: Props) => {
   return <Button onClick={onClick}>{buttonText}</Button>
 }
 
-const Button = styled.button`
+const Button = styled(StyledButton)`
   background-color: var(--preset-button-background);
   border-radius: 4px;
   font-size: 14px;

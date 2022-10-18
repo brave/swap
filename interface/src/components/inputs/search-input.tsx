@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import SearchIcon from '~/assets/search-icon.svg'
 
 // Styled Components
-import { Icon } from '~/components/shared.styles'
+import { Icon, StyledInput } from '~/components/shared.styles'
 
 interface Props {
   onChange: (value: string) => void
@@ -43,7 +43,7 @@ export const SearchInput = (props: Props) => {
   )
 }
 
-const Input = styled.input`
+const Input = styled(StyledInput)`
   flex: 1;
   ::placeholder {
     color: ${(p) => p.theme.color.legacy.text03};

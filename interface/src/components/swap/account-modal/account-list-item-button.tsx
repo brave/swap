@@ -10,10 +10,12 @@ import { create } from 'ethereum-blockies'
 // Utils
 import { reduceAddress } from '~/utils/reduce-address'
 
-// Styles
+// Styled Components
 import {
   Text,
-  HorizontalSpacer
+  HorizontalSpacer,
+  StyledDiv,
+  StyledButton
 } from '~/components/shared.styles'
 
 interface Props {
@@ -48,7 +50,7 @@ export const AccountListItemButton = (props: Props) => {
   )
 }
 
-const Button = styled.button`
+const Button = styled(StyledButton)`
   --account-text-color: ${(p) => p.theme.color.legacy.text02};
   display: flex;
   justify-content: flex-start;
@@ -60,7 +62,7 @@ const Button = styled.button`
   }
 `
 
-const AccountCircle = styled.div<{ orb: string }>`
+const AccountCircle = styled(StyledDiv)<{ orb: string }>`
   width: 24px;
   height: 24px;
   border-radius: 100%;

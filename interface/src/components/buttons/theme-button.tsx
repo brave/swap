@@ -5,6 +5,9 @@
 
 import styled from 'styled-components'
 
+// Styled Components
+import { StyledDiv, StyledButton } from '~/components/shared.styles'
+
 interface Props {
   onClick: () => void
 }
@@ -19,7 +22,7 @@ export const ThemeButton = (props: Props) => {
   )
 }
 
-const Button = styled.button`
+const Button = styled(StyledButton)`
   background-color: ${(p) => p.theme.color.legacy.background01};
   border-radius: 100%;
   box-shadow: var(--theme-button-box-shadow);
@@ -31,7 +34,7 @@ const Button = styled.button`
   }
 `
 
-const ButtonIcon = styled.div`
+const ButtonIcon = styled(StyledDiv)`
   height: 20px;
   width: 20px;
   background-image: var(--theme-button-icon);

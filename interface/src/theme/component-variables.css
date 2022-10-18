@@ -5,10 +5,10 @@
 
 :root {
   /* Light Variables */
-  --box-background-primary: var(--color-secondary-10);
+  --box-background-primary: var(--color-purple-10);
   --box-background-secondary: var(--color-legacy-background1);
 
-  --account-list-button-hover-background: var(--color-secondary-10);
+  --account-list-button-hover-background: var(--color-purple-10);
 
   --connect-wallet-button-background-connected: var(--color-legacy-background1);
   --connect-wallet-button-background-disconnected: var(
@@ -30,9 +30,9 @@
   /* This RGBA value does not exist in the design system */
   --token-or-network-button-background-hover-primary: rgba(255, 255, 255, 0.6);
   --token-or-network-button-background-hover-secondary: var(
-    --color-secondary-10
+    --color-purple-10
   );
-  --token-or-network-bubble-background: var(--color-secondary-10);
+  --token-or-network-bubble-background: var(--color-purple-10);
 
   --standard-button-color-disabled: #ffffff;
   --standard-button-border-secondary-selected: var(--color-legacy-interactive5);
@@ -157,10 +157,10 @@
 
 html[data-theme='light'] {
   /* Light Variables */
-  --box-background-primary: var(--color-secondary-10);
+  --box-background-primary: var(--color-purple-10);
   --box-background-secondary: var(--color-legacy-background1);
 
-  --account-list-button-hover-background: var(--color-secondary-10);
+  --account-list-button-hover-background: var(--color-purple-10);
 
   --connect-wallet-button-background-connected: var(--color-legacy-background1);
   --connect-wallet-button-background-disconnected: var(
@@ -182,9 +182,9 @@ html[data-theme='light'] {
   /* This RGBA value does not exist in the design system */
   --token-or-network-button-background-hover-primary: rgba(255, 255, 255, 0.6);
   --token-or-network-button-background-hover-secondary: var(
-    --color-secondary-10
+    --color-purple-10
   );
-  --token-or-network-bubble-background: var(--color-secondary-10);
+  --token-or-network-bubble-background: var(--color-purple-10);
 
   --standard-button-color-disabled: #ffffff;
   --standard-button-border-secondary-selected: var(--color-legacy-interactive5);

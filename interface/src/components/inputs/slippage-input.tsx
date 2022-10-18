@@ -7,7 +7,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Styled Components
-import { Text } from '~/components/shared.styles'
+import { Text, StyledDiv, StyledInput } from '~/components/shared.styles'
 
 interface Props {
   onChange: (value: string) => void
@@ -40,7 +40,7 @@ export const SlippageInput = (props: Props) => {
   )
 }
 
-const InputWrapper = styled.div`
+const InputWrapper = styled(StyledDiv)`
   display: flex;
   width: 94px;
   height: 32px;
@@ -56,7 +56,7 @@ const InputWrapper = styled.div`
   }
 `
 
-const CustomSlippageInput = styled.input`
+const CustomSlippageInput = styled(StyledInput)`
   width: 50px;
   border: none;
   font-weight: 400;

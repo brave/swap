@@ -21,7 +21,7 @@ import { SearchInput } from '~/components/inputs'
 import { NetworkSelector } from './network-selector'
 
 // Styled Components
-import { HorizontalDivider } from '~/components/shared.styles'
+import { HorizontalDivider, StyledDiv } from '~/components/shared.styles'
 
 interface Props {
   onSearchChanged: (value: string) => void
@@ -69,7 +69,7 @@ export const SearchWithNetworkSelector = (props: Props) => {
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled(StyledDiv)`
   background-color: ${p => p.theme.color.legacy.background01};
   border: 1px solid ${p => p.theme.color.legacy.disabled};
   border-radius: 4px;
@@ -80,7 +80,7 @@ const Wrapper = styled.div`
   width: 100%;
 `
 
-const SelectorWrapper = styled.div`
+const SelectorWrapper = styled(StyledDiv)`
   display: flex;
   position: relative;
 `

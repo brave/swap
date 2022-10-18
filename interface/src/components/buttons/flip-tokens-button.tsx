@@ -9,7 +9,7 @@ import styled from 'styled-components'
 import ArrowIcon from '~/assets/arrow-icon.svg'
 
 // Styled Components
-import { Icon } from '~/components/shared.styles'
+import { Icon, StyledDiv, StyledButton } from '~/components/shared.styles'
 
 interface Props {
   onClick: () => void
@@ -27,12 +27,12 @@ export const FlipTokensButton = (props: Props) => {
   )
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled(StyledDiv)`
   height: 8px;
   width: 100%;
 `
 
-const Button = styled.button`
+const Button = styled(StyledButton)`
   --icon-color: ${(p) => p.theme.color.legacy.text02};
   background-color: ${(p) => p.theme.color.legacy.background01};
   border-radius: 100%;
