@@ -8,6 +8,7 @@ import styled from 'styled-components'
 
 // Assets
 import DisconnectIcon from '~/assets/disconnect-icon.svg'
+import HelpIcon from '~/assets/info-icon.svg'
 
 // Hiding Porfolio Section until we support it.
 // import PortfolioIcon from '~/assets/portfolio-icon.svg'
@@ -58,6 +59,12 @@ export const AccountModal = (props: Props) => {
     }
     // ToDo: For the dotcom site we need a way to link out to brave://wallet
   }, [routeBackToWallet])
+
+  const onClickHelpCenter = React.useCallback(() => {
+    window.open(
+      'https://support.brave.com/hc/en-us/articles/8155407080845-Brave-Swaps-FAQ'
+    )
+  }, [])
 
   return (
     <ModalBox>
@@ -118,6 +125,11 @@ export const AccountModal = (props: Props) => {
           text={getLocale('braveSwapWallet')}
           icon={DisconnectIcon}
           onClick={onRouteBackToWallet}
+        />
+        <AccountModalButton
+          text={getLocale('braveSwapHelpCenter')}
+          icon={HelpIcon}
+          onClick={onClickHelpCenter}
         />
       </Column>
     </ModalBox>
