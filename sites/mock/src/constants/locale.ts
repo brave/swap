@@ -56,5 +56,6 @@ export const locale: Registry = {
   braveSwapDisconnect: 'Disconenect',
   braveSwapMyPortfolio: 'My portfolio',
   braveSwapWallet: 'Wallet',
-  braveSwapBest: 'Best'
+  braveSwapBest: 'Best',
+  braveSwapHelpCenter: 'Help Center'
 }
