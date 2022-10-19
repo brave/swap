@@ -126,7 +126,7 @@ export const AccountModal = (props: Props) => {
 
 const ModalBox = styled(StyledDiv)`
   background-color: ${(p) => p.theme.color.legacy.background01};
-  width: 280px;
+  min-width: 280px;
   position: absolute;
   padding-bottom: 4px;
   z-index: 10;
@@ -134,4 +134,5 @@ const ModalBox = styled(StyledDiv)`
   box-shadow: 0px 0px 16px var(--network-selector-shadow-color);
   right: 0px;
   border-radius: 16px;
+  white-space: nowrap;
 `
