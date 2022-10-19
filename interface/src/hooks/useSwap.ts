@@ -80,10 +80,20 @@ export const useSwap = () => {
     gasFeeOptions[1]
   )
 
-  // Update on render
-  if (fromToken === undefined && toToken === undefined && assetsList[0] !== undefined) {
-    setFromToken(assetsList[0])
+  const nativeAsset = React.useMemo(() => makeNetworkAsset(network), [network])
+  const resetSelectedAssets = React.useCallback(() => {
+    setFromToken(nativeAsset)
+    setToToken(undefined)
+  }, [nativeAsset])
+
+  if (fromToken === undefined && toToken === undefined) {
+    resetSelectedAssets()
   }
+
+  // Reset FROM asset when network changes
+  React.useEffect(() => {
+    resetSelectedAssets()
+  }, [resetSelectedAssets])
 
   const jupiter = useJupiter({
     fromToken,
@@ -208,8 +218,6 @@ export const useSwap = () => {
     },
     [quoteOptions, jupiter.quote, zeroEx.quote, network]
   )
-
-  const nativeAsset = React.useMemo(() => makeNetworkAsset(network), [network])
 
   const refreshMakerAssetSpotPrice = React.useCallback(
     async (token: BlockchainToken) => {
