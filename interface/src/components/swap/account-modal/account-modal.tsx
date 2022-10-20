@@ -52,14 +52,6 @@ export const AccountModal = (props: Props) => {
     [onHideModal, switchAccount]
   )
 
-  const onRouteBackToWallet = React.useCallback(() => {
-    if (routeBackToWallet) {
-      routeBackToWallet()
-      return
-    }
-    // ToDo: For the dotcom site we need a way to link out to brave://wallet
-  }, [routeBackToWallet])
-
   const onClickHelpCenter = React.useCallback(() => {
     window.open(
       'https://support.brave.com/hc/en-us/articles/8155407080845-Brave-Swaps-FAQ'
@@ -121,11 +113,13 @@ export const AccountModal = (props: Props) => {
           icon={PortfolioIcon}
           onClick={onClickViewPortfolio}
         /> */}
-        <AccountModalButton
-          text={getLocale('braveSwapWallet')}
-          icon={DisconnectIcon}
-          onClick={onRouteBackToWallet}
-        />
+        {routeBackToWallet &&
+          <AccountModalButton
+            text={getLocale('braveSwapWallet')}
+            icon={DisconnectIcon}
+            onClick={routeBackToWallet}
+            />
+        }
         <AccountModalButton
           text={getLocale('braveSwapHelpCenter')}
           icon={HelpIcon}
