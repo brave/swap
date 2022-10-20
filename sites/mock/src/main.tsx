@@ -30,6 +30,7 @@ ReactDOM.render(
 function SwapContainer () {
   const [account, setAccount] = React.useState<WalletAccount>(mockAccount1)
   const [network, setNetwork] = React.useState<NetworkInfo>(mockEthereumNetwork)
+  const [isWalletConnected, setIsWalletConnected] = React.useState<boolean>(false)
 
   return (
     <Swap
@@ -40,6 +41,9 @@ function SwapContainer () {
       walletAccounts={mockAccounts}
       exchanges={mockExchanges}
       defaultBaseCurrency='USD'
+      isWalletConnected={isWalletConnected}
+      connectWallet={async () => setIsWalletConnected(true)}
+      disconnectWallet={async () => setIsWalletConnected(false)}
       switchAccount={async (account: WalletAccount) => {
         setAccount(account)
       }}

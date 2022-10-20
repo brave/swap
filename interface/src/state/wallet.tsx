@@ -30,8 +30,6 @@ const initialState: WalletState = {
     takerAsset: '',
     nativeAsset: ''
   },
-  // ToDo: Add logic to updated if wallet is connected
-  isConnected: false,
   // ToDo: Set up local storage for userSelectedExchanges
   // and other user prefs
   userSelectedExchanges: [],
@@ -47,8 +45,6 @@ const WalletReducer = (state: WalletState, action: WalletActions): WalletState =
       return { ...state, spotPrices: { ...state.spotPrices, ...action.payload } }
     case 'updateUserSelectedExchanges':
       return { ...state, userSelectedExchanges: action.payload }
-    case 'setIsConnected':
-      return { ...state, isConnected: action.payload }
     default:
       return state
   }

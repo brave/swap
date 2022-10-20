@@ -8,7 +8,6 @@ import { Registry, Exchange, GasEstimate, SpotPrices } from '~/constants/types'
 export type WalletState = {
   tokenBalances: Registry
   spotPrices: SpotPrices
-  isConnected: boolean
   userSelectedExchanges: Exchange[]
   networkFeeEstimates: Record<string, GasEstimate>
 }
@@ -33,16 +32,10 @@ type UpdateDefaultBaseCurrency = {
   payload: string
 }
 
-type SetIsConnected = {
-  type: 'setIsConnected'
-  payload: boolean
-}
-
 export type WalletActions =
   | UpdateTokenBalances
   | UpdateSpotPrices
   | UpdateUserSelectedExchanges
-  | SetIsConnected
   | UpdateDefaultBaseCurrency
 
 export type Dispatch = (action: WalletActions) => void

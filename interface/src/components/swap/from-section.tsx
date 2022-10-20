@@ -42,12 +42,7 @@ export const FromSection = (props: Props) => {
   } = props
 
   // context
-  const { getLocale } = useSwapContext()
-
-  // Wallet State
-  const {
-    state: { isConnected }
-  } = useWalletState()
+  const { getLocale, isWalletConnected } = useSwapContext()
 
   // methods
   const onClickHalfPreset = () => {
@@ -90,7 +85,7 @@ export const FromSection = (props: Props) => {
               textColor={hasInputError ? 'error' : 'text02'}
               maintainHeight={true}
             >
-              {!tokenBalance.isUndefined() && isConnected
+              {!tokenBalance.isUndefined() && isWalletConnected
                 ? `${getLocale('braveSwapBalance')} ${tokenBalance
                   .divideByDecimals(token.decimals)
                   .format(6)}`

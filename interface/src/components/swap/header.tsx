@@ -18,7 +18,6 @@ import { NetworkSelector } from './network-selector'
 import { AccountModal } from './account-modal/account-modal'
 
 // Hooks
-import { useWalletState, useWalletDispatch } from '~/state/wallet'
 import { useSwapContext } from '~/context/swap.context'
 import { useNetworkFees } from '~/hooks/useNetworkFees'
 import { useOnClickOutside } from '~/hooks/useOnClickOutside'
@@ -28,12 +27,8 @@ import { Row, HorizontalSpacer, StyledDiv } from '~/components/shared.styles'
 
 export const Header = () => {
   // Wallet State
-  const { state } = useWalletState()
-  const { isConnected } = state
-  const { network, supportedNetworks, switchNetwork } = useSwapContext()
-
-  // Dispatch
-  const { dispatch } = useWalletDispatch()
+  const { network, supportedNetworks, isWalletConnected, connectWallet, switchNetwork } =
+    useSwapContext()
 
   // State
   const [showNetworkSelector, setShowNetworkSelector] = React.useState<boolean>(false)
@@ -77,11 +72,6 @@ export const Header = () => {
     return
   }, [])
 
-  const connectWallet = React.useCallback(() => {
-    // ToDo: Add logic here to connect a wallet.
-    dispatch({ type: 'setIsConnected', payload: true })
-  }, [dispatch])
-
   // Hooks
   const { getNetworkFeeFiatEstimate } = useNetworkFees()
 
@@ -102,6 +92,15 @@ export const Header = () => {
   const isNetworkSupported = React.useMemo(() => {
     return supportedNetworks.some(supportedNetwork => supportedNetwork.chainId === network.chainId)
   }, [network, supportedNetworks])
+
+  const onClickConnectWalletButton = React.useCallback(async () => {
+    if (!isWalletConnected && connectWallet) {
+      await connectWallet()
+      return
+    }
+
+    setShowAccountModal(prev => !prev)
+  }, [isWalletConnected, connectWallet])
 
   return (
     <Wrapper>
@@ -126,17 +125,11 @@ export const Header = () => {
         </SelectorWrapper>
         <HorizontalSpacer size={15} />
         <SelectorWrapper ref={accountModalRef}>
-            <ConnectWalletButton
-              onClick={
-                isConnected
-                  ? () => setShowAccountModal((prev) => !prev)
-                  : connectWallet
-              }
-            />
-            {showAccountModal && (
-              <AccountModal onHideModal={() => setShowAccountModal(false)} />
-            )}
-          </SelectorWrapper>
+          <ConnectWalletButton
+            onClick={onClickConnectWalletButton}
+          />
+          {showAccountModal && <AccountModal onHideModal={() => setShowAccountModal(false)} />}
+        </SelectorWrapper>
       </Row>
     </Wrapper>
   )

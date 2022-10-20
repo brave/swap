@@ -21,11 +21,11 @@ interface Props {
   token: BlockchainToken
   balance: Amount
   disabled: boolean
-  isConnected: boolean
+  isWalletConnected: boolean
 }
 
 export const TokenListButton = (props: Props) => {
-  const { onClick, token, balance, disabled, isConnected } = props
+  const { onClick, token, balance, disabled, isWalletConnected } = props
 
   const onSelectToken = React.useCallback(() => {
     onClick(token)
@@ -44,7 +44,7 @@ export const TokenListButton = (props: Props) => {
           </Text>
         </Column>
       </Row>
-      {isConnected && (
+      {isWalletConnected && (
         <Text isBold={true} textColor='text01' textSize='14px'>
           {balance.divideByDecimals(token.decimals).formatAsAsset(6, token.symbol)}
         </Text>
