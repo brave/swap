@@ -9,9 +9,6 @@ import styled from 'styled-components'
 // Context
 import { useSwapContext } from '~/context/swap.context'
 
-// Hooks
-import { useWalletState } from '~/state/wallet'
-
 // Types
 import { BlockchainToken } from '~/constants/types'
 import Amount from '~/utils/amount'
@@ -40,12 +37,7 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
     const { onClose, onSelectToken, getAssetBalance, disabledToken, selectingFromOrTo } = props
 
     // Context
-    const { getLocale, assetsList } = useSwapContext()
-
-    // Wallet State
-    const {
-      state: { isConnected }
-    } = useWalletState()
+    const { getLocale, assetsList, isWalletConnected } = useSwapContext()
 
     // State
     const [hideTokensWithZeroBalances, setHideTokensWithZeroBalances] =
@@ -86,18 +78,18 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
     }, [filteredTokenListBySearch, getAssetBalance])
 
     const filteredTokenList: BlockchainToken[] = React.useMemo(() => {
-      if (tokenListWithBalances.length === 0 || !isConnected) {
+      if (tokenListWithBalances.length === 0 || !isWalletConnected) {
         return filteredTokenListBySearch
       }
       if (hideTokensWithZeroBalances) {
         return tokenListWithBalances
       }
       return filteredTokenListBySearch
-    }, [filteredTokenListBySearch, hideTokensWithZeroBalances, tokenListWithBalances, isConnected])
+    }, [filteredTokenListBySearch, hideTokensWithZeroBalances, tokenListWithBalances, isWalletConnected])
 
     const showZeroBalanceButton: boolean = React.useMemo(() => {
-      return tokenListWithBalances.length !== 0 && isConnected
-    }, [tokenListWithBalances, isConnected])
+      return tokenListWithBalances.length !== 0 && isWalletConnected
+    }, [tokenListWithBalances, isWalletConnected])
 
     // Effects
     React.useEffect(() => {
@@ -134,7 +126,7 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
               key={token.contractAddress}
               onClick={onSelectToken}
               balance={getAssetBalance(token)}
-              isConnected={isConnected}
+              isWalletConnected={isWalletConnected}
               token={token}
               disabled={
                 disabledToken ? disabledToken.contractAddress === token.contractAddress : false

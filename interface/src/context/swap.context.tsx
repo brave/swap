@@ -40,6 +40,9 @@ interface SwapContextInterface {
   supportedNetworks: NetworkInfo[]
   switchAccount: (account: WalletAccount) => Promise<void>
   switchNetwork: (network: NetworkInfo) => Promise<void>
+  isWalletConnected: boolean
+  connectWallet?: () => Promise<void>
+  disconnectWallet?: () => Promise<void>
   getTokenPrice: (token: BlockchainToken) => Promise<string>
   swapService: {
     getZeroExPriceQuote: (params: ZeroExSwapParams) => Promise<ZeroExQuoteResponse>
@@ -87,6 +90,9 @@ const SwapProvider = (props: SwapProviderInterface) => {
     exchanges,
     walletAccounts,
     defaultBaseCurrency,
+    isWalletConnected,
+    connectWallet,
+    disconnectWallet,
     switchAccount,
     switchNetwork,
     getLocale,
@@ -110,6 +116,9 @@ const SwapProvider = (props: SwapProviderInterface) => {
         exchanges,
         walletAccounts,
         defaultBaseCurrency,
+        isWalletConnected,
+        connectWallet,
+        disconnectWallet,
         switchAccount,
         switchNetwork,
         getLocale,

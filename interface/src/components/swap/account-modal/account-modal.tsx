@@ -41,7 +41,8 @@ export const AccountModal = (props: Props) => {
   const { onHideModal } = props
 
   // Context
-  const { getLocale, routeBackToWallet, walletAccounts, switchAccount } = useSwapContext()
+  const { getLocale, routeBackToWallet, walletAccounts, switchAccount, disconnectWallet } =
+    useSwapContext()
 
   // Methods
   const onSelectAccount = React.useCallback(
@@ -51,14 +52,13 @@ export const AccountModal = (props: Props) => {
     },
     [onHideModal, switchAccount]
   )
-
-  const onRouteBackToWallet = React.useCallback(() => {
-    if (routeBackToWallet) {
-      routeBackToWallet()
-      return
+  const onDisconnect = React.useCallback(async () => {
+    if (disconnectWallet) {
+      await disconnectWallet()
     }
-    // ToDo: For the dotcom site we need a way to link out to brave://wallet
-  }, [routeBackToWallet])
+
+    await onHideModal()
+  }, [disconnectWallet, onHideModal])
 
   const onClickHelpCenter = React.useCallback(() => {
     window.open(
@@ -121,11 +121,22 @@ export const AccountModal = (props: Props) => {
           icon={PortfolioIcon}
           onClick={onClickViewPortfolio}
         /> */}
-        <AccountModalButton
-          text={getLocale('braveSwapWallet')}
-          icon={DisconnectIcon}
-          onClick={onRouteBackToWallet}
-        />
+        {disconnectWallet && (
+          <AccountModalButton
+            text={getLocale('braveSwapDisconnectWallet')}
+            icon={DisconnectIcon}
+            onClick={onDisconnect}
+          />
+        )}
+
+        {routeBackToWallet && (
+          <AccountModalButton
+            text={getLocale('braveSwapWallet')}
+            icon={DisconnectIcon} // FIXME - change icon
+            onClick={routeBackToWallet}
+          />
+        )}
+
         <AccountModalButton
           text={getLocale('braveSwapHelpCenter')}
           icon={HelpIcon}

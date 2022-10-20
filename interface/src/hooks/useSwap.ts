@@ -49,9 +49,9 @@ const hasDecimalsOverflow = (amount: string, asset?: BlockchainToken) => {
 export const useSwap = () => {
   // Wallet State
   const {
-    state: { tokenBalances, isConnected, spotPrices }
+    state: { tokenBalances, spotPrices }
   } = useWalletState()
-  const { getLocale, getTokenPrice, assetsList, network, account, defaultBaseCurrency } =
+  const { getLocale, getTokenPrice, network, account, defaultBaseCurrency, isWalletConnected } =
     useSwapContext()
   const { dispatch } = useWalletDispatch()
 
@@ -400,11 +400,11 @@ export const useSwap = () => {
 
   // Memos
   const fromTokenBalance: Amount = React.useMemo(() => {
-    if (fromToken && isConnected) {
+    if (fromToken && isWalletConnected) {
       return getAssetBalance(fromToken)
     }
     return Amount.zero()
-  }, [fromToken, isConnected, getAssetBalance])
+  }, [fromToken, isWalletConnected, getAssetBalance])
 
   const fiatValue: string | undefined = React.useMemo(() => {
     if (fromAmount && spotPrices.makerAsset) {
