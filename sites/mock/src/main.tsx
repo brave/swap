@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom'
 
 import { Swap, WalletAccount, NetworkInfo } from '@brave/swap-interface'
 import '@brave/swap-interface/style.css'
+import './index.css'
 
 import { getLocale } from './utils/locale'
 import {
