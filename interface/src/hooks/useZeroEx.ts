@@ -50,7 +50,6 @@ export function useZeroEx (params: SwapParams) {
       }
 
       setLoading(true)
-      setHasAllowance(false)
       let response
       try {
         response = await swapService.getZeroExPriceQuote({
@@ -81,29 +80,29 @@ export function useZeroEx (params: SwapParams) {
         }
       }
 
+      let hasAllowanceResult = false
+
       // Native asset does not have allowance requirements, so we always
       // default to true.
       if (!overriddenParams.fromToken.isToken) {
-        setHasAllowance(true)
+        hasAllowanceResult = true
       }
 
-      if (!response) {
-        setLoading(false)
-        return
+      if (response && overriddenParams.fromToken.isToken) {
+        try {
+          const allowance = await ethWalletAdapter.getERC20Allowance(
+            response.sellTokenAddress,
+            account.address,
+            response.allowanceTarget
+          )
+          hasAllowanceResult = new Amount(allowance).gte(response.sellAmount)
+        } catch (e) {
+          // bubble up error
+          console.log(`Error getting ERC20 allowance: ${e}`)
+        }
       }
 
-      try {
-        const allowance = await ethWalletAdapter.getERC20Allowance(
-          response.sellTokenAddress,
-          account.address,
-          response.allowanceTarget
-        )
-        setHasAllowance(new Amount(allowance).gte(response.sellAmount))
-      } catch (e) {
-        // bubble up error
-        console.log(`Error getting ERC20 allowance: ${e}`)
-      }
-
+      setHasAllowance(hasAllowanceResult)
       setLoading(false)
       return response
     },
