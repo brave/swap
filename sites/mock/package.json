@@ -11,13 +11,13 @@
     "@brave/swap-interface": "file:../../interface",
     "react": "16.14.0",
     "react-dom": "16.14.0",
-    "styled-components": "^5.3.5"
+    "styled-components": "5.3.6"
   },
   "devDependencies": {
     "@types/react": "17.0.2",
     "@types/react-dom": "17.0.1",
-    "@vitejs/plugin-react": "^2.1.0",
-    "typescript": "^4.6.4",
-    "vite": "^3.1.0"
+    "@vitejs/plugin-react": "2.1.0",
+    "typescript": "4.8.4",
+    "vite": "3.1.4"
   }
 }
