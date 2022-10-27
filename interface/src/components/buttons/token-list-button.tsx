@@ -54,18 +54,18 @@ export const TokenListButton = (props: Props) => {
 }
 
 const Button = styled(StyledButton)`
-  background-color: ${p => p.theme.color.legacy.background01};
+  background-color: none;
   border-radius: 8px;
   justify-content: space-between;
   padding: 16px 8px;
   white-space: nowrap;
-  width: 100%;
+  width: calc(100% - 24px);
+  margin-left: 12px;
   :disabled {
     opacity: 0.3;
   }
   &:hover:not([disabled]) {
     box-shadow: var(--token-list-button-shadow);
-    z-index: 20px;
-    position: relative;
+    background-color: ${(p) => p.theme.color.legacy.background01};
   }
 `

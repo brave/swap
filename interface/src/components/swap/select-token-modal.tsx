@@ -17,9 +17,10 @@ import Amount from '~/utils/amount'
 import CloseIcon from '~/assets/close-icon.svg'
 
 // Components
-import { StandardButton, TokenListButton } from '~/components/buttons'
+import { StandardButton } from '~/components/buttons'
 import { SearchWithNetworkSelector } from './search-with-network-selector'
 import { StandardModal } from '~/components/modals'
+import { VirtualizedTokenList } from './virtualized-tokens-list'
 
 // Styled Components
 import { Column, Row, Text, VerticalDivider, IconButton } from '~/components/shared.styles'
@@ -117,22 +118,18 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
         <VerticalDivider />
         <ScrollContainer
           columnWidth='full'
-          horizontalPadding={12}
           verticalAlign='flex-start'
           verticalPadding={8}
         >
-          {filteredTokenList.map(token => (
-            <TokenListButton
-              key={token.contractAddress}
-              onClick={onSelectToken}
-              balance={getAssetBalance(token)}
+          {filteredTokenList.length !== 0 && (
+            <VirtualizedTokenList
+              disabledToken={disabledToken}
+              getAssetBalance={getAssetBalance}
               isWalletConnected={isWalletConnected}
-              token={token}
-              disabled={
-                disabledToken ? disabledToken.contractAddress === token.contractAddress : false
-              }
+              onSelectToken={onSelectToken}
+              tokenList={filteredTokenList}
             />
-          ))}
+          )}
         </ScrollContainer>
         {showZeroBalanceButton && (
           <Button
@@ -160,6 +157,4 @@ const Button = styled(StandardButton)`
 
 const ScrollContainer = styled(Column)`
   flex: 1;
-  overflow-x: hidden;
-  overflow-y: scroll;
 `
