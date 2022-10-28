@@ -14,7 +14,7 @@ import { useSwapContext } from '~/context/swap.context'
 
 // Utils
 import Amount from '~/utils/amount'
-import { makeNetworkAsset } from '~/utils/assets'
+import { useNativeAsset } from '~/hooks/useNativeAsset'
 
 // Create Wallet State Context
 const WalletStateContext = createContext<{ state: WalletState } | undefined>(undefined)
@@ -64,7 +64,7 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
 
   // Wallet State
   const [state, dispatch] = useReducer(WalletReducer, initialState)
-  const nativeAsset = React.useMemo(() => makeNetworkAsset(network), [network])
+  const nativeAsset = useNativeAsset()
 
   React.useEffect(() => {
     // Fetch spot price for native asset, and update the state. During
@@ -90,15 +90,25 @@ const WalletStateProvider = (props: WalletStateProviderInterface) => {
           )
           : await getBalance(account.address, network.coin, network.chainId)
 
-        dispatch({
+        await dispatch({
           type: 'updateTokenBalances',
           payload: { [asset.contractAddress.toLowerCase()]: Amount.normalize(result) }
         })
       } catch (e) {
-        console.log(e)
+        console.error(`Error querying balance: error=${e} asset=`, asset)
       }
     })
-  }, [assetsList, account, network, getTokenPrice, getBalance, getTokenBalance, dispatch])
+  }, [
+    assetsList,
+    account,
+    network.coin,
+    network.chainId,
+    nativeAsset,
+    getTokenPrice,
+    getBalance,
+    getTokenBalance,
+    dispatch
+  ])
 
   return (
     <WalletStateContext.Provider value={{ state }}>
