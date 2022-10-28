@@ -9,6 +9,9 @@ import styled from 'styled-components'
 // Types
 import { CoinType } from '~/constants/types'
 
+// Constants
+import { BRAVE_SWAP_DATA_THEME_KEY } from '../constants/magics'
+
 // Context
 import { useSwapContext } from '~/context/swap.context'
 import { useWalletState } from '~/state/wallet'
@@ -108,6 +111,14 @@ export const Swap = () => {
     selectingFromOrTo !== undefined
   )
   useOnClickOutside(swapSettingsModalRef, onToggleShowSwapSettings, showSwapSettings)
+
+  React.useEffect(() => {
+    const userTheme = window.localStorage.getItem(BRAVE_SWAP_DATA_THEME_KEY)
+    if (userTheme === null) {
+      return
+    }
+    document.documentElement.setAttribute('data-theme', userTheme)
+  }, [])
 
   // render
   return (
