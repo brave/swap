@@ -6,6 +6,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
+// Constants
+import { BRAVE_SWAP_DATA_THEME_KEY } from '../../constants/magics'
+
 // Types
 import { NetworkInfo } from '~/constants/types'
 
@@ -45,30 +48,32 @@ export const Header = () => {
   }, [switchNetwork])
 
   const toggleTheme = React.useCallback(() => {
-    // Sites local theme
-    // ToDo: Store this value in localStorage per wallet address
-    const localTheme = document.documentElement.getAttribute('data-theme')
+    // Users local theme
+    const userTheme = window.localStorage.getItem(BRAVE_SWAP_DATA_THEME_KEY)
 
     // The opposite of the browsers default theme
     const themeToChangeTo = window.matchMedia('(prefers-color-scheme: dark)').matches
       ? 'light'
       : 'dark'
 
-    // If the localTheme is null then the site will default the browsers pref,
-    // so if user clicks the theme toggle, we set the localTheme for the first time.
-    if (localTheme === null) {
+    // If the userTheme is null then the site will default the browsers pref,
+    // so if user clicks the theme toggle, we set the userTheme for the first time.
+    if (userTheme === null) {
       document.documentElement.setAttribute('data-theme', themeToChangeTo)
+      window.localStorage.setItem(BRAVE_SWAP_DATA_THEME_KEY, themeToChangeTo)
       return
     }
 
-    // If localTheme is light, change to dark
-    if (localTheme === 'light') {
+    // If userTheme is light, change to dark
+    if (userTheme === 'light') {
       document.documentElement.setAttribute('data-theme', 'dark')
+      window.localStorage.setItem(BRAVE_SWAP_DATA_THEME_KEY, 'dark')
       return
     }
 
     // Default to light
     document.documentElement.setAttribute('data-theme', 'light')
+    window.localStorage.setItem(BRAVE_SWAP_DATA_THEME_KEY, 'light')
     return
   }, [])
 

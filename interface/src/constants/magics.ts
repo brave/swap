@@ -12,3 +12,6 @@ export const WRAPPED_SOL_CONTRACT_ADDRESS = 'So111111111111111111111111111111111
 export const MAX_UINT256 = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
 
 export const ZERO_EX_VALIDATION_ERROR_CODE = 100
+
+
+export const BRAVE_SWAP_DATA_THEME_KEY = 'brave-swap-data-theme'
