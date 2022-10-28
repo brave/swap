@@ -13,6 +13,7 @@ import { gasFeeOptions } from '~/options/gas-fee-options'
 import { useWalletDispatch, useWalletState } from '~/state/wallet'
 import { useJupiter } from './useJupiter'
 import { useZeroEx } from './useZeroEx'
+import { useNativeAsset } from './useNativeAsset'
 import { useSwapContext } from '~/context/swap.context'
 
 // Types and constants
@@ -30,7 +31,6 @@ import {
 // Utils
 import Amount from '~/utils/amount'
 import { ZERO_EX_VALIDATION_ERROR_CODE } from '~/constants/magics'
-import { makeNetworkAsset } from '~/utils/assets'
 
 const hasDecimalsOverflow = (amount: string, asset?: BlockchainToken) => {
   if (!asset) {
@@ -80,20 +80,16 @@ export const useSwap = () => {
     gasFeeOptions[1]
   )
 
-  const nativeAsset = React.useMemo(() => makeNetworkAsset(network), [network])
+  const nativeAsset = useNativeAsset()
   const resetSelectedAssets = React.useCallback(() => {
     setFromToken(nativeAsset)
     setToToken(undefined)
+    setFromAmount('')
+    setToAmount('')
   }, [nativeAsset])
 
-  if (fromToken === undefined && toToken === undefined) {
-    resetSelectedAssets()
-  }
-
   // Reset FROM asset when network changes
-  React.useEffect(() => {
-    resetSelectedAssets()
-  }, [resetSelectedAssets])
+  React.useEffect(resetSelectedAssets, [resetSelectedAssets])
 
   const jupiter = useJupiter({
     fromToken,
@@ -122,7 +118,7 @@ export const useSwap = () => {
     return () => {
       clearInterval(interval)
     }
-  }, [network, zeroEx.refresh, jupiter.refresh])
+  }, [network.coin, zeroEx.refresh, jupiter.refresh])
 
   const quoteOptions: QuoteOption[] = React.useMemo(() => {
     if (!fromToken || !toToken) {
@@ -197,7 +193,7 @@ export const useSwap = () => {
         routing: 'split' // 0x supports split routing only
       }
     ]
-  }, [fromToken, toToken, network, jupiter.quote, zeroEx.quote])
+  }, [fromToken, toToken, network.coin, jupiter.quote, zeroEx.quote])
 
   const onSelectQuoteOption = React.useCallback(
     (index: number) => {
@@ -208,7 +204,7 @@ export const useSwap = () => {
           jupiter.setSelectedRoute(route)
           setToAmount(option.toAmount.format(6))
         }
-      } else if (network?.coin === CoinType.Ethereum) {
+      } else if (network.coin === CoinType.Ethereum) {
         if (zeroEx.quote && toToken) {
           setToAmount(option.toAmount.format(6))
         }
@@ -216,7 +212,7 @@ export const useSwap = () => {
 
       setSelectedQuoteOptionIndex(index)
     },
-    [quoteOptions, jupiter.quote, zeroEx.quote, network]
+    [quoteOptions, jupiter.quote, zeroEx.quote, network.coin]
   )
 
   const refreshMakerAssetSpotPrice = React.useCallback(
@@ -300,13 +296,13 @@ export const useSwap = () => {
         })
       }
     },
-    [network, handleJupiterQuoteRefresh, handleZeroExQuoteRefresh]
+    [network.coin, handleJupiterQuoteRefresh, handleZeroExQuoteRefresh]
   )
 
   const handleOnSetToAmount = React.useCallback(
     async (value: string) => {
       // Setting to amount is not supported on Jupiter
-      if (network?.coin !== CoinType.Ethereum) {
+      if (network.coin !== CoinType.Ethereum) {
         return
       }
 
@@ -316,7 +312,7 @@ export const useSwap = () => {
         toAmount: value
       })
     },
-    [network, handleZeroExQuoteRefresh]
+    [network.coin, handleZeroExQuoteRefresh]
   )
 
   const getAssetBalance = React.useCallback(
@@ -346,18 +342,18 @@ export const useSwap = () => {
       setSelectingFromOrTo(undefined)
       await refreshTakerAssetSpotPrice(token)
 
-      if (network?.coin === CoinType.Solana) {
+      if (network.coin === CoinType.Solana) {
         await handleJupiterQuoteRefresh({
           toToken: token
         })
-      } else if (network?.coin === CoinType.Ethereum) {
+      } else if (network.coin === CoinType.Ethereum) {
         await handleZeroExQuoteRefresh({
           toToken: token,
           toAmount: ''
         })
       }
     },
-    [network, handleJupiterQuoteRefresh, handleZeroExQuoteRefresh]
+    [network.coin, handleJupiterQuoteRefresh, handleZeroExQuoteRefresh]
   )
 
   const onSelectFromToken = React.useCallback(
@@ -366,18 +362,18 @@ export const useSwap = () => {
       setSelectingFromOrTo(undefined)
       await refreshMakerAssetSpotPrice(token)
 
-      if (network?.coin === CoinType.Solana) {
+      if (network.coin === CoinType.Solana) {
         await handleJupiterQuoteRefresh({
           fromToken: token
         })
-      } else if (network?.coin === CoinType.Ethereum) {
+      } else if (network.coin === CoinType.Ethereum) {
         await handleZeroExQuoteRefresh({
           fromToken: token,
           fromAmount: ''
         })
       }
     },
-    [network, handleZeroExQuoteRefresh, handleJupiterQuoteRefresh]
+    [network.coin, handleZeroExQuoteRefresh, handleJupiterQuoteRefresh]
   )
 
   const onSetSelectedSwapAndSendOption = React.useCallback((value: string) => {
@@ -423,10 +419,6 @@ export const useSwap = () => {
   }, [])
 
   const feesWrapped = React.useMemo(() => {
-    if (!network) {
-      return Amount.zero()
-    }
-
     if (network.coin === CoinType.Ethereum) {
       if (!zeroEx.quote) {
         return Amount.zero()
@@ -443,7 +435,7 @@ export const useSwap = () => {
     }
 
     return Amount.zero()
-  }, [network, zeroEx])
+  }, [network.coin, zeroEx])
 
   const swapValidationError: SwapValidationErrorType | undefined = React.useMemo(() => {
     // No validation to perform when From and To amounts are empty, since quote
@@ -479,9 +471,6 @@ export const useSwap = () => {
       return 'insufficientFundsForGas'
     }
 
-    if (!network) {
-      return
-    }
     if (
       fromToken.symbol === network.symbol &&
       fromAmountWeiWrapped.plus(feesWrapped).gt(fromAssetBalance)
@@ -531,7 +520,7 @@ export const useSwap = () => {
     fromAmount,
     toToken,
     toAmount,
-    network,
+    network.coin,
     feesWrapped,
     zeroEx,
     jupiter,
@@ -540,19 +529,19 @@ export const useSwap = () => {
   ])
 
   const onSubmit = React.useCallback(async () => {
-    if (network?.coin === CoinType.Ethereum) {
+    if (network.coin === CoinType.Ethereum) {
       if (zeroEx.hasAllowance) {
         await zeroEx.exchange()
       } else {
         await zeroEx.approve()
       }
-    } else if (network?.coin === CoinType.Solana) {
+    } else if (network.coin === CoinType.Solana) {
       await jupiter.exchange()
     }
-  }, [network, zeroEx, jupiter])
+  }, [network.coin, zeroEx, jupiter])
 
   const submitButtonText = React.useMemo(() => {
-    if (!fromToken || !network) {
+    if (!fromToken) {
       return getLocale('braveSwapReviewOrder')
     }
 
@@ -564,7 +553,7 @@ export const useSwap = () => {
       return getLocale('braveSwapInsufficientBalance').replace('$1', network.symbol)
     }
 
-    if (network?.coin === CoinType.Ethereum) {
+    if (network.coin === CoinType.Ethereum) {
       if (swapValidationError === 'insufficientAllowance') {
         return getLocale('braveSwapApproveToken').replace('$1', fromToken.symbol)
       }
@@ -576,12 +565,10 @@ export const useSwap = () => {
     // }
 
     return getLocale('braveSwapReviewOrder')
-  }, [fromToken, network, swapValidationError])
+  }, [fromToken, network.coin, swapValidationError])
 
   const isSubmitButtonDisabled = React.useMemo(() => {
     return (
-      // Prevent an active CTA when current network has not loaded yet.
-      network === undefined ||
       // Prevent creating a swap transaction with stale parameters if fetching
       // of a new quote is in progress.
       zeroEx.loading ||
@@ -614,7 +601,7 @@ export const useSwap = () => {
         network.coin === CoinType.Ethereum &&
         swapValidationError !== 'insufficientAllowance')
     )
-  }, [network, zeroEx, jupiter, fromToken, toToken, fromAmount, toAmount, swapValidationError])
+  }, [network.coin, zeroEx, jupiter, fromToken, toToken, fromAmount, toAmount, swapValidationError])
 
   return {
     fromToken,
