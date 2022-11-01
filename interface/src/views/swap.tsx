@@ -14,7 +14,6 @@ import { BRAVE_SWAP_DATA_THEME_KEY } from '../constants/magics'
 
 // Context
 import { useSwapContext } from '~/context/swap.context'
-import { useWalletState } from '~/state/wallet'
 
 // Hooks
 import { useSwap } from '~/hooks/useSwap'
@@ -30,7 +29,8 @@ import {
   QuoteOptions,
   QuoteInfo,
   SwapAndSend,
-  SwapSettingsModal
+  SwapSettingsModal,
+  SwapSkeleton
 } from '~/components/swap'
 import { SwapSectionBox } from '~/components/boxes'
 
@@ -88,7 +88,7 @@ export const Swap = () => {
   } = swap
 
   // Context
-  const { getLocale, network } = useSwapContext()
+  const { getLocale, network, isReady } = useSwapContext()
 
   // State
   const [showSwapSettings, setShowSwapSettings] = React.useState<boolean>(false)
@@ -120,14 +120,26 @@ export const Swap = () => {
     document.documentElement.setAttribute('data-theme', userTheme)
   }, [])
 
+  if (!isReady) {
+    return <SwapSkeleton />
+  }
+
   // render
   return (
     <>
       <SwapContainer>
-        <Row rowWidth='full' horizontalPadding={16} verticalPadding={6} marginBottom={18}>
+        <Row
+          rowWidth='full'
+          horizontalPadding={16}
+          verticalPadding={6}
+          marginBottom={18}
+        >
           <Text isBold={true}>{getLocale('braveSwap')}</Text>
           <SettingsWrapper ref={swapSettingsModalRef}>
-            <IconButton icon={AdvancedIcon} onClick={onToggleShowSwapSettings} />
+            <IconButton
+              icon={AdvancedIcon}
+              onClick={onToggleShowSwapSettings}
+            />
             {showSwapSettings && (
               <SwapSettingsModal
                 selectedGasFeeOption={selectedGasFeeOption}
@@ -209,7 +221,9 @@ export const Swap = () => {
         <SelectTokenModal
           ref={selectTokenModalRef}
           onClose={() => setSelectingFromOrTo(undefined)}
-          onSelectToken={selectingFromOrTo === 'from' ? onSelectFromToken : onSelectToToken}
+          onSelectToken={
+            selectingFromOrTo === 'from' ? onSelectFromToken : onSelectToToken
+          }
           disabledToken={selectingFromOrTo === 'from' ? toToken : fromToken}
           getAssetBalance={getAssetBalance}
           selectingFromOrTo={selectingFromOrTo}
