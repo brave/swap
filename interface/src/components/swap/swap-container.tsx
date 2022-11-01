@@ -51,7 +51,7 @@ export const SwapContainer = (props: Props) => {
       <Container ref={ref}>{children}</Container>
       <Background
         height={backgroundHeight}
-        network={network.chainName?.toLowerCase() ?? ''}
+        network={network.chainId ?? ''}
         backgroundOpacity={backgroundOpacity}
       />
     </Wrapper>
@@ -81,44 +81,52 @@ const Background = styled(StyledDiv)<{
   network: string
   backgroundOpacity: number
 }>`
-  --solana: linear-gradient(
+  /* Solana */
+  --0x65: linear-gradient(
     125deg,
     rgb(33, 178, 164) 0%,
     rgb(93, 124, 209) 50%,
     rgb(122, 96, 232) 100%
   );
-  --ethereum: linear-gradient(125deg, rgb(98, 126, 234) 0%, rgb(129, 152, 238) 100%);
-  --polygon: linear-gradient(
+  /* Ethereum */
+  --0x1: linear-gradient(125deg, rgb(98, 126, 234) 0%, rgb(129, 152, 238) 100%);
+  /* Polygon */
+  --0x89: linear-gradient(
     125deg,
     rgb(130, 71, 229) 0%,
     rgb(93, 124, 209) 50%,
     rgb(130, 71, 229) 100%
   );
-  --avalanche: linear-gradient(
+  /* Avalanche */
+  --0xa86a: linear-gradient(
     125deg,
     rgb(232, 65, 66) 0%,
     rgb(233, 175, 176) 50%,
     rgb(232, 65, 66) 100%
   );
-  --optimism: linear-gradient(
+  /* Optimism */
+  --0xa: linear-gradient(
     125deg,
     rgb(252, 141, 153) 0%,
     rgb(247, 211, 215) 50%,
     rgb(254, 4, 32) 100%
   );
-  --celo: linear-gradient(
+  /* Celo */
+  --0xa4ec: linear-gradient(
     125deg,
     rgb(252, 204, 94) 0%,
     rgb(238, 255, 143) 50%,
     rgb(54, 210, 129) 100%
   );
-  --binance: linear-gradient(
+  /* Binance */
+  --0x38: linear-gradient(
     125deg,
     rgb(243, 186, 47) 0%,
     rgb(255, 219, 133) 50%,
     rgb(243, 186, 47) 100%
   );
-  --fantom: linear-gradient(
+  /* Fantom */
+  --0xfa: linear-gradient(
     125deg,
     rgb(19, 181, 236) 0%,
     rgb(19, 181, 236) 50%,
