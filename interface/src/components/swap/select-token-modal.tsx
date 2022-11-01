@@ -101,7 +101,7 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
 
     // render
     return (
-      <Modal ref={forwardedRef} modalHeight={hideTokensWithZeroBalances ? 'standard' : 'full'}>
+      <StandardModal ref={forwardedRef} modalHeight={hideTokensWithZeroBalances ? 'standard' : 'full'}>
         <Row rowWidth='full' horizontalPadding={24} verticalPadding={20}>
           <Text textSize='18px' isBold={true}>
             {getLocale('braveSwapSelectAToken')}
@@ -141,14 +141,10 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
             verticalMargin={0}
           />
         )}
-      </Modal>
+      </StandardModal>
     )
   }
 )
-
-const Modal = styled(StandardModal)`
-  min-height: 440px;
-`
 
 const Button = styled(StandardButton)`
   align-self: flex-end;
@@ -157,4 +153,5 @@ const Button = styled(StandardButton)`
 
 const ScrollContainer = styled(Column)`
   flex: 1;
+  overflow: hidden;
 `
