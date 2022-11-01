@@ -32,6 +32,7 @@ const App = (props: AppProps) => {
     exchanges,
     walletAccounts,
     isWalletConnected,
+    isReady,
     connectWallet,
     disconnectWallet,
     switchAccount,
@@ -58,6 +59,7 @@ const App = (props: AppProps) => {
         exchanges={exchanges}
         walletAccounts={walletAccounts}
         isWalletConnected={isWalletConnected}
+        isReady={isReady}
         connectWallet={connectWallet}
         disconnectWallet={disconnectWallet}
         switchAccount={switchAccount}

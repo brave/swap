@@ -28,10 +28,16 @@ ReactDOM.render(
   document.getElementById('root') as HTMLElement
 )
 
-function SwapContainer () {
+function SwapContainer() {
   const [account, setAccount] = React.useState<WalletAccount>(mockAccount1)
   const [network, setNetwork] = React.useState<NetworkInfo>(mockEthereumNetwork)
-  const [isWalletConnected, setIsWalletConnected] = React.useState<boolean>(false)
+  const [isReady, setIsReady] = React.useState<boolean>(false)
+  const [isWalletConnected, setIsWalletConnected] =
+    React.useState<boolean>(false)
+
+  React.useEffect(() => {
+    setTimeout(() => setIsReady(true), 2000)
+  }, [])
 
   return (
     <Swap
@@ -60,6 +66,7 @@ function SwapContainer () {
       ethWalletAdapter={ethWalletAdapter}
       solWalletAdapter={solWalletAdapter}
       swapService={swapService}
+      isReady={isReady}
     />
   )
 }
