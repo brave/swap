@@ -15,12 +15,16 @@ import { Header } from './header'
 // Styled Components
 import { StyledDiv } from '~/components/shared.styles'
 
+// Types
+import { RefreshBlockchainStateParams } from '~/constants/types'
+
 interface Props {
   children?: React.ReactNode
+  refreshBlockchainState: (overrides: Partial<RefreshBlockchainStateParams>) => void
 }
 
 export const SwapContainer = (props: Props) => {
-  const { children } = props
+  const { children, refreshBlockchainState } = props
 
   const { network } = useSwapContext()
 
@@ -47,7 +51,7 @@ export const SwapContainer = (props: Props) => {
 
   return (
     <Wrapper>
-      <Header />
+      <Header refreshBlockchainState={refreshBlockchainState} />
       <Container ref={ref}>{children}</Container>
       <Background
         height={backgroundHeight}

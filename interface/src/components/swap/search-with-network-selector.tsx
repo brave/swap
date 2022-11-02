@@ -13,7 +13,7 @@ import { reduceNetworkDisplayName } from '~/utils/reduce-network-name'
 import { useSwapContext } from '~/context/swap.context'
 
 // Types
-import { NetworkInfo } from '~/constants/types'
+import { NetworkInfo, RefreshBlockchainStateParams } from '~/constants/types'
 
 // Components
 import { SelectTokenOrNetworkButton } from '~/components/buttons'
@@ -27,10 +27,11 @@ interface Props {
   onSearchChanged: (value: string) => void
   searchValue: string
   networkSelectorDisabled: boolean
+  refreshBlockchainState: (overrides: Partial<RefreshBlockchainStateParams>) => void
 }
 
 export const SearchWithNetworkSelector = (props: Props) => {
-  const { onSearchChanged, searchValue, networkSelectorDisabled } = props
+  const { onSearchChanged, refreshBlockchainState, searchValue, networkSelectorDisabled } = props
 
   // Context
   const { getLocale, network, switchNetwork } = useSwapContext()
@@ -41,6 +42,7 @@ export const SearchWithNetworkSelector = (props: Props) => {
   const onSelectNetwork = React.useCallback(
     async (network: NetworkInfo) => {
       await switchNetwork(network)
+      await refreshBlockchainState({ network })
       setShowNetworkSelector(false)
     },
     [switchNetwork]

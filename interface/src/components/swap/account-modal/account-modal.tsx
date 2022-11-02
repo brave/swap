@@ -10,14 +10,14 @@ import styled from 'styled-components'
 import DisconnectIcon from '~/assets/disconnect-icon.svg'
 import HelpIcon from '~/assets/info-icon.svg'
 
-// Hiding Porfolio Section until we support it.
+// Hiding Portfolio Section until we support it.
 // import PortfolioIcon from '~/assets/portfolio-icon.svg'
 
 // Context
 import { useSwapContext } from '~/context/swap.context'
 
 // Types
-import { WalletAccount } from '~/constants/types'
+import { RefreshBlockchainStateParams, WalletAccount } from '~/constants/types'
 
 // Components
 import { AccountListItemButton } from './account-list-item-button'
@@ -35,19 +35,26 @@ import {
 
 interface Props {
   onHideModal: () => void
+  refreshBlockchainState: (overrides: Partial<RefreshBlockchainStateParams>) => void
 }
 
 export const AccountModal = (props: Props) => {
-  const { onHideModal } = props
+  const { onHideModal, refreshBlockchainState } = props
 
   // Context
-  const { getLocale, routeBackToWallet, walletAccounts, switchAccount, disconnectWallet } =
+  const { getLocale, routeBackToWallet, walletAccounts, network, switchAccount, disconnectWallet } =
     useSwapContext()
+
+  // Memos
+  const networkAccounts = React.useMemo(() => {
+      return walletAccounts.filter(account => account.coin === network.coin)
+  }, [walletAccounts, network])
 
   // Methods
   const onSelectAccount = React.useCallback(
     async (account: WalletAccount) => {
       await switchAccount(account)
+      await refreshBlockchainState({ account })
       onHideModal()
     },
     [onHideModal, switchAccount]
@@ -98,7 +105,7 @@ export const AccountModal = (props: Props) => {
             {getLocale('braveSwapAccounts')}
           </Text>
         </Row>
-        {walletAccounts.map((account) => (
+        {networkAccounts.map((account) => (
           <AccountListItemButton
             key={account.id}
             address={account.address}

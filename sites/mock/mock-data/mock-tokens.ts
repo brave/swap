@@ -9,7 +9,6 @@ import { BlockchainToken, CoinType } from '@brave/swap-interface'
 // Icons
 import {
   BATIconUrl,
-  ETHIconUrl,
   BNBIconUrl,
   SOLIconUrl,
   USDCIconUrl,
@@ -21,18 +20,6 @@ import {
 } from '../src/assets/asset-icons'
 
 export const mockEthereumTokens: BlockchainToken[] = [
-  {
-    contractAddress: '',
-    name: 'Ethereum',
-    symbol: 'ETH',
-    logo: ETHIconUrl,
-    isToken: false,
-    decimals: 18,
-    visible: true,
-    coingeckoId: 'ethereum',
-    coin: CoinType.Ethereum,
-    chainId: '0x1'
-  },
   {
     contractAddress: '0x0D8775F648430679A709E98d2b0Cb6250d2887EF',
     name: 'Basic Attention Token',

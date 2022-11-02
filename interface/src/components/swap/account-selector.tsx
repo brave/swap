@@ -42,10 +42,15 @@ export const AccountSelector = (props: Props) => {
   } = props
 
   // Context
-  const { getLocale, walletAccounts } = useSwapContext()
+  const { getLocale, walletAccounts, network } = useSwapContext()
 
   // Refs
   const accountSelectorRef = React.useRef<HTMLDivElement>(null)
+
+  // Memos
+  const networkAccounts = React.useMemo(() => {
+    return walletAccounts.filter(account => account.coin === network.coin)
+  }, [walletAccounts, network])
 
   // Methods
   const onToggleShowAccountSelector = React.useCallback(() => {
@@ -78,7 +83,7 @@ export const AccountSelector = (props: Props) => {
       </SelectButton>
       {showAccountSelector && (
         <SelectorBox>
-          {walletAccounts.map(account => (
+          {networkAccounts.map(account => (
             <AccountListButton account={account} onClick={onClickSelectAccount} key={account.id} />
           ))}
         </SelectorBox>
