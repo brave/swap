@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import { BRAVE_SWAP_DATA_THEME_KEY } from '../../constants/magics'
 
 // Types
-import { NetworkInfo } from '~/constants/types'
+import { NetworkInfo, RefreshBlockchainStateParams } from '~/constants/types'
 
 // Utils
 import { reduceNetworkDisplayName } from '~/utils/reduce-network-name'
@@ -28,7 +28,13 @@ import { useOnClickOutside } from '~/hooks/useOnClickOutside'
 // Styled Components
 import { Row, HorizontalSpacer, StyledDiv } from '~/components/shared.styles'
 
-export const Header = () => {
+interface Props {
+  refreshBlockchainState: (overrides: Partial<RefreshBlockchainStateParams>) => void
+}
+
+export const Header = (props: Props) => {
+  const { refreshBlockchainState } = props
+
   // Wallet State
   const { network, supportedNetworks, isWalletConnected, connectWallet, switchNetwork } =
     useSwapContext()
@@ -44,8 +50,9 @@ export const Header = () => {
   // Methods
   const onSelectNetwork = React.useCallback(async (network: NetworkInfo) => {
     await switchNetwork(network)
+    await refreshBlockchainState({ network })
     setShowNetworkSelector(false)
-  }, [switchNetwork])
+  }, [switchNetwork, refreshBlockchainState])
 
   const toggleTheme = React.useCallback(() => {
     // Users local theme
@@ -133,7 +140,7 @@ export const Header = () => {
           <ConnectWalletButton
             onClick={onClickConnectWalletButton}
           />
-          {showAccountModal && <AccountModal onHideModal={() => setShowAccountModal(false)} />}
+          {showAccountModal && <AccountModal refreshBlockchainState={refreshBlockchainState} onHideModal={() => setShowAccountModal(false)} />}
         </SelectorWrapper>
       </Row>
     </Wrapper>

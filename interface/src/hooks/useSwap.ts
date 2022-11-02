@@ -25,12 +25,16 @@ import {
   GasEstimate,
   CoinType,
   SwapParams,
-  SwapValidationErrorType
+  SwapValidationErrorType,
+  NetworkInfo,
+  RefreshBlockchainStateParams,
+  RefreshPricesParams
 } from '~/constants/types'
 
 // Utils
 import Amount from '~/utils/amount'
 import { ZERO_EX_VALIDATION_ERROR_CODE } from '~/constants/magics'
+import { makeNetworkAsset } from '~/utils/assets'
 
 const hasDecimalsOverflow = (amount: string, asset?: BlockchainToken) => {
   if (!asset) {
@@ -51,8 +55,18 @@ export const useSwap = () => {
   const {
     state: { tokenBalances, spotPrices }
   } = useWalletState()
-  const { getLocale, getTokenPrice, network, account, defaultBaseCurrency, isWalletConnected } =
-    useSwapContext()
+  const {
+    getLocale,
+    getTokenPrice,
+    getTokenBalance,
+    getBalance,
+    assetsList,
+    network,
+    account,
+    defaultBaseCurrency,
+    isWalletConnected,
+    walletAccounts
+  } = useSwapContext()
   const { dispatch } = useWalletDispatch()
 
   // State
@@ -79,6 +93,7 @@ export const useSwap = () => {
   const [selectedGasFeeOption, setSelectedGasFeeOption] = React.useState<GasFeeOption>(
     gasFeeOptions[1]
   )
+  const [initialized, setInitialized] = React.useState<boolean>(false)
 
   const nativeAsset = useNativeAsset()
   const resetSelectedAssets = React.useCallback(() => {
@@ -215,12 +230,37 @@ export const useSwap = () => {
     [quoteOptions, jupiter.quote, zeroEx.quote, network.coin]
   )
 
+  const refreshNativeAssetSpotPrice = React.useCallback(
+    (overrides: Partial<RefreshPricesParams>) => {
+      const overriddenParams = {
+        network,
+        ...overrides
+      }
+
+      const nativeAsset = makeNetworkAsset(overriddenParams.network)
+
+      ;(async () => {
+        const nativeAssetPrice = await getTokenPrice(nativeAsset)
+
+        await dispatch({
+          type: 'updateSpotPrices',
+          payload: {
+            nativeAsset: Amount.normalize(nativeAssetPrice)
+          }
+        })
+      })()
+    },
+    [network, getTokenPrice]
+  )
+
   const refreshMakerAssetSpotPrice = React.useCallback(
     async (token: BlockchainToken) => {
       const price = await getTokenPrice(token)
       dispatch({
         type: 'updateSpotPrices',
-        payload: token.isToken ? { makerAsset: price } : { makerAsset: price, nativeAsset: price }
+        payload: token.isToken
+          ? { makerAsset: Amount.normalize(price) }
+          : { makerAsset: Amount.normalize(price), nativeAsset: Amount.normalize(price) }
       })
     },
     [getTokenPrice]
@@ -231,13 +271,121 @@ export const useSwap = () => {
       const price = await getTokenPrice(token)
       dispatch({
         type: 'updateSpotPrices',
-        payload: token.isToken ? { takerAsset: price } : { takerAsset: price, nativeAsset: price }
+        payload: token.isToken
+          ? { takerAsset: Amount.normalize(price) }
+          : { takerAsset: Amount.normalize(price), nativeAsset: Amount.normalize(price) }
       })
     },
     [getTokenPrice]
   )
 
   // Methods
+  const getNetworkAssetsList = React.useCallback(
+    (networkInfo: NetworkInfo) => {
+      const nativeAsset = makeNetworkAsset(networkInfo)
+      return [nativeAsset, ...assetsList].filter(
+        asset => asset.coin === networkInfo.coin && asset.chainId === networkInfo.chainId
+      )
+    },
+    [assetsList]
+  )
+
+  const refreshBlockchainState = React.useCallback(
+    (overrides: Partial<RefreshBlockchainStateParams>) => {
+      let overriddenParams = {
+        network,
+        account,
+        ...overrides
+      }
+
+      if (overriddenParams.account.coin !== overriddenParams.network.coin) {
+        overriddenParams = {
+          ...overriddenParams,
+          account:
+            walletAccounts.find(account => account.coin === overriddenParams.network.coin) ||
+            overriddenParams.account
+        }
+      }
+
+      const networkAssets = getNetworkAssetsList(overriddenParams.network)
+      const balancesPromise = Promise.all(
+        networkAssets.map(async asset => {
+          try {
+            const result = asset.isToken
+              ? await getTokenBalance(
+                asset.contractAddress,
+                overriddenParams.account.address,
+                overriddenParams.account.coin,
+                asset.chainId
+              )
+              : await getBalance(
+                overriddenParams.account.address,
+                overriddenParams.network.coin,
+                overriddenParams.network.chainId
+              )
+
+            return {
+              key: asset.contractAddress.toLowerCase(),
+              value: Amount.normalize(result)
+            }
+          } catch (e) {
+            console.error(`Error querying balance: error=${e} asset=`, JSON.stringify(asset))
+            return {
+              key: asset.contractAddress.toLowerCase(),
+              value: ''
+            }
+          }
+        })
+      )
+
+      ;(async () => {
+        const balances = await balancesPromise
+
+        // In the following code block, we're doing the following transformation:
+        // {key: string, value: string}[] => { [key]: value }
+        //
+        // The balances array can be quite big, and copying the accumulated object
+        // for each .reduce() pass can result in an overheard. We're therefore using
+        // a mutable accumulator object, instead of Object.assign() or spread syntax.
+        //
+        // We also return a comma expression, which evaluates the expression
+        // before the comma and returns the expression after the comma. This prevents
+        // unnecessary assignments and object copy.
+        //
+        // We also filter out balance results from the array that could not be
+        // fetched.
+        const payload = balances
+          .filter(item => item.value !== '')
+          .reduce((obj, item) => (((obj as any)[item.key] = item.value), obj), {})
+
+        await dispatch({
+          type: 'updateTokenBalances',
+          payload
+        })
+      })()
+    },
+    [
+      getTokenPrice,
+      getBalance,
+      getTokenBalance,
+      dispatch,
+      getNetworkAssetsList,
+      walletAccounts,
+      network,
+      account
+    ]
+  )
+
+  React.useEffect(() => {
+    ;(async () => {
+      if (!initialized) {
+        await refreshBlockchainState({})
+        await refreshNativeAssetSpotPrice({})
+        setInitialized(true)
+      }
+    })()
+  }, [refreshBlockchainState, refreshNativeAssetSpotPrice, initialized])
+
   const handleJupiterQuoteRefresh = React.useCallback(
     async (overrides: Partial<SwapParams>) => {
       const quote = await jupiter.refresh(overrides)
@@ -644,7 +792,10 @@ export const useSwap = () => {
     onSubmit,
     submitButtonText,
     isSubmitButtonDisabled,
-    swapValidationError
+    swapValidationError,
+    refreshBlockchainState,
+    refreshNativeAssetSpotPrice,
+    getNetworkAssetsList
   }
 }
 export default useSwap

@@ -27,7 +27,7 @@ import {
 } from '~/components/shared.styles'
 
 interface Props {
-  onSelectNetwork: (network: NetworkInfo) => void
+  onSelectNetwork: (network: NetworkInfo) => Promise<void>
   isHeader?: boolean
 }
 

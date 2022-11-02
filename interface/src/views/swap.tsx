@@ -84,7 +84,9 @@ export const Swap = () => {
     onSubmit,
     submitButtonText,
     isSubmitButtonDisabled,
-    swapValidationError
+    swapValidationError,
+    refreshBlockchainState,
+    getNetworkAssetsList
   } = swap
 
   // Context
@@ -127,7 +129,7 @@ export const Swap = () => {
   // render
   return (
     <>
-      <SwapContainer>
+      <SwapContainer refreshBlockchainState={refreshBlockchainState} >
         <Row
           rowWidth='full'
           horizontalPadding={16}
@@ -227,6 +229,8 @@ export const Swap = () => {
           disabledToken={selectingFromOrTo === 'from' ? toToken : fromToken}
           getAssetBalance={getAssetBalance}
           selectingFromOrTo={selectingFromOrTo}
+          refreshBlockchainState={refreshBlockchainState}
+          getNetworkAssetsList={getNetworkAssetsList}
         />
       )}
     </>

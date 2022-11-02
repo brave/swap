@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import { useSwapContext } from '~/context/swap.context'
 
 // Types
-import { BlockchainToken } from '~/constants/types'
+import {BlockchainToken, NetworkInfo, RefreshBlockchainStateParams} from '~/constants/types'
 import Amount from '~/utils/amount'
 
 // Assets
@@ -31,14 +31,16 @@ interface Props {
   getAssetBalance: (token: BlockchainToken) => Amount
   disabledToken: BlockchainToken | undefined
   selectingFromOrTo: 'from' | 'to'
+  refreshBlockchainState: (overrides: Partial<RefreshBlockchainStateParams>) => void
+  getNetworkAssetsList: (network: NetworkInfo) => BlockchainToken[]
 }
 
 export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
   (props: Props, forwardedRef) => {
-    const { onClose, onSelectToken, getAssetBalance, disabledToken, selectingFromOrTo } = props
+    const { onClose, onSelectToken, getAssetBalance, refreshBlockchainState, getNetworkAssetsList, disabledToken, selectingFromOrTo } = props
 
     // Context
-    const { getLocale, assetsList, isWalletConnected } = useSwapContext()
+    const { getLocale, network, isWalletConnected } = useSwapContext()
 
     // State
     const [hideTokensWithZeroBalances, setHideTokensWithZeroBalances] =
@@ -55,6 +57,10 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
     }, [])
 
     // Memos
+    const networkAssetsList = React.useMemo(() => {
+      return getNetworkAssetsList(network)
+    }, [getNetworkAssetsList, network])
+
     const buttonText: string = React.useMemo(() => {
       return hideTokensWithZeroBalances
         ? getLocale('braveSwapShowTokensWithZeroBalances')
@@ -63,14 +69,14 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
 
     const filteredTokenListBySearch: BlockchainToken[] = React.useMemo(() => {
       if (searchValue === '') {
-        return assetsList
+        return networkAssetsList
       }
-      return assetsList.filter(
+      return networkAssetsList.filter(
         (token: BlockchainToken) =>
           token.name.toLowerCase().startsWith(searchValue.toLowerCase()) ||
           token.symbol.toLowerCase().startsWith(searchValue.toLowerCase())
       )
-    }, [assetsList, searchValue])
+    }, [networkAssetsList, searchValue])
 
     const tokenListWithBalances: BlockchainToken[] = React.useMemo(() => {
       return filteredTokenListBySearch.filter((token: BlockchainToken) =>
@@ -113,6 +119,7 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
             onSearchChanged={handleOnSearchChanged}
             searchValue={searchValue}
             networkSelectorDisabled={selectingFromOrTo === 'to'}
+            refreshBlockchainState={refreshBlockchainState}
           />
         </Row>
         <VerticalDivider />

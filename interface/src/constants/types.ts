@@ -74,6 +74,15 @@ export type SwapAndSend = {
   name: string
 }
 
+export type RefreshBlockchainStateParams = {
+  network: NetworkInfo
+  account: WalletAccount
+}
+
+export type RefreshPricesParams = {
+  network: NetworkInfo
+}
+
 export enum CoinType {
   Solana = 501,
   Ethereum = 60
