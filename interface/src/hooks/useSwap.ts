@@ -34,7 +34,7 @@ import {
 // Utils
 import Amount from '~/utils/amount'
 import { ZERO_EX_VALIDATION_ERROR_CODE } from '~/constants/magics'
-import { makeNetworkAsset } from '~/utils/assets'
+import { getBalanceRegistryKey, makeNetworkAsset } from '~/utils/assets'
 
 const hasDecimalsOverflow = (amount: string, asset?: BlockchainToken) => {
   if (!asset) {
@@ -310,6 +310,8 @@ export const useSwap = () => {
       const networkAssets = getNetworkAssetsList(overriddenParams.network)
       const balancesPromise = Promise.all(
         networkAssets.map(async asset => {
+          const balanceRegistryKey = getBalanceRegistryKey(asset)
+
           try {
             const result = asset.isToken
               ? await getTokenBalance(
@@ -325,13 +327,13 @@ export const useSwap = () => {
               )
 
             return {
-              key: asset.contractAddress.toLowerCase(),
+              key: balanceRegistryKey,
               value: Amount.normalize(result)
             }
           } catch (e) {
             console.error(`Error querying balance: error=${e} asset=`, JSON.stringify(asset))
             return {
-              key: asset.contractAddress.toLowerCase(),
+              key: balanceRegistryKey,
               value: ''
             }
           }
@@ -465,9 +467,9 @@ export const useSwap = () => {
 
   const getAssetBalance = React.useCallback(
     (token: BlockchainToken): Amount => {
-      return tokenBalances
-        ? new Amount(tokenBalances[token.contractAddress.toLowerCase()] ?? '0')
-        : Amount.zero()
+      const balanceRegistryKey = getBalanceRegistryKey(token)
+
+      return tokenBalances ? new Amount(tokenBalances[balanceRegistryKey] ?? '0') : Amount.zero()
     },
     [tokenBalances]
   )
