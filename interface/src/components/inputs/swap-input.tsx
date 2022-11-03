@@ -44,7 +44,7 @@ export const SwapInput = (props: Props) => {
 const Input = styled(StyledInput)<{
   hasError: boolean
 }>`
-  color: ${(p) => (p.hasError ? p.theme.color.red80 : 'inherit')};
+  color: ${(p) => (p.hasError ? p.theme.color.red40 : 'inherit')};
   font-weight: 500;
   font-size: 28px;
   line-height: 42px;

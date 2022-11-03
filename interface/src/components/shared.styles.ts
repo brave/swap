@@ -15,7 +15,7 @@ export const Text = styled.span<{
   --text01: ${(p) => p.theme.color.legacy.text01};
   --text02: ${(p) => p.theme.color.legacy.text02};
   --text03: ${(p) => p.theme.color.legacy.text03};
-  --error: ${(p) => p.theme.color.red80};
+  --error: ${(p) => p.theme.color.red40};
   --success: ${(p) => p.theme.color.green30};
   --warning: ${(p) => p.theme.color.yellow30};
   font-family: 'Poppins';
