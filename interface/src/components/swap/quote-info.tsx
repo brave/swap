@@ -20,7 +20,7 @@ import { useSwapContext } from '~/context/swap.context'
 import { useWalletState } from '~/state/wallet'
 
 // Utils
-import { constructCoinGeckoRateURL } from '~/utils/api-utils'
+import Amount from '~/utils/amount'
 
 // Assets
 import HorizontalArrowsIcon from '~/assets/horizontal-arrows-icon.svg'
@@ -74,7 +74,7 @@ export const QuoteInfo = (props: Props) => {
     }`
   }, [selectedQuoteOption])
 
-  const coinGeckoImpact: string = React.useMemo(() => {
+  const coinGeckoDelta: Amount = React.useMemo(() => {
     if (
       fromToken !== undefined &&
       toToken !== undefined &&
@@ -82,15 +82,54 @@ export const QuoteInfo = (props: Props) => {
       spotPrices.takerAsset &&
       selectedQuoteOption !== undefined
     ) {
-      const fromTokenPrice = spotPrices.makerAsset
-      const toTokenPrice = spotPrices.takerAsset
-      const coinGeckoRate = Number(toTokenPrice) / Number(fromTokenPrice)
-      const coinGeckoMinimumReceived = Number(toAmount) * coinGeckoRate
-      const impact = selectedQuoteOption.toAmount.toNumber() / coinGeckoMinimumReceived
-      return impact.toFixed(2)
+      // Exchange rate is the value <R> in the following equation:
+      // 1 FROM = <R> TO
+
+      // CoinGecko rate computation:
+      //   1 FROM = <R> TO
+      //   1 FROM/USD = <R> TO/USD
+      //   => <R> = (FROM/USD) / (TO/USD)
+      const coinGeckoRate = new Amount(spotPrices.makerAsset).div(spotPrices.takerAsset)
+
+      // Quote rate computation:
+      //   <X> FROM = <Y> TO
+      //   1 FROM = <R> TO
+      //   => <R> = <Y>/<X>
+      const quoteRate = selectedQuoteOption.rate
+
+      // The trade is profitable if quoteRate > coinGeckoRate.
+      return quoteRate.minus(coinGeckoRate).div(quoteRate).times(100)
     }
-    return ''
-  }, [spotPrices, fromToken, toToken, selectedQuoteOption, toAmount])
+
+    return Amount.zero()
+  }, [spotPrices, fromToken, toToken, selectedQuoteOption])
+
+  const coinGeckoDeltaText: string = React.useMemo(() => {
+    if (coinGeckoDelta.gte(0)) {
+      return getLocale('braveSwapCoinGeckoCheaper').replace('$1', coinGeckoDelta.format(2))
+    }
+
+    if (coinGeckoDelta.gte(-1)) {
+      return getLocale('braveSwapCoinGeckoWithin').replace('$1', coinGeckoDelta.times(-1).format(2))
+    }
+
+    return getLocale('braveSwapCoinGeckoExpensive').replace(
+      '$1',
+      coinGeckoDelta.times(-1).format(2)
+    )
+  }, [coinGeckoDelta])
+
+  const coinGeckoDeltaColor = React.useMemo(() => {
+    if (coinGeckoDelta.gte(-1)) {
+      return 'success'
+    }
+
+    if (coinGeckoDelta.gte(-5)) {
+      return 'warning'
+    }
+
+    return 'error'
+  }, [coinGeckoDelta])
 
   const swapImpact: string = React.useMemo(() => {
     if (selectedQuoteOption === undefined) {
@@ -108,13 +147,6 @@ export const QuoteInfo = (props: Props) => {
   }, [selectedQuoteOption])
 
   // Methods
-  const coinGeckoAPIURL = React.useMemo(() => {
-    if (fromToken && toToken) {
-      return constructCoinGeckoRateURL(fromToken, toToken)
-    }
-    return ''
-  }, [fromToken, toToken])
-
   const toggleShowAdvanced = React.useCallback(() => {
     setShowAdvanced(prev => !prev)
   }, [])
@@ -134,20 +166,16 @@ export const QuoteInfo = (props: Props) => {
           <Row rowWidth='full' marginBottom={10} horizontalPadding={16}>
             <HorizontalSpacer size={1} />
             <Row>
-              <Text textSize='14px' textColor={coinGeckoImpact > swapImpact ? 'error' : 'text01'}>
-                {`< ${coinGeckoImpact}%`} {getLocale('braveSwapCoinGecko')}
+              <Text textSize='14px' textColor={coinGeckoDeltaColor}>
+                {coinGeckoDeltaText}
               </Text>
-              <HorizontalSpacer size={4} />
-              <Link rel='noopener noreferrer' target='_blank' href={coinGeckoAPIURL}>
-                {getLocale('braveSwapAPI')} {`>`}
-              </Link>
             </Row>
           </Row>
 
           <Row rowWidth='full' marginBottom={10} horizontalPadding={16}>
             <Text textSize='14px'>{getLocale('braveSwapPriceImpact')}</Text>
             <Text textSize='14px'>
-              {swapImpact === '0' ? `${swapImpact}%` : `< ${swapImpact}%`}
+              {swapImpact === '0' ? `${swapImpact}%` : `~ ${swapImpact}%`}
             </Text>
           </Row>
           <Row rowWidth='full' marginBottom={8} horizontalPadding={16}>

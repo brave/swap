@@ -80,7 +80,9 @@ export type RefreshBlockchainStateParams = {
 }
 
 export type RefreshPricesParams = {
-  network: NetworkInfo
+  nativeAsset: BlockchainToken,
+  fromAsset: BlockchainToken | undefined
+  toAsset: BlockchainToken | undefined
 }
 
 export enum CoinType {
