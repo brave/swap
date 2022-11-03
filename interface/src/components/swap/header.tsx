@@ -29,7 +29,7 @@ import { useOnClickOutside } from '~/hooks/useOnClickOutside'
 import { Row, HorizontalSpacer, StyledDiv } from '~/components/shared.styles'
 
 interface Props {
-  refreshBlockchainState: (overrides: Partial<RefreshBlockchainStateParams>) => void
+  refreshBlockchainState: (overrides: Partial<RefreshBlockchainStateParams>) => Promise<void>
 }
 
 export const Header = (props: Props) => {
@@ -50,8 +50,8 @@ export const Header = (props: Props) => {
   // Methods
   const onSelectNetwork = React.useCallback(async (network: NetworkInfo) => {
     await switchNetwork(network)
-    await refreshBlockchainState({ network })
     setShowNetworkSelector(false)
+    await refreshBlockchainState({ network })
   }, [switchNetwork, refreshBlockchainState])
 
   const toggleTheme = React.useCallback(() => {

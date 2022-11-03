@@ -27,7 +27,7 @@ interface Props {
   onSearchChanged: (value: string) => void
   searchValue: string
   networkSelectorDisabled: boolean
-  refreshBlockchainState: (overrides: Partial<RefreshBlockchainStateParams>) => void
+  refreshBlockchainState: (overrides: Partial<RefreshBlockchainStateParams>) => Promise<void>
 }
 
 export const SearchWithNetworkSelector = (props: Props) => {
@@ -42,10 +42,10 @@ export const SearchWithNetworkSelector = (props: Props) => {
   const onSelectNetwork = React.useCallback(
     async (network: NetworkInfo) => {
       await switchNetwork(network)
-      await refreshBlockchainState({ network })
       setShowNetworkSelector(false)
+      await refreshBlockchainState({ network })
     },
-    [switchNetwork]
+    [switchNetwork, refreshBlockchainState]
   )
 
   return (

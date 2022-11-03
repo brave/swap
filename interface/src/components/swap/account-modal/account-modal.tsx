@@ -35,7 +35,7 @@ import {
 
 interface Props {
   onHideModal: () => void
-  refreshBlockchainState: (overrides: Partial<RefreshBlockchainStateParams>) => void
+  refreshBlockchainState: (overrides: Partial<RefreshBlockchainStateParams>) => Promise<void>
 }
 
 export const AccountModal = (props: Props) => {
@@ -57,7 +57,7 @@ export const AccountModal = (props: Props) => {
       await refreshBlockchainState({ account })
       onHideModal()
     },
-    [onHideModal, switchAccount]
+    [onHideModal, switchAccount, refreshBlockchainState]
   )
   const onDisconnect = React.useCallback(async () => {
     if (disconnectWallet) {

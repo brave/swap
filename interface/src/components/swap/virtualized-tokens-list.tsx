@@ -16,7 +16,7 @@ import Amount from '~/utils/amount'
 interface VirtualizedTokensListProps {
   tokenList: BlockchainToken[]
   onSelectToken: (token: BlockchainToken) => void
-  getAssetBalance: (token: BlockchainToken) => Amount
+  getCachedAssetBalance: (token: BlockchainToken) => Amount
   disabledToken: BlockchainToken | undefined
   isWalletConnected: boolean
 }
@@ -38,7 +38,7 @@ const ListItem = (props: ListItemProps) => {
   const {
     index,
     data,
-    getAssetBalance,
+    getCachedAssetBalance,
     disabledToken,
     isWalletConnected,
     onSelectToken,
@@ -50,7 +50,7 @@ const ListItem = (props: ListItemProps) => {
     <div style={style}>
       <TokenListButton
         onClick={onSelectToken}
-        balance={getAssetBalance(token)}
+        balance={getCachedAssetBalance(token)}
         isWalletConnected={isWalletConnected}
         token={token}
         disabled={
@@ -67,7 +67,7 @@ export const VirtualizedTokenList = (props: VirtualizedTokensListProps) => {
   const {
     tokenList,
     disabledToken,
-    getAssetBalance,
+    getCachedAssetBalance,
     isWalletConnected,
     onSelectToken
   } = props
@@ -93,7 +93,7 @@ export const VirtualizedTokenList = (props: VirtualizedTokensListProps) => {
             children={(itemProps) => (
               <ListItem
                 {...itemProps}
-                getAssetBalance={getAssetBalance}
+                getCachedAssetBalance={getCachedAssetBalance}
                 disabledToken={disabledToken}
                 isWalletConnected={isWalletConnected}
                 onSelectToken={onSelectToken}

@@ -8,9 +8,10 @@ import styled from 'styled-components'
 
 // Types
 import { CoinType } from '~/constants/types'
+import Amount from '~/utils/amount'
 
 // Constants
-import { BRAVE_SWAP_DATA_THEME_KEY } from '../constants/magics'
+import { BRAVE_SWAP_DATA_THEME_KEY } from '~/constants/magics'
 
 // Context
 import { useSwapContext } from '~/context/swap.context'
@@ -52,7 +53,7 @@ export const Swap = () => {
     quoteOptions,
     selectedQuoteOptionIndex,
     selectingFromOrTo,
-    fromTokenBalance,
+    fromAssetBalance,
     fiatValue,
     swapAndSendSelected,
     toAnotherAddress,
@@ -64,7 +65,7 @@ export const Swap = () => {
     useDirectRoute,
     useOptimizedFees,
     gasEstimates,
-    getAssetBalance,
+    getCachedAssetBalance,
     onSelectFromToken,
     onSelectToToken,
     onSelectQuoteOption,
@@ -162,7 +163,7 @@ export const Swap = () => {
           inputValue={fromAmount}
           onClickSelectToken={() => setSelectingFromOrTo('from')}
           token={fromToken}
-          tokenBalance={fromTokenBalance}
+          tokenBalance={fromAssetBalance}
           hasInputError={
             swapValidationError === 'insufficientBalance' ||
             swapValidationError === 'fromAmountDecimalsOverflow'
@@ -227,7 +228,7 @@ export const Swap = () => {
             selectingFromOrTo === 'from' ? onSelectFromToken : onSelectToToken
           }
           disabledToken={selectingFromOrTo === 'from' ? toToken : fromToken}
-          getAssetBalance={getAssetBalance}
+          getCachedAssetBalance={getCachedAssetBalance}
           selectingFromOrTo={selectingFromOrTo}
           refreshBlockchainState={refreshBlockchainState}
           getNetworkAssetsList={getNetworkAssetsList}
