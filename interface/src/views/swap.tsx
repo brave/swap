@@ -55,11 +55,6 @@ export const Swap = () => {
     selectingFromOrTo,
     fromAssetBalance,
     fiatValue,
-    swapAndSendSelected,
-    toAnotherAddress,
-    userConfirmedAddress,
-    selectedSwapSendAccount,
-    selectedSwapAndSendOption,
     selectedGasFeeOption,
     slippageTolerance,
     useDirectRoute,
@@ -73,11 +68,6 @@ export const Swap = () => {
     setSelectingFromOrTo,
     handleOnSetFromAmount,
     handleOnSetToAmount,
-    handleOnSetToAnotherAddress,
-    onCheckUserConfirmedAddress,
-    onSetSelectedSwapAndSendOption,
-    setSelectedSwapSendAccount,
-    setSwapAndSendSelected,
     setSelectedGasFeeOption,
     setSlippageTolerance,
     setUseDirectRoute,
@@ -197,18 +187,20 @@ export const Swap = () => {
               toToken={toToken}
               toAmount={toAmount}
             />
-            <SwapAndSend
-              onChangeSwapAndSendSelected={setSwapAndSendSelected}
-              handleOnSetToAnotherAddress={handleOnSetToAnotherAddress}
-              onCheckUserConfirmedAddress={onCheckUserConfirmedAddress}
-              onSelectSwapAndSendOption={onSetSelectedSwapAndSendOption}
-              onSelectSwapSendAccount={setSelectedSwapSendAccount}
-              swapAndSendSelected={swapAndSendSelected}
-              selectedSwapAndSendOption={selectedSwapAndSendOption}
-              selectedSwapSendAccount={selectedSwapSendAccount}
-              toAnotherAddress={toAnotherAddress}
-              userConfirmedAddress={userConfirmedAddress}
-            />
+
+            {/* TODO: Swap and Send  is currently unavailable
+              <SwapAndSend
+                onChangeSwapAndSendSelected={setSwapAndSendSelected}
+                handleOnSetToAnotherAddress={handleOnSetToAnotherAddress}
+                onCheckUserConfirmedAddress={onCheckUserConfirmedAddress}
+                onSelectSwapAndSendOption={onSetSelectedSwapAndSendOption}
+                onSelectSwapSendAccount={setSelectedSwapSendAccount}
+                swapAndSendSelected={swapAndSendSelected}
+                selectedSwapAndSendOption={selectedSwapAndSendOption}
+                selectedSwapSendAccount={selectedSwapSendAccount}
+                toAnotherAddress={toAnotherAddress}
+                userConfirmedAddress={userConfirmedAddress}
+            */}
           </>
         )}
         <StandardButton
