@@ -4,6 +4,7 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 import React from 'react'
+import async from 'async'
 
 // Options
 import { SwapAndSendOptions } from '~/options/select-and-send-options'
@@ -290,8 +291,37 @@ export const useSwap = () => {
     [assetsList]
   )
 
+  const getAssetBalanceFactory = React.useCallback(
+    (account: WalletAccount, network: NetworkInfo) => async (asset: BlockchainToken) => {
+      const balanceRegistryKey = getBalanceRegistryKey(asset)
+
+      try {
+        const result = asset.isToken
+          ? await getTokenBalance(
+            asset.contractAddress,
+            account.address,
+            account.coin,
+            asset.chainId
+          )
+          : await getBalance(account.address, network.coin, network.chainId)
+
+        return {
+          key: balanceRegistryKey,
+          value: Amount.normalize(result)
+        }
+      } catch (e) {
+        console.log(`Error querying balance: error=${e} asset=`, JSON.stringify(asset))
+        return {
+          key: balanceRegistryKey,
+          value: ''
+        }
+      }
+    },
+    [getBalance, getTokenBalance]
+  )
+
   const refreshBlockchainState = React.useCallback(
-    (overrides: Partial<RefreshBlockchainStateParams>) => {
+    async (overrides: Partial<RefreshBlockchainStateParams>) => {
       let overriddenParams = {
         network,
         account,
@@ -308,40 +338,10 @@ export const useSwap = () => {
       }
 
       const networkAssets = getNetworkAssetsList(overriddenParams.network)
-      const balancesPromise = Promise.all(
-        networkAssets.map(async asset => {
-          const balanceRegistryKey = getBalanceRegistryKey(asset)
+      const iterator = getAssetBalanceFactory(overriddenParams.account, overriddenParams.network)
 
-          try {
-            const result = asset.isToken
-              ? await getTokenBalance(
-                asset.contractAddress,
-                overriddenParams.account.address,
-                overriddenParams.account.coin,
-                asset.chainId
-              )
-              : await getBalance(
-                overriddenParams.account.address,
-                overriddenParams.network.coin,
-                overriddenParams.network.chainId
-              )
-
-            return {
-              key: balanceRegistryKey,
-              value: Amount.normalize(result)
-            }
-          } catch (e) {
-            console.error(`Error querying balance: error=${e} asset=`, JSON.stringify(asset))
-            return {
-              key: balanceRegistryKey,
-              value: ''
-            }
-          }
-        })
-      )
-
-      ;(async () => {
-        const balances = await balancesPromise
+      async function drainChunk (chunk: BlockchainToken[]) {
+        const balances = await async.mapLimit(chunk, 10, iterator)
 
         // In the following code block, we're doing the following transformation:
         // {key: string, value: string}[] => { [key]: value }
@@ -360,11 +360,17 @@ export const useSwap = () => {
           .filter(item => item.value !== '')
           .reduce((obj, item) => (((obj as any)[item.key] = item.value), obj), {})
 
-        await dispatch({
+        dispatch({
           type: 'updateTokenBalances',
           payload
         })
-      })()
+      }
+
+      const chunkSize = 10
+      for (let i = 0; i < networkAssets.length; i += chunkSize) {
+        const chunk = networkAssets.slice(i, i + chunkSize)
+        await drainChunk(chunk)
+      }
     },
     [
       getTokenPrice,
@@ -380,13 +386,18 @@ export const useSwap = () => {
 
   React.useEffect(() => {
     ;(async () => {
+      // Do not trigger refresh functions if assetsList is still not available.
+      if (assetsList.length === 0) {
+        return
+      }
+
       if (!initialized) {
         await refreshBlockchainState({})
         await refreshNativeAssetSpotPrice({})
         setInitialized(true)
       }
     })()
-  }, [refreshBlockchainState, refreshNativeAssetSpotPrice, initialized])
+  }, [refreshBlockchainState, refreshNativeAssetSpotPrice, initialized, assetsList])
 
   const handleJupiterQuoteRefresh = React.useCallback(
     async (overrides: Partial<SwapParams>) => {
@@ -465,7 +476,7 @@ export const useSwap = () => {
     [network.coin, handleZeroExQuoteRefresh]
   )
 
-  const getAssetBalance = React.useCallback(
+  const getCachedAssetBalance = React.useCallback(
     (token: BlockchainToken): Amount => {
       const balanceRegistryKey = getBalanceRegistryKey(token)
 
@@ -473,14 +484,25 @@ export const useSwap = () => {
     },
     [tokenBalances]
   )
-  const fromAssetBalance = fromToken && getAssetBalance(fromToken)
-  const nativeAssetBalance = nativeAsset && getAssetBalance(nativeAsset)
+
+  const fromAssetBalance = fromToken && getCachedAssetBalance(fromToken)
+  const nativeAssetBalance = getCachedAssetBalance(nativeAsset)
 
   const onClickFlipSwapTokens = React.useCallback(async () => {
     setFromToken(toToken)
-    toToken && (await refreshMakerAssetSpotPrice(toToken))
-
     setToToken(fromToken)
+
+    if (toToken) {
+      const balance = await getAssetBalanceFactory(account, network)(toToken)
+      dispatch({
+        type: 'updateTokenBalances',
+        payload: {
+          [balance.key]: balance.value
+        }
+      })
+      await refreshMakerAssetSpotPrice(toToken)
+    }
+
     fromToken && (await refreshTakerAssetSpotPrice(fromToken))
 
     await handleOnSetFromAmount('')
@@ -510,6 +532,15 @@ export const useSwap = () => {
     async (token: BlockchainToken) => {
       setFromToken(token)
       setSelectingFromOrTo(undefined)
+
+      const balance = await getAssetBalanceFactory(account, network)(token)
+      dispatch({
+        type: 'updateTokenBalances',
+        payload: {
+          [balance.key]: balance.value
+        }
+      })
+
       await refreshMakerAssetSpotPrice(token)
 
       if (network.coin === CoinType.Solana) {
@@ -545,13 +576,6 @@ export const useSwap = () => {
   )
 
   // Memos
-  const fromTokenBalance: Amount = React.useMemo(() => {
-    if (fromToken && isWalletConnected) {
-      return getAssetBalance(fromToken)
-    }
-    return Amount.zero()
-  }, [fromToken, isWalletConnected, getAssetBalance])
-
   const fiatValue: string | undefined = React.useMemo(() => {
     if (fromAmount && spotPrices.makerAsset) {
       return new Amount(fromAmount).times(spotPrices.makerAsset).formatAsFiat(defaultBaseCurrency)
@@ -758,7 +782,7 @@ export const useSwap = () => {
     toToken,
     fromAmount,
     toAmount,
-    fromTokenBalance,
+    fromAssetBalance: fromAssetBalance || Amount.zero(),
     fiatValue,
     isFetchingQuote: zeroEx.loading || jupiter.loading,
     quoteOptions,
@@ -776,7 +800,7 @@ export const useSwap = () => {
     gasEstimates,
     onSelectFromToken,
     onSelectToToken,
-    getAssetBalance,
+    getCachedAssetBalance,
     onSelectQuoteOption,
     setSelectingFromOrTo,
     handleOnSetFromAmount,

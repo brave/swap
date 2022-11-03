@@ -28,16 +28,16 @@ import { Column, Row, Text, VerticalDivider, IconButton } from '~/components/sha
 interface Props {
   onClose: () => void
   onSelectToken: (token: BlockchainToken) => void
-  getAssetBalance: (token: BlockchainToken) => Amount
+  getCachedAssetBalance: (token: BlockchainToken) => Amount
   disabledToken: BlockchainToken | undefined
   selectingFromOrTo: 'from' | 'to'
-  refreshBlockchainState: (overrides: Partial<RefreshBlockchainStateParams>) => void
+  refreshBlockchainState: (overrides: Partial<RefreshBlockchainStateParams>) => Promise<void>
   getNetworkAssetsList: (network: NetworkInfo) => BlockchainToken[]
 }
 
 export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
   (props: Props, forwardedRef) => {
-    const { onClose, onSelectToken, getAssetBalance, refreshBlockchainState, getNetworkAssetsList, disabledToken, selectingFromOrTo } = props
+    const { onClose, onSelectToken, getCachedAssetBalance, refreshBlockchainState, getNetworkAssetsList, disabledToken, selectingFromOrTo } = props
 
     // Context
     const { getLocale, network, isWalletConnected } = useSwapContext()
@@ -80,9 +80,9 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
 
     const tokenListWithBalances: BlockchainToken[] = React.useMemo(() => {
       return filteredTokenListBySearch.filter((token: BlockchainToken) =>
-        getAssetBalance(token).gt(0)
+        getCachedAssetBalance(token).gt(0)
       )
-    }, [filteredTokenListBySearch, getAssetBalance])
+    }, [filteredTokenListBySearch, getCachedAssetBalance])
 
     const filteredTokenList: BlockchainToken[] = React.useMemo(() => {
       if (tokenListWithBalances.length === 0 || !isWalletConnected) {
@@ -131,7 +131,7 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
           {filteredTokenList.length !== 0 && (
             <VirtualizedTokenList
               disabledToken={disabledToken}
-              getAssetBalance={getAssetBalance}
+              getCachedAssetBalance={getCachedAssetBalance}
               isWalletConnected={isWalletConnected}
               onSelectToken={onSelectToken}
               tokenList={filteredTokenList}

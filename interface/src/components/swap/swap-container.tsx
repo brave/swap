@@ -20,7 +20,7 @@ import { RefreshBlockchainStateParams } from '~/constants/types'
 
 interface Props {
   children?: React.ReactNode
-  refreshBlockchainState: (overrides: Partial<RefreshBlockchainStateParams>) => void
+  refreshBlockchainState: (overrides: Partial<RefreshBlockchainStateParams>) => Promise<void>
 }
 
 export const SwapContainer = (props: Props) => {
