@@ -25,7 +25,7 @@ import {
   Icon,
   HorizontalSpacer,
   Row,
-  HiddenResponsiveRow, 
+  HiddenResponsiveRow,
   StyledButton
 } from '~/components/shared.styles'
 
@@ -156,7 +156,7 @@ const Button = styled(StyledButton)<SelectTokenButtonStyleProps>`
   background-color: ${(p) =>
     p.hasBackground
       ? p.networkNotSupported
-        ? p.theme.color.red80
+        ? p.theme.color.red40
         : p.theme.color.legacy.background01
       : 'transparent'};
   border-radius: 100px;
@@ -178,7 +178,7 @@ const Button = styled(StyledButton)<SelectTokenButtonStyleProps>`
   &:hover:not([disabled]) {
     background-color: ${(p) =>
       p.networkNotSupported
-        ? p.theme.color.red80
+        ? p.theme.color.red40
         : p.buttonType === 'secondary' || p.buttonSize === 'small'
         ? 'var(--token-or-network-button-background-hover-secondary)'
         : 'var(--token-or-network-button-background-hover-primary)'};
