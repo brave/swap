@@ -188,7 +188,7 @@ export const QuoteInfo = (props: Props) => {
           </Row>
           {selectedQuoteOption && selectedQuoteOption.sources.length > 0 && (
             <Row rowWidth='full' marginBottom={8} horizontalPadding={16}>
-              <Text textSize='14px'>{getLocale('braveSwapLiquidityProvider')}</Text>
+              <Text textSize='14px' textAlign='left'>{getLocale('braveSwapLiquidityProvider')}</Text>
               <Row>
                 {selectedQuoteOption.sources.map((source, idx) => (
                   <>
