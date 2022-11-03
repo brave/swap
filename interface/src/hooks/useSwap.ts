@@ -86,7 +86,7 @@ export const useSwap = () => {
   const [userConfirmedAddress, setUserConfirmedAddress] = React.useState<boolean>(false)
   const [selectedSwapSendAccount, setSelectedSwapSendAccount] = React.useState<
     WalletAccount | undefined
-  >(undefined)
+  >(account)
   const [useDirectRoute, setUseDirectRoute] = React.useState<boolean>(false)
   const [useOptimizedFees, setUseOptimizedFees] = React.useState<boolean>(false)
   const [slippageTolerance, setSlippageTolerance] = React.useState<string>('0.5')
@@ -114,7 +114,11 @@ export const useSwap = () => {
     slippagePercentage: new Amount(slippageTolerance).toNumber()
   })
   const zeroEx = useZeroEx({
-    takerAddress: selectedSwapSendAccount?.address || account.address,
+    takerAddress: swapAndSendSelected
+      ? selectedSwapAndSendOption === 'to-account'
+        ? selectedSwapSendAccount?.address || account.address
+        : toAnotherAddress
+      : account.address,
     fromAmount,
     toAmount: '',
     fromToken,
