@@ -8,7 +8,7 @@ import styled from 'styled-components'
 export const Text = styled.span<{
   textSize?: '20px' | '18px' | '16px' | '14px' | '12px'
   isBold?: boolean
-  textColor?: 'text01' | 'text02' | 'text03' | 'error'
+  textColor?: 'text01' | 'text02' | 'text03' | 'error' | 'success' | 'warning'
   maintainHeight?: boolean
   textAlign?: 'left' | 'right'
 }>`
@@ -16,6 +16,8 @@ export const Text = styled.span<{
   --text02: ${(p) => p.theme.color.legacy.text02};
   --text03: ${(p) => p.theme.color.legacy.text03};
   --error: ${(p) => p.theme.color.red80};
+  --success: ${(p) => p.theme.color.green30};
+  --warning: ${(p) => p.theme.color.yellow30};
   font-family: 'Poppins';
   color: ${(p) =>
     p.textColor ? `var(--${p.textColor})` : p.theme.color.legacy.text01};

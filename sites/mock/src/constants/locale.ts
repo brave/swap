@@ -45,7 +45,9 @@ export const locale: Registry = {
     'It insures only direct routing and also disables split trade trading',
   braveSwapNetworkFeeDescription:
     'Brave uses top the 60 tokens for intermediate routing for performance optimization',
-  braveSwapCoinGecko: 'CoinGecko',
+  braveSwapCoinGeckoCheaper: '$1% cheaper than CoinGecko',
+  braveSwapCoinGeckoWithin: 'Within $1% CoinGecko',
+  braveSwapCoinGeckoExpensive: '$1% more expensive than CoinGecko',
   braveSwapAPI: 'API',
   braveSwapName: 'Name',
   braveSwapConnectWallet: 'Connect Wallet',

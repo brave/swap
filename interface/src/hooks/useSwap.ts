@@ -231,53 +231,36 @@ export const useSwap = () => {
     [quoteOptions, jupiter.quote, zeroEx.quote, network.coin]
   )
 
-  const refreshNativeAssetSpotPrice = React.useCallback(
+  const refreshSpotPrices = React.useCallback(
     (overrides: Partial<RefreshPricesParams>) => {
-      const overriddenParams = {
-        network,
+      const overriddenParams: RefreshPricesParams = {
+        nativeAsset: makeNetworkAsset(network),
+        fromAsset: fromToken,
+        toAsset: toToken,
         ...overrides
       }
 
-      const nativeAsset = makeNetworkAsset(overriddenParams.network)
-
       ;(async () => {
-        const nativeAssetPrice = await getTokenPrice(nativeAsset)
+        const fromAssetPrice =
+          overriddenParams.fromAsset && (await getTokenPrice(overriddenParams.fromAsset))
+        const toAssetPrice =
+          overriddenParams.toAsset && (await getTokenPrice(overriddenParams.toAsset))
+
+        const nativeAssetPrice = overriddenParams.fromAsset?.isToken
+          ? await getTokenPrice(overriddenParams.nativeAsset)
+          : fromAssetPrice
 
         await dispatch({
           type: 'updateSpotPrices',
           payload: {
-            nativeAsset: Amount.normalize(nativeAssetPrice)
+            nativeAsset: Amount.normalize(nativeAssetPrice || ''),
+            makerAsset: Amount.normalize(fromAssetPrice || ''),
+            takerAsset: Amount.normalize(toAssetPrice || '')
           }
         })
       })()
     },
-    [network, getTokenPrice]
-  )
-
-  const refreshMakerAssetSpotPrice = React.useCallback(
-    async (token: BlockchainToken) => {
-      const price = await getTokenPrice(token)
-      dispatch({
-        type: 'updateSpotPrices',
-        payload: token.isToken
-          ? { makerAsset: Amount.normalize(price) }
-          : { makerAsset: Amount.normalize(price), nativeAsset: Amount.normalize(price) }
-      })
-    },
-    [getTokenPrice]
-  )
-
-  const refreshTakerAssetSpotPrice = React.useCallback(
-    async (token: BlockchainToken) => {
-      const price = await getTokenPrice(token)
-      dispatch({
-        type: 'updateSpotPrices',
-        payload: token.isToken
-          ? { takerAsset: Amount.normalize(price) }
-          : { takerAsset: Amount.normalize(price), nativeAsset: Amount.normalize(price) }
-      })
-    },
-    [getTokenPrice]
+    [network, fromToken, toToken, getTokenPrice]
   )
 
   // Methods
@@ -393,11 +376,11 @@ export const useSwap = () => {
 
       if (!initialized) {
         await refreshBlockchainState({})
-        await refreshNativeAssetSpotPrice({})
+        await refreshSpotPrices({})
         setInitialized(true)
       }
     })()
-  }, [refreshBlockchainState, refreshNativeAssetSpotPrice, initialized, assetsList])
+  }, [refreshBlockchainState, refreshSpotPrices, initialized, assetsList])
 
   const handleJupiterQuoteRefresh = React.useCallback(
     async (overrides: Partial<SwapParams>) => {
@@ -500,19 +483,17 @@ export const useSwap = () => {
           [balance.key]: balance.value
         }
       })
-      await refreshMakerAssetSpotPrice(toToken)
     }
 
-    fromToken && (await refreshTakerAssetSpotPrice(fromToken))
-
+    await refreshSpotPrices({ fromAsset: toToken, toAsset: fromToken })
     await handleOnSetFromAmount('')
-  }, [fromToken, toToken, handleOnSetFromAmount])
+  }, [fromToken, toToken, handleOnSetFromAmount, refreshSpotPrices])
 
   const onSelectToToken = React.useCallback(
     async (token: BlockchainToken) => {
       setToToken(token)
       setSelectingFromOrTo(undefined)
-      await refreshTakerAssetSpotPrice(token)
+      await refreshSpotPrices({ toAsset: token })
 
       if (network.coin === CoinType.Solana) {
         await handleJupiterQuoteRefresh({
@@ -525,7 +506,7 @@ export const useSwap = () => {
         })
       }
     },
-    [network.coin, handleJupiterQuoteRefresh, handleZeroExQuoteRefresh]
+    [network.coin, handleJupiterQuoteRefresh, handleZeroExQuoteRefresh, refreshSpotPrices]
   )
 
   const onSelectFromToken = React.useCallback(
@@ -541,7 +522,7 @@ export const useSwap = () => {
         }
       })
 
-      await refreshMakerAssetSpotPrice(token)
+      await refreshSpotPrices({ fromAsset: token })
 
       if (network.coin === CoinType.Solana) {
         await handleJupiterQuoteRefresh({
@@ -820,7 +801,6 @@ export const useSwap = () => {
     isSubmitButtonDisabled,
     swapValidationError,
     refreshBlockchainState,
-    refreshNativeAssetSpotPrice,
     getNetworkAssetsList
   }
 }
