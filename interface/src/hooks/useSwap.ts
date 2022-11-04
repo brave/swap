@@ -197,7 +197,7 @@ export const useSwap = () => {
         label: '',
         fromAmount: new Amount(zeroEx.quote.sellAmount).divideByDecimals(fromToken.decimals),
         toAmount: new Amount(zeroEx.quote.buyAmount).divideByDecimals(toToken.decimals),
-        minimumToAmount: new Amount(zeroEx.quote.buyAmount).divideByDecimals(toToken.decimals),
+        minimumToAmount: undefined,
         fromToken,
         toToken,
         rate: new Amount(zeroEx.quote.buyAmount)

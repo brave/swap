@@ -39,7 +39,7 @@ export type QuoteOption = {
   label: string
   fromAmount: Amount
   toAmount: Amount
-  minimumToAmount: Amount
+  minimumToAmount: Amount | undefined
   fromToken: BlockchainToken
   toToken: BlockchainToken
   rate: Amount
