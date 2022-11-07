@@ -58,7 +58,6 @@ export const Swap = () => {
     selectedGasFeeOption,
     slippageTolerance,
     useDirectRoute,
-    useOptimizedFees,
     gasEstimates,
     getCachedAssetBalance,
     onSelectFromToken,
@@ -71,7 +70,6 @@ export const Swap = () => {
     setSelectedGasFeeOption,
     setSlippageTolerance,
     setUseDirectRoute,
-    setUseOptimizedFees,
     onSubmit,
     submitButtonText,
     isSubmitButtonDisabled,
@@ -138,11 +136,9 @@ export const Swap = () => {
                 selectedGasFeeOption={selectedGasFeeOption}
                 slippageTolerance={slippageTolerance}
                 useDirectRoute={useDirectRoute}
-                useOptimizedFees={useOptimizedFees}
                 setSelectedGasFeeOption={setSelectedGasFeeOption}
                 setSlippageTolerance={setSlippageTolerance}
                 setUseDirectRoute={setUseDirectRoute}
-                setUseOptimizedFees={setUseOptimizedFees}
                 gasEstimates={gasEstimates}
               />
             )}
