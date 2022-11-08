@@ -89,7 +89,6 @@ export const useSwap = () => {
     WalletAccount | undefined
   >(account)
   const [useDirectRoute, setUseDirectRoute] = React.useState<boolean>(false)
-  const [useOptimizedFees, setUseOptimizedFees] = React.useState<boolean>(false)
   const [slippageTolerance, setSlippageTolerance] = React.useState<string>('0.5')
   const [selectedGasFeeOption, setSelectedGasFeeOption] = React.useState<GasFeeOption>(
     gasFeeOptions[1]
@@ -781,7 +780,6 @@ export const useSwap = () => {
     selectedGasFeeOption,
     slippageTolerance,
     useDirectRoute,
-    useOptimizedFees,
     gasEstimates,
     onSelectFromToken,
     onSelectToToken,
@@ -799,7 +797,6 @@ export const useSwap = () => {
     setSelectedGasFeeOption,
     setSlippageTolerance,
     setUseDirectRoute,
-    setUseOptimizedFees,
     onSubmit,
     submitButtonText,
     isSubmitButtonDisabled,

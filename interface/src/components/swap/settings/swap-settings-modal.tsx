@@ -23,7 +23,6 @@ import { gasFeeOptions } from '~/options/gas-fee-options'
 
 // Components
 import { ExpandSection } from './expand-section'
-import { ToggleSection } from './toggle-section'
 import { GasPresetButton } from './gas-preset-button'
 import { StandardButton } from '~/components/buttons'
 import { StandardCheckbox } from '~/components/form-controls'
@@ -44,12 +43,10 @@ const slippagePresets = ['0.1', '0.5', '1.0']
 
 interface Props {
   useDirectRoute: boolean
-  useOptimizedFees: boolean
   slippageTolerance: string
   selectedGasFeeOption: GasFeeOption
   gasEstimates: GasEstimate
   setUseDirectRoute: (value: boolean) => void
-  setUseOptimizedFees: (value: boolean) => void
   setSlippageTolerance: (value: string) => void
   setSelectedGasFeeOption: (value: GasFeeOption) => void
 }
@@ -59,11 +56,9 @@ export const SwapSettingsModal = (props: Props) => {
     selectedGasFeeOption,
     setSelectedGasFeeOption,
     setSlippageTolerance,
-    setUseDirectRoute,
-    setUseOptimizedFees,
+    // setUseDirectRoute,
     slippageTolerance,
-    useDirectRoute,
-    useOptimizedFees,
+    // useDirectRoute,
     gasEstimates
   } = props
 
@@ -169,13 +164,13 @@ export const SwapSettingsModal = (props: Props) => {
           {/* Ethereum Only Settings */}
           {network.coin === CoinType.Ethereum && (
             <>
-              {/* Exchanges */}
-              <ExpandSection
+              {/* Exchanges disabled until supported */}
+              {/* <ExpandSection
                 label={getLocale('braveSwapExchanges')}
                 value={userSelectedExchanges.length.toString()}
                 onExpandOut={() => setShowExchanges(true)}
               />
-              <VerticalDivider />
+              <VerticalDivider /> */}
 
               {/* Network Fee */}
               <ExpandSection
@@ -201,22 +196,14 @@ export const SwapSettingsModal = (props: Props) => {
           {/* Solana Only Settings */}
           {network.coin === CoinType.Solana && (
             <>
-              {/* Direct Route Toggle */}
-              <ToggleSection
+              {/* Direct Route Toggle is disabled until supported */}
+              {/* <ToggleSection
                 label={getLocale('braveSwapDirectRouteTitle')}
                 description={getLocale('braveSwapDirectRouteDescription')}
                 isChecked={useDirectRoute}
                 setIsChecked={setUseDirectRoute}
               />
-              <VerticalDivider />
-
-              {/* Optimized Fee Toggle */}
-              <ToggleSection
-                label={getLocale('braveSwapNetworkFee')}
-                description={getLocale('braveSwapNetworkFeeDescription')}
-                isChecked={useOptimizedFees}
-                setIsChecked={setUseOptimizedFees}
-              />
+              <VerticalDivider /> */}
             </>
           )}
         </>

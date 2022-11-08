@@ -23,11 +23,11 @@ export const ToggleSection = (props: Props) => {
   return (
     <Row rowWidth='full' verticalAlign='flex-start' verticalPadding={16}>
       <Column horizontalAlign='flex-start'>
-        <Text textColor='text02' textSize='14px' isBold={true}>
+        <Text textColor='text02' textSize='14px' textAlign='left' isBold={true}>
           {label}
         </Text>
         <VerticalSpacer size={4} />
-        <Text textColor='text03' textSize='12px' isBold={false}>
+        <Text textColor='text03' textSize='12px' textAlign='left' isBold={false}>
           {description}
         </Text>
       </Column>
