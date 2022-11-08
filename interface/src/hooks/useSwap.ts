@@ -140,79 +140,12 @@ export const useSwap = () => {
   }, [network.coin, zeroEx.refresh, jupiter.refresh])
 
   const quoteOptions: QuoteOption[] = React.useMemo(() => {
-    if (!fromToken || !toToken) {
-      return []
-    }
-
     if (network.coin === CoinType.Solana) {
-      if (jupiter.quote === undefined) {
-        return []
-      }
-
-      return jupiter.quote.routes.map(
-        route =>
-          ({
-            label: route.marketInfos.map(marketInfo => marketInfo.label).join(' x '),
-            fromAmount: new Amount(route.inAmount.toString()).divideByDecimals(fromToken.decimals),
-            toAmount: new Amount(route.outAmount.toString()).divideByDecimals(toToken.decimals),
-            minimumToAmount: new Amount(route.otherAmountThreshold.toString()).divideByDecimals(
-              toToken.decimals
-            ),
-            fromToken,
-            toToken,
-            rate: new Amount(route.otherAmountThreshold.toString())
-              .divideByDecimals(toToken.decimals)
-              .div(new Amount(route.inAmount.toString()).divideByDecimals(fromToken.decimals)),
-            impact: new Amount(route.priceImpactPct),
-            sources: route.marketInfos.flatMap(marketInfo =>
-              // Split "Cykura (95%) + Lifinity (5%)" into "Cykura (95%)" and "Lifinity (5%)"
-              marketInfo.label.split('+').map(label => {
-                // Extract name and proportion from Cykura (95%)
-                const match = label.match(/(.*)\s+\((\d+)%\)/)
-                if (match && match.length === 3) {
-                  return {
-                    name: match[1].trim(),
-                    proportion: new Amount(match[2]).div(100)
-                  }
-                }
-
-                return {
-                  name: label.trim(),
-                  proportion: new Amount(1)
-                }
-              })
-            ),
-            routing: route.marketInfos.length > 1 ? 'flow' : 'split'
-          } as QuoteOption)
-      )
+      return jupiter.quoteOptions
     }
 
-    if (zeroEx.quote === undefined) {
-      return []
-    }
-
-    return [
-      {
-        label: '',
-        fromAmount: new Amount(zeroEx.quote.sellAmount).divideByDecimals(fromToken.decimals),
-        toAmount: new Amount(zeroEx.quote.buyAmount).divideByDecimals(toToken.decimals),
-        minimumToAmount: undefined,
-        fromToken,
-        toToken,
-        rate: new Amount(zeroEx.quote.buyAmount)
-          .divideByDecimals(toToken.decimals)
-          .div(new Amount(zeroEx.quote.sellAmount).divideByDecimals(fromToken.decimals)),
-        impact: new Amount(zeroEx.quote.estimatedPriceImpact),
-        sources: zeroEx.quote.sources
-          .map(source => ({
-            name: source.name,
-            proportion: new Amount(source.proportion)
-          }))
-          .filter(source => source.proportion.gt(0)),
-        routing: 'split' // 0x supports split routing only
-      }
-    ]
-  }, [fromToken, toToken, network.coin, jupiter.quote, zeroEx.quote])
+    return zeroEx.quoteOptions
+  }, [network.coin, jupiter.quoteOptions, zeroEx.quoteOptions])
 
   const onSelectQuoteOption = React.useCallback(
     (index: number) => {

@@ -6,7 +6,13 @@
 import React from 'react'
 
 // Types / constants
-import { CoinType, SwapParams, ZeroExErrorResponse, ZeroExQuoteResponse } from '~/constants/types'
+import {
+  CoinType,
+  QuoteOption,
+  SwapParams,
+  ZeroExErrorResponse,
+  ZeroExQuoteResponse
+} from '~/constants/types'
 import { MAX_UINT256, NATIVE_ASSET_CONTRACT_ADDRESS_0X } from '~/constants/magics'
 
 // Hooks
@@ -205,6 +211,38 @@ export function useZeroEx (params: SwapParams) {
     }
   }, [account, quote, hasAllowance])
 
+  const quoteOptions: QuoteOption[] = React.useMemo(() => {
+    if (!params.fromToken || !params.toToken) {
+      return []
+    }
+
+    if (quote === undefined) {
+      return []
+    }
+
+    return [
+      {
+        label: '',
+        fromAmount: new Amount(quote.sellAmount).divideByDecimals(params.fromToken.decimals),
+        toAmount: new Amount(quote.buyAmount).divideByDecimals(params.toToken.decimals),
+        minimumToAmount: undefined,
+        fromToken: params.fromToken,
+        toToken: params.toToken,
+        rate: new Amount(quote.buyAmount)
+          .divideByDecimals(params.toToken.decimals)
+          .div(new Amount(quote.sellAmount).divideByDecimals(params.fromToken.decimals)),
+        impact: new Amount(quote.estimatedPriceImpact),
+        sources: quote.sources
+          .map(source => ({
+            name: source.name,
+            proportion: new Amount(source.proportion)
+          }))
+          .filter(source => source.proportion.gt(0)),
+        routing: 'split' // 0x supports split routing only
+      }
+    ]
+  }, [params.fromToken, params.toToken, quote])
+
   return {
     quote,
     error,
@@ -212,6 +250,7 @@ export function useZeroEx (params: SwapParams) {
     loading,
     exchange,
     refresh,
-    approve
+    approve,
+    quoteOptions
   }
 }
