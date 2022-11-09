@@ -1,0 +1,44 @@
+name: npm audit
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'releases/*'
+
+jobs:
+  scan:
+    name: npm audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install interface dependencies
+        run: npm ci
+        working-directory: ./interface
+      - uses: oke-py/npm-audit-action@v2
+        working-directory: ./interface
+        with:
+          audit_level: moderate
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_labels: vulnerability
+          dedupe_issues: true
+
+      - name: Build interface
+        run: npm run build
+        working-directory: ./interface
+
+      - name: Install mock site dependencies
+        run: npm ci
+        working-directory: ./sites/mock
+
+      - uses: oke-py/npm-audit-action@v2
+        working-directory: ./sites/mock
+        with:
+          audit_level: moderate
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_labels: vulnerability
+          dedupe_issues: true
