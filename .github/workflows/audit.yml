@@ -16,16 +16,14 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+
       - name: Install interface dependencies
         run: npm ci
         working-directory: ./interface
-      - uses: oke-py/npm-audit-action@v2
+
+      - name: Run npm audit for interface
         working-directory: ./interface
-        with:
-          audit_level: moderate
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          issue_labels: vulnerability
-          dedupe_issues: true
+        run: npm audit
 
       - name: Build interface
         run: npm run build
@@ -35,10 +33,6 @@ jobs:
         run: npm ci
         working-directory: ./sites/mock
 
-      - uses: oke-py/npm-audit-action@v2
+      - name: Run npm audit for sites/mock
         working-directory: ./sites/mock
-        with:
-          audit_level: moderate
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          issue_labels: vulnerability
-          dedupe_issues: true
+        run: npm audit
