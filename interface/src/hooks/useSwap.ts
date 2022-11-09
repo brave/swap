@@ -126,93 +126,13 @@ export const useSwap = () => {
     slippagePercentage: new Amount(slippageTolerance).div(100).toNumber()
   })
 
-  React.useEffect(() => {
-    const interval = setInterval(async () => {
-      if (network.coin === CoinType.Solana) {
-        await jupiter.refresh()
-      } else {
-        await zeroEx.refresh()
-      }
-    }, 5000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [network.coin, zeroEx.refresh, jupiter.refresh])
-
   const quoteOptions: QuoteOption[] = React.useMemo(() => {
-    if (!fromToken || !toToken) {
-      return []
-    }
-
     if (network.coin === CoinType.Solana) {
-      if (jupiter.quote === undefined) {
-        return []
-      }
-
-      return jupiter.quote.routes.map(
-        route =>
-          ({
-            label: route.marketInfos.map(marketInfo => marketInfo.label).join(' x '),
-            fromAmount: new Amount(route.inAmount.toString()).divideByDecimals(fromToken.decimals),
-            toAmount: new Amount(route.outAmount.toString()).divideByDecimals(toToken.decimals),
-            minimumToAmount: new Amount(route.otherAmountThreshold.toString()).divideByDecimals(
-              toToken.decimals
-            ),
-            fromToken,
-            toToken,
-            rate: new Amount(route.otherAmountThreshold.toString())
-              .divideByDecimals(toToken.decimals)
-              .div(new Amount(route.inAmount.toString()).divideByDecimals(fromToken.decimals)),
-            impact: new Amount(route.priceImpactPct),
-            sources: route.marketInfos.flatMap(marketInfo =>
-              // Split "Cykura (95%) + Lifinity (5%)" into "Cykura (95%)" and "Lifinity (5%)"
-              marketInfo.label.split('+').map(label => {
-                // Extract name and proportion from Cykura (95%)
-                const match = label.match(/(.*)\s+\((\d+)%\)/)
-                if (match && match.length === 3) {
-                  return {
-                    name: match[1].trim(),
-                    proportion: new Amount(match[2]).div(100)
-                  }
-                }
-
-                return {
-                  name: label.trim(),
-                  proportion: new Amount(1)
-                }
-              })
-            ),
-            routing: route.marketInfos.length > 1 ? 'flow' : 'split'
-          } as QuoteOption)
-      )
+      return jupiter.quoteOptions
     }
 
-    if (zeroEx.quote === undefined) {
-      return []
-    }
-
-    return [
-      {
-        label: '',
-        fromAmount: new Amount(zeroEx.quote.sellAmount).divideByDecimals(fromToken.decimals),
-        toAmount: new Amount(zeroEx.quote.buyAmount).divideByDecimals(toToken.decimals),
-        minimumToAmount: undefined,
-        fromToken,
-        toToken,
-        rate: new Amount(zeroEx.quote.buyAmount)
-          .divideByDecimals(toToken.decimals)
-          .div(new Amount(zeroEx.quote.sellAmount).divideByDecimals(fromToken.decimals)),
-        impact: new Amount(zeroEx.quote.estimatedPriceImpact),
-        sources: zeroEx.quote.sources
-          .map(source => ({
-            name: source.name,
-            proportion: new Amount(source.proportion)
-          }))
-          .filter(source => source.proportion.gt(0)),
-        routing: 'split' // 0x supports split routing only
-      }
-    ]
-  }, [fromToken, toToken, network.coin, jupiter.quote, zeroEx.quote])
+    return zeroEx.quoteOptions
+  }, [network.coin, jupiter.quoteOptions, zeroEx.quoteOptions])
 
   const onSelectQuoteOption = React.useCallback(
     (index: number) => {
@@ -388,15 +308,18 @@ export const useSwap = () => {
   const handleJupiterQuoteRefresh = React.useCallback(
     async (overrides: Partial<SwapParams>) => {
       const quote = await jupiter.refresh(overrides)
-      if (!quote || !toToken) {
+      if (!quote) {
         return
       }
 
-      setToAmount(
-        new Amount(quote.routes[0].outAmount.toString())
-          .divideByDecimals(toToken.decimals)
-          .format(6)
-      )
+      const token = overrides.toToken || toToken
+      if (token) {
+        setToAmount(
+          new Amount(quote.routes[0].outAmount.toString())
+            .divideByDecimals(token.decimals)
+            .format(6)
+        )
+      }
     },
     [jupiter.refresh, toToken]
   )
@@ -490,7 +413,15 @@ export const useSwap = () => {
 
     await refreshSpotPrices({ fromAsset: toToken, toAsset: fromToken })
     await handleOnSetFromAmount('')
-  }, [fromToken, toToken, handleOnSetFromAmount, refreshSpotPrices])
+  }, [
+    fromToken,
+    toToken,
+    handleOnSetFromAmount,
+    refreshSpotPrices,
+    getAssetBalanceFactory,
+    account,
+    network
+  ])
 
   const onSelectToToken = React.useCallback(
     async (token: BlockchainToken) => {
@@ -538,7 +469,15 @@ export const useSwap = () => {
         })
       }
     },
-    [network.coin, handleZeroExQuoteRefresh, handleJupiterQuoteRefresh]
+    [
+      network.coin,
+      handleZeroExQuoteRefresh,
+      handleJupiterQuoteRefresh,
+      refreshSpotPrices,
+      getAssetBalanceFactory,
+      account,
+      network
+    ]
   )
 
   const onSetSelectedSwapAndSendOption = React.useCallback((value: string) => {
@@ -578,22 +517,21 @@ export const useSwap = () => {
 
   const feesWrapped = React.useMemo(() => {
     if (network.coin === CoinType.Ethereum) {
-      if (!zeroEx.quote) {
+      if (zeroEx.networkFee.isUndefined()) {
         return Amount.zero()
+      } else {
+        return zeroEx.networkFee
       }
-
-      // NOTE: Swap will eventually use EIP-1559 gas fields, but we rely on
-      // gasPrice as a fee-ceiling for validation of inputs.
-      const { gasPrice, gas } = zeroEx.quote
-      const gasPriceWrapped = new Amount(gasPrice)
-      const gasWrapped = new Amount(gas)
-      return gasPriceWrapped.times(gasWrapped)
     } else if (network.coin === CoinType.Solana) {
-      // TODO: solana
+      if (jupiter.networkFee.isUndefined()) {
+        return Amount.zero()
+      } else {
+        return jupiter.networkFee
+      }
     }
 
     return Amount.zero()
-  }, [network.coin, zeroEx])
+  }, [network.coin, zeroEx.networkFee, jupiter.networkFee])
 
   const swapValidationError: SwapValidationErrorType | undefined = React.useMemo(() => {
     // No validation to perform when From and To amounts are empty, since quote
@@ -760,6 +698,19 @@ export const useSwap = () => {
         swapValidationError !== 'insufficientAllowance')
     )
   }, [network.coin, zeroEx, jupiter, fromToken, toToken, fromAmount, toAmount, swapValidationError])
+
+  React.useEffect(() => {
+    const interval = setInterval(async () => {
+      if (network.coin === CoinType.Solana) {
+        await handleJupiterQuoteRefresh({})
+      } else {
+        await handleZeroExQuoteRefresh({})
+      }
+    }, 10000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [network.coin, handleJupiterQuoteRefresh, handleZeroExQuoteRefresh])
 
   return {
     fromToken,

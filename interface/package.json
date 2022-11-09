@@ -1,6 +1,6 @@
 {
   "name": "@brave/swap-interface",
-  "version": "0.11.6",
+  "version": "0.11.7",
   "description": "Brave Swap - an open-source swap interface by Brave, focussed on usability and multi-chain support.",
   "type": "module",
   "license": "MPL-2.0",
@@ -48,14 +48,14 @@
     "@brave/leo": "github:brave-experiments/leo",
     "@brave/react-virtualized-auto-sizer": "^1.0.4",
     "@types/react-window": "^1.8.2",
-    "@types/styled-components": "^5.1.25",
+    "@types/styled-components": "^5.1.9",
     "async": "^3.2.4",
     "bignumber.js": "^9.1.0",
     "ethereum-blockies": "github:brave/blockies",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-window": "^1.8.5",
-    "styled-components": "^5.3.5"
+    "styled-components": "^5.3.0"
   },
   "devDependencies": {
     "@types/async": "^3.2.15",

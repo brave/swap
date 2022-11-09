@@ -11,6 +11,7 @@ import {
   JupiterErrorResponse,
   JupiterQuoteResponse,
   JupiterRoute,
+  QuoteOption,
   SwapParams
 } from '~/constants/types'
 
@@ -31,7 +32,12 @@ export function useJupiter (params: SwapParams) {
   const [selectedRoute, setSelectedRoute] = React.useState<JupiterRoute | undefined>(undefined)
 
   // Context
-  const { swapService, solWalletAdapter, account, network } = useSwapContext()
+  const { swapService, solWalletAdapter, account, network, defaultBaseCurrency } = useSwapContext()
+
+  // State
+  const {
+    state: { spotPrices }
+  } = useWalletState()
 
   const refresh = React.useCallback(
     async function (
@@ -50,6 +56,17 @@ export function useJupiter (params: SwapParams) {
         return
       }
       if (!overriddenParams.fromAmount) {
+        setQuote(undefined)
+        setError(undefined)
+        return
+      }
+
+      const fromAmountWrapped = new Amount(overriddenParams.fromAmount)
+      if (
+        fromAmountWrapped.isNaN() ||
+        fromAmountWrapped.isZero() ||
+        fromAmountWrapped.isUndefined()
+      ) {
         setQuote(undefined)
         setError(undefined)
         return
@@ -140,6 +157,72 @@ export function useJupiter (params: SwapParams) {
     [quote, selectedRoute, account, network, params]
   )
 
+  const networkFee = new Amount('0.000005')
+
+  const quoteOptions: QuoteOption[] = React.useMemo(() => {
+    if (!params.fromToken || !params.toToken) {
+      return []
+    }
+
+    if (quote === undefined) {
+      return []
+    }
+
+    return quote.routes.map(
+      route =>
+        ({
+          label: route.marketInfos.map(marketInfo => marketInfo.label).join(' x '),
+          fromAmount: new Amount(route.inAmount.toString()).divideByDecimals(
+            // @ts-ignore
+            params.fromToken.decimals
+          ),
+          toAmount: new Amount(route.outAmount.toString()).divideByDecimals(
+            // @ts-ignore
+            params.toToken.decimals
+          ),
+          minimumToAmount: new Amount(route.otherAmountThreshold.toString()).divideByDecimals(
+            // @ts-ignore
+            params.toToken.decimals
+          ),
+          fromToken: params.fromToken,
+          toToken: params.toToken,
+          rate: new Amount(route.otherAmountThreshold.toString())
+            // @ts-ignore
+            .divideByDecimals(params.toToken.decimals)
+            // @ts-ignore
+            .div(new Amount(route.inAmount.toString()).divideByDecimals(params.fromToken.decimals)),
+          impact: new Amount(route.priceImpactPct),
+          sources: route.marketInfos.flatMap(marketInfo =>
+            // Split "Cykura (95%) + Lifinity (5%)" into "Cykura (95%)" and "Lifinity (5%)"
+            marketInfo.label.split('+').map(label => {
+              // Extract name and proportion from Cykura (95%)
+              const match = label.match(/(.*)\s+\((\d+)%\)/)
+              if (match && match.length === 3) {
+                return {
+                  name: match[1].trim(),
+                  proportion: new Amount(match[2]).div(100)
+                }
+              }
+
+              return {
+                name: label.trim(),
+                proportion: new Amount(1)
+              }
+            })
+          ),
+          routing: route.marketInfos.length > 1 ? 'flow' : 'split',
+          networkFee: networkFee.times(spotPrices.nativeAsset).formatAsFiat(defaultBaseCurrency)
+        } as QuoteOption)
+    )
+  }, [
+    quote,
+    params.fromToken,
+    params.toToken,
+    networkFee,
+    defaultBaseCurrency,
+    spotPrices.nativeAsset
+  ])
+
   return {
     quote,
     error,
@@ -147,6 +230,8 @@ export function useJupiter (params: SwapParams) {
     exchange,
     refresh,
     selectedRoute,
-    setSelectedRoute
+    setSelectedRoute,
+    quoteOptions,
+    networkFee
   }
 }
