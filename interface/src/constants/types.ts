@@ -52,6 +52,8 @@ export type QuoteOption = {
   // flow  -> indicates that the order was fulfilled through an intermediate
   //          asset between two separate LPs.
   routing: 'split' | 'flow'
+
+  networkFee: string
 }
 
 export type Registry = Record<string, string>

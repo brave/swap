@@ -30,7 +30,12 @@ export function useZeroEx (params: SwapParams) {
   const [loading, setLoading] = React.useState<boolean>(false)
 
   // Context
-  const { swapService, ethWalletAdapter, account, network } = useSwapContext()
+  const { swapService, ethWalletAdapter, account, network, defaultBaseCurrency } = useSwapContext()
+
+  // State
+  const {
+    state: { spotPrices }
+  } = useWalletState()
 
   const refresh = React.useCallback(
     async function (overrides: Partial<SwapParams> = {}): Promise<ZeroExQuoteResponse | undefined> {
@@ -47,6 +52,18 @@ export function useZeroEx (params: SwapParams) {
         return
       }
       if (!overriddenParams.fromAmount && !overriddenParams.toAmount) {
+        setQuote(undefined)
+        setError(undefined)
+        return
+      }
+      const fromAmountWrapped = new Amount(overriddenParams.fromAmount)
+      const toAmountWrapped = new Amount(overriddenParams.toAmount)
+      if (
+        (fromAmountWrapped.isZero() ||
+          fromAmountWrapped.isNaN() ||
+          fromAmountWrapped.isUndefined()) &&
+        (toAmountWrapped.isZero() || toAmountWrapped.isNaN() || toAmountWrapped.isUndefined())
+      ) {
         setQuote(undefined)
         setError(undefined)
         return
@@ -136,6 +153,15 @@ export function useZeroEx (params: SwapParams) {
         return
       }
 
+      const fromAmountWrapped = new Amount(overriddenParams.fromAmount)
+      const toAmountWrapped = new Amount(overriddenParams.toAmount)
+      if (
+        (fromAmountWrapped.isZero() || fromAmountWrapped.isNaN()) &&
+        (toAmountWrapped.isZero() || toAmountWrapped.isNaN())
+      ) {
+        return
+      }
+
       setLoading(true)
       let response
       try {
@@ -211,6 +237,14 @@ export function useZeroEx (params: SwapParams) {
     }
   }, [account, quote, hasAllowance])
 
+  const networkFee = React.useMemo(() => {
+    if (!quote) {
+      return Amount.empty()
+    }
+
+    return new Amount(quote.gasPrice).times(quote.gas).divideByDecimals(network.decimals)
+  }, [quote, network.decimals])
+
   const quoteOptions: QuoteOption[] = React.useMemo(() => {
     if (!params.fromToken || !params.toToken) {
       return []
@@ -238,10 +272,20 @@ export function useZeroEx (params: SwapParams) {
             proportion: new Amount(source.proportion)
           }))
           .filter(source => source.proportion.gt(0)),
-        routing: 'split' // 0x supports split routing only
+        routing: 'split', // 0x supports split routing only
+        networkFee: networkFee.isUndefined()
+          ? ''
+          : networkFee.times(spotPrices.nativeAsset).formatAsFiat(defaultBaseCurrency)
       }
     ]
-  }, [params.fromToken, params.toToken, quote])
+  }, [
+    params.fromToken,
+    params.toToken,
+    quote,
+    defaultBaseCurrency,
+    networkFee,
+    spotPrices.nativeAsset
+  ])
 
   return {
     quote,
@@ -251,6 +295,7 @@ export function useZeroEx (params: SwapParams) {
     exchange,
     refresh,
     approve,
-    quoteOptions
+    quoteOptions,
+    networkFee
   }
 }

@@ -12,9 +12,6 @@ import { BlockchainToken, QuoteOption } from '~/constants/types'
 // Constants
 import LPMetadata from '~/constants/lpMetadata'
 
-// Hooks
-import { useNetworkFees } from '~/hooks/useNetworkFees'
-
 // Context
 import { useSwapContext } from '~/context/swap.context'
 import { useWalletState } from '~/state/wallet'
@@ -45,13 +42,11 @@ interface Props {
 }
 
 export const QuoteInfo = (props: Props) => {
-  const { selectedQuoteOption, fromToken, toToken, toAmount } = props
+  const { selectedQuoteOption, fromToken, toToken } = props
 
-  // Hooks
-  const { getNetworkFeeFiatEstimate } = useNetworkFees()
 
   // Context
-  const { getLocale, network } = useSwapContext()
+  const { getLocale } = useSwapContext()
 
   // Wallet State
   const { state } = useWalletState()
@@ -160,11 +155,9 @@ export const QuoteInfo = (props: Props) => {
       </Row>
       <Row rowWidth='full' marginBottom={10} horizontalPadding={16}>
         <Text textSize='14px'>{getLocale('braveSwapPriceImpact')}</Text>
-        <Text textSize='14px'>
-          {swapImpact === '0' ? `${swapImpact}%` : `~ ${swapImpact}%`}
-        </Text>
+        <Text textSize='14px'>{swapImpact === '0' ? `${swapImpact}%` : `~ ${swapImpact}%`}</Text>
       </Row>
-      {minimumReceived !== '' &&
+      {minimumReceived !== '' && (
         <Row rowWidth='full' marginBottom={8} horizontalPadding={16}>
           <Text textSize='14px' textAlign='left'>
             {getLocale('braveSwapMinimumReceivedAfterSlippage')}
@@ -173,10 +166,12 @@ export const QuoteInfo = (props: Props) => {
             {minimumReceived}
           </Text>
         </Row>
-      }
+      )}
       {selectedQuoteOption && selectedQuoteOption.sources.length > 0 && (
         <Row rowWidth='full' marginBottom={8} horizontalPadding={16}>
-          <Text textSize='14px' textAlign='left'>{getLocale('braveSwapLiquidityProvider')}</Text>
+          <Text textSize='14px' textAlign='left'>
+            {getLocale('braveSwapLiquidityProvider')}
+          </Text>
           <Row>
             {selectedQuoteOption.sources.map((source, idx) => (
               <div key={idx}>
@@ -197,13 +192,15 @@ export const QuoteInfo = (props: Props) => {
           </Row>
         </Row>
       )}
-      <Row rowWidth='full' marginBottom={16} horizontalPadding={16}>
-        <Text textSize='14px'>{getLocale('braveSwapNetworkFee')}</Text>
-        <Bubble>
-          <FuelTank icon={FuelTankIcon} size={12} />
-          <Text textSize='14px'>{getNetworkFeeFiatEstimate(network)}</Text>
-        </Bubble>
-      </Row>
+      {selectedQuoteOption && (
+        <Row rowWidth='full' marginBottom={16} horizontalPadding={16}>
+          <Text textSize='14px'>{getLocale('braveSwapNetworkFee')}</Text>
+          <Bubble>
+            <FuelTank icon={FuelTankIcon} size={12} />
+            <Text textSize='14px'>{selectedQuoteOption.networkFee}</Text>
+          </Bubble>
+        </Row>
+      )}
     </Column>
   )
 }
@@ -224,7 +221,7 @@ const Bubble = styled(Row)`
   background-color: var(--token-or-network-bubble-background);
 `
 
-const LPIcon = styled(StyledDiv) <{ icon: string; size: number }>`
+const LPIcon = styled(StyledDiv)<{ icon: string; size: number }>`
   background-image: url(${p => p.icon});
   background-size: cover;
   background-position: center;

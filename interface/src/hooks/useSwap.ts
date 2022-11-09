@@ -126,19 +126,6 @@ export const useSwap = () => {
     slippagePercentage: new Amount(slippageTolerance).div(100).toNumber()
   })
 
-  React.useEffect(() => {
-    const interval = setInterval(async () => {
-      if (network.coin === CoinType.Solana) {
-        await jupiter.refresh()
-      } else {
-        await zeroEx.refresh()
-      }
-    }, 5000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [network.coin, zeroEx.refresh, jupiter.refresh])
-
   const quoteOptions: QuoteOption[] = React.useMemo(() => {
     if (network.coin === CoinType.Solana) {
       return jupiter.quoteOptions
@@ -321,15 +308,18 @@ export const useSwap = () => {
   const handleJupiterQuoteRefresh = React.useCallback(
     async (overrides: Partial<SwapParams>) => {
       const quote = await jupiter.refresh(overrides)
-      if (!quote || !toToken) {
+      if (!quote) {
         return
       }
 
-      setToAmount(
-        new Amount(quote.routes[0].outAmount.toString())
-          .divideByDecimals(toToken.decimals)
-          .format(6)
-      )
+      const token = overrides.toToken || toToken
+      if (token) {
+        setToAmount(
+          new Amount(quote.routes[0].outAmount.toString())
+            .divideByDecimals(token.decimals)
+            .format(6)
+        )
+      }
     },
     [jupiter.refresh, toToken]
   )
@@ -423,7 +413,15 @@ export const useSwap = () => {
 
     await refreshSpotPrices({ fromAsset: toToken, toAsset: fromToken })
     await handleOnSetFromAmount('')
-  }, [fromToken, toToken, handleOnSetFromAmount, refreshSpotPrices])
+  }, [
+    fromToken,
+    toToken,
+    handleOnSetFromAmount,
+    refreshSpotPrices,
+    getAssetBalanceFactory,
+    account,
+    network
+  ])
 
   const onSelectToToken = React.useCallback(
     async (token: BlockchainToken) => {
@@ -471,7 +469,15 @@ export const useSwap = () => {
         })
       }
     },
-    [network.coin, handleZeroExQuoteRefresh, handleJupiterQuoteRefresh]
+    [
+      network.coin,
+      handleZeroExQuoteRefresh,
+      handleJupiterQuoteRefresh,
+      refreshSpotPrices,
+      getAssetBalanceFactory,
+      account,
+      network
+    ]
   )
 
   const onSetSelectedSwapAndSendOption = React.useCallback((value: string) => {
@@ -511,22 +517,21 @@ export const useSwap = () => {
 
   const feesWrapped = React.useMemo(() => {
     if (network.coin === CoinType.Ethereum) {
-      if (!zeroEx.quote) {
+      if (zeroEx.networkFee.isUndefined()) {
         return Amount.zero()
+      } else {
+        return zeroEx.networkFee
       }
-
-      // NOTE: Swap will eventually use EIP-1559 gas fields, but we rely on
-      // gasPrice as a fee-ceiling for validation of inputs.
-      const { gasPrice, gas } = zeroEx.quote
-      const gasPriceWrapped = new Amount(gasPrice)
-      const gasWrapped = new Amount(gas)
-      return gasPriceWrapped.times(gasWrapped)
     } else if (network.coin === CoinType.Solana) {
-      // TODO: solana
+      if (jupiter.networkFee.isUndefined()) {
+        return Amount.zero()
+      } else {
+        return jupiter.networkFee
+      }
     }
 
     return Amount.zero()
-  }, [network.coin, zeroEx])
+  }, [network.coin, zeroEx.networkFee, jupiter.networkFee])
 
   const swapValidationError: SwapValidationErrorType | undefined = React.useMemo(() => {
     // No validation to perform when From and To amounts are empty, since quote
@@ -693,6 +698,19 @@ export const useSwap = () => {
         swapValidationError !== 'insufficientAllowance')
     )
   }, [network.coin, zeroEx, jupiter, fromToken, toToken, fromAmount, toAmount, swapValidationError])
+
+  React.useEffect(() => {
+    const interval = setInterval(async () => {
+      if (network.coin === CoinType.Solana) {
+        await handleJupiterQuoteRefresh({})
+      } else {
+        await handleZeroExQuoteRefresh({})
+      }
+    }, 10000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [network.coin, handleJupiterQuoteRefresh, handleZeroExQuoteRefresh])
 
   return {
     fromToken,

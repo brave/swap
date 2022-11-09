@@ -32,7 +32,12 @@ export function useJupiter (params: SwapParams) {
   const [selectedRoute, setSelectedRoute] = React.useState<JupiterRoute | undefined>(undefined)
 
   // Context
-  const { swapService, solWalletAdapter, account, network } = useSwapContext()
+  const { swapService, solWalletAdapter, account, network, defaultBaseCurrency } = useSwapContext()
+
+  // State
+  const {
+    state: { spotPrices }
+  } = useWalletState()
 
   const refresh = React.useCallback(
     async function (
@@ -51,6 +56,17 @@ export function useJupiter (params: SwapParams) {
         return
       }
       if (!overriddenParams.fromAmount) {
+        setQuote(undefined)
+        setError(undefined)
+        return
+      }
+
+      const fromAmountWrapped = new Amount(overriddenParams.fromAmount)
+      if (
+        fromAmountWrapped.isNaN() ||
+        fromAmountWrapped.isZero() ||
+        fromAmountWrapped.isUndefined()
+      ) {
         setQuote(undefined)
         setError(undefined)
         return
@@ -141,6 +157,8 @@ export function useJupiter (params: SwapParams) {
     [quote, selectedRoute, account, network, params]
   )
 
+  const networkFee = new Amount('0.000005')
+
   const quoteOptions: QuoteOption[] = React.useMemo(() => {
     if (!params.fromToken || !params.toToken) {
       return []
@@ -192,10 +210,18 @@ export function useJupiter (params: SwapParams) {
               }
             })
           ),
-          routing: route.marketInfos.length > 1 ? 'flow' : 'split'
+          routing: route.marketInfos.length > 1 ? 'flow' : 'split',
+          networkFee: networkFee.times(spotPrices.nativeAsset).formatAsFiat(defaultBaseCurrency)
         } as QuoteOption)
     )
-  }, [quote, params.fromToken, params.toToken])
+  }, [
+    quote,
+    params.fromToken,
+    params.toToken,
+    networkFee,
+    defaultBaseCurrency,
+    spotPrices.nativeAsset
+  ])
 
   return {
     quote,
@@ -205,6 +231,7 @@ export function useJupiter (params: SwapParams) {
     refresh,
     selectedRoute,
     setSelectedRoute,
-    quoteOptions
+    quoteOptions,
+    networkFee
   }
 }
