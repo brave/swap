@@ -22,7 +22,8 @@ import {
   GasPrice1559,
   ETHSendTransactionParams,
   ApproveERC20Params,
-  SOLSendTransactionParams
+  SOLSendTransactionParams,
+  SwapFee
 } from '~/constants/types'
 
 interface SwapContextInterface {
@@ -51,6 +52,7 @@ interface SwapContextInterface {
     getJupiterQuote: (params: JupiterQuoteParams) => Promise<JupiterQuoteResponse>
     getJupiterTransactionsPayload: (params: JupiterSwapParams) => Promise<JupiterSwapResponse>
     isSwapSupported: (chainId: string) => Promise<boolean>
+    getBraveFeeForAsset: (asset: BlockchainToken) => Promise<SwapFee>
   }
   walletAccounts: WalletAccount[]
   exchanges: Exchange[]

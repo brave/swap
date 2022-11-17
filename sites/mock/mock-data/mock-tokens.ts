@@ -19,7 +19,7 @@ import {
   ZEROXBTCIconUrl
 } from '../src/assets/asset-icons'
 
-export const mockEthereumTokens: BlockchainToken[] = [
+const mockEthereumTokens: BlockchainToken[] = [
   {
     contractAddress: '0x0D8775F648430679A709E98d2b0Cb6250d2887EF',
     name: 'Basic Attention Token',
@@ -129,3 +129,44 @@ export const mockEthereumTokens: BlockchainToken[] = [
     chainId: '0x1'
   }
 ]
+
+const mockSolanaTokens: BlockchainToken[] = [
+  {
+    contractAddress: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
+    name: 'Tether USD',
+    symbol: 'USDT',
+    logo: USDTIconUrl,
+    isToken: true,
+    decimals: 6,
+    visible: true,
+    coingeckoId: 'tether',
+    coin: CoinType.Solana,
+    chainId: '0x65'
+  },
+  {
+    contractAddress: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+    name: 'USD Coin',
+    symbol: 'USDC',
+    logo: USDCIconUrl,
+    isToken: true,
+    decimals: 6,
+    visible: true,
+    coingeckoId: 'usd-coin',
+    coin: CoinType.Solana,
+    chainId: '0x65'
+  },
+  {
+    contractAddress: 'EPeUFDgHRxs9xxEPVaL6kfGQvCon7jmAWKVUHuux1Tpz',
+    name: 'Basic Attention Token',
+    symbol: 'BAT',
+    logo: BATIconUrl,
+    isToken: true,
+    decimals: 8,
+    visible: true,
+    coingeckoId: 'basic-attention-token',
+    coin: CoinType.Solana,
+    chainId: '0x65'
+  }
+]
+
+export const mockTokens = [...mockEthereumTokens, ...mockSolanaTokens]
