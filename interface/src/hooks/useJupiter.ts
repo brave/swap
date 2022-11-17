@@ -12,7 +12,8 @@ import {
   JupiterQuoteResponse,
   JupiterRoute,
   QuoteOption,
-  SwapParams
+  SwapParams,
+  SwapFee
 } from '~/constants/types'
 
 // Hooks
@@ -30,6 +31,7 @@ export function useJupiter (params: SwapParams) {
   const [error, setError] = React.useState<JupiterErrorResponse | undefined>(undefined)
   const [loading, setLoading] = React.useState<boolean>(false)
   const [selectedRoute, setSelectedRoute] = React.useState<JupiterRoute | undefined>(undefined)
+  const [braveFee, setBraveFee] = React.useState<SwapFee | undefined>(undefined)
 
   // Context
   const { swapService, solWalletAdapter, account, network, defaultBaseCurrency } = useSwapContext()
@@ -73,6 +75,14 @@ export function useJupiter (params: SwapParams) {
       }
 
       setLoading(true)
+
+      try {
+        const fee = await swapService.getBraveFeeForAsset(overriddenParams.toToken)
+        setBraveFee(fee)
+      } catch (e) {
+        console.log(`Error getting Brave fee (Jupiter): ${overriddenParams.toToken.symbol}`)
+      }
+
       let response
       try {
         response = await swapService.getJupiterQuote({
@@ -211,7 +221,8 @@ export function useJupiter (params: SwapParams) {
             })
           ),
           routing: route.marketInfos.length > 1 ? 'flow' : 'split',
-          networkFee: networkFee.times(spotPrices.nativeAsset).formatAsFiat(defaultBaseCurrency)
+          networkFee: networkFee.times(spotPrices.nativeAsset).formatAsFiat(defaultBaseCurrency),
+          braveFee
         } as QuoteOption)
     )
   }, [
@@ -220,7 +231,8 @@ export function useJupiter (params: SwapParams) {
     params.toToken,
     networkFee,
     defaultBaseCurrency,
-    spotPrices.nativeAsset
+    spotPrices.nativeAsset,
+    braveFee
   ])
 
   return {

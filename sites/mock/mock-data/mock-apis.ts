@@ -15,12 +15,15 @@ import {
 } from './mock-quote-options'
 import { mockNetworkFeeEstimates } from './mock-network-fee-estimates'
 import {
-  ApproveERC20Params, BlockchainToken,
+  ApproveERC20Params,
+  BlockchainToken,
   ETHSendTransactionParams,
   JupiterQuoteParams,
   JupiterSwapParams,
   SOLSendTransactionParams,
-  ZeroExSwapParams
+  ZeroExSwapParams,
+  CoinType,
+  SwapFee
 } from '@brave/swap-interface'
 
 const delay = (time: number) => new Promise(res => setTimeout(res, time))
@@ -74,6 +77,19 @@ export const swapService = {
   },
   isSwapSupported: async (chainId: string) => {
     return true
+  },
+  getBraveFeeForAsset: async (asset: BlockchainToken) => {
+    if (asset.coin === CoinType.Ethereum) {
+      return {
+        fee: '0.875',
+        discount: '0'
+      } as SwapFee
+    }
+
+    return {
+      fee: '0.85',
+      discount: ['USDC', 'USDT', 'SOL'].includes(asset.symbol) ? '0' : '100'
+    } as SwapFee
   }
 }
 

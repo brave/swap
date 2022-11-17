@@ -7,7 +7,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Types
-import { BlockchainToken, QuoteOption } from '~/constants/types'
+import { BlockchainToken, QuoteOption, SwapFee } from '~/constants/types'
 
 // Constants
 import LPMetadata from '~/constants/lpMetadata'
@@ -43,7 +43,6 @@ interface Props {
 
 export const QuoteInfo = (props: Props) => {
   const { selectedQuoteOption, fromToken, toToken } = props
-
 
   // Context
   const { getLocale } = useSwapContext()
@@ -135,6 +134,19 @@ export const QuoteInfo = (props: Props) => {
     return selectedQuoteOption.minimumToAmount.formatAsAsset(6, selectedQuoteOption.toToken.symbol)
   }, [selectedQuoteOption])
 
+  const realBraveFee = React.useMemo(() => {
+    if (!selectedQuoteOption) {
+      return
+    }
+
+    const { braveFee } = selectedQuoteOption
+    if (!braveFee) {
+      return
+    }
+
+    return new Amount(100).minus(braveFee.discount).div(100).times(braveFee.fee)
+  }, [selectedQuoteOption])
+
   return (
     <Column columnHeight='dynamic' columnWidth='full'>
       <VerticalSpacer size={16} />
@@ -193,12 +205,33 @@ export const QuoteInfo = (props: Props) => {
         </Row>
       )}
       {selectedQuoteOption && (
-        <Row rowWidth='full' marginBottom={16} horizontalPadding={16}>
+        <Row rowWidth='full' marginBottom={8} horizontalPadding={16}>
           <Text textSize='14px'>{getLocale('braveSwapNetworkFee')}</Text>
           <Bubble>
             <FuelTank icon={FuelTankIcon} size={12} />
             <Text textSize='14px'>{selectedQuoteOption.networkFee}</Text>
           </Bubble>
+        </Row>
+      )}
+      {selectedQuoteOption?.braveFee && realBraveFee && (
+        <Row rowWidth='full' marginBottom={16} horizontalPadding={16}>
+          <Text textSize='14px'>{getLocale('braveSwapBraveFee')}</Text>
+          <Text textSize='14px'>
+            <BraveFeeContainer>
+              {realBraveFee.isZero() && (
+                <Text textSize='14px' textColor='success' isBold={true}>
+                  {getLocale('braveSwapFree')}
+                </Text>
+              )}
+              {realBraveFee.isZero() ? (
+                <BraveFeeDiscounted textSize='14px' textColor='text03'>
+                  {`${selectedQuoteOption.braveFee.fee}%`}
+                </BraveFeeDiscounted>
+              ) : (
+                <Text textSize='14px'>{`${realBraveFee.format()}%`}</Text>
+              )}
+            </BraveFeeContainer>
+          </Text>
         </Row>
       )}
     </Column>
@@ -234,4 +267,12 @@ const LPIcon = styled(StyledDiv)<{ icon: string; size: number }>`
 
 const LPSeparator = styled(Text)`
   padding: 0 6px;
+`
+
+const BraveFeeContainer = styled(Row)`
+  gap: 4px;
+`
+
+const BraveFeeDiscounted = styled(Text)`
+  text-decoration: line-through;
 `

@@ -29,7 +29,8 @@ import {
   SwapValidationErrorType,
   NetworkInfo,
   RefreshBlockchainStateParams,
-  RefreshPricesParams
+  RefreshPricesParams,
+  SwapFee
 } from '~/constants/types'
 
 // Utils

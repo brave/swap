@@ -54,6 +54,8 @@ export type QuoteOption = {
   routing: 'split' | 'flow'
 
   networkFee: string
+
+  braveFee: SwapFee | undefined
 }
 
 export type Registry = Record<string, string>
@@ -119,6 +121,11 @@ export type GasEstimate = {
   gasFeeGwei?: string
   gasFeeFiat?: string
   time?: string
+}
+
+export type SwapFee = {
+  fee: string,
+  discount: string
 }
 
 export type AmountValidationErrorType = 'fromAmountDecimalsOverflow' | 'toAmountDecimalsOverflow'

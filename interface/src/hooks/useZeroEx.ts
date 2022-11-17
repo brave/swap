@@ -11,7 +11,8 @@ import {
   QuoteOption,
   SwapParams,
   ZeroExErrorResponse,
-  ZeroExQuoteResponse
+  ZeroExQuoteResponse,
+  SwapFee
 } from '~/constants/types'
 import { MAX_UINT256, NATIVE_ASSET_CONTRACT_ADDRESS_0X } from '~/constants/magics'
 
@@ -28,6 +29,7 @@ export function useZeroEx (params: SwapParams) {
   const [error, setError] = React.useState<ZeroExErrorResponse | undefined>(undefined)
   const [hasAllowance, setHasAllowance] = React.useState<boolean>(false)
   const [loading, setLoading] = React.useState<boolean>(false)
+  const [braveFee, setBraveFee] = React.useState<SwapFee | undefined>(undefined)
 
   // Context
   const { swapService, ethWalletAdapter, account, network, defaultBaseCurrency } = useSwapContext()
@@ -73,6 +75,14 @@ export function useZeroEx (params: SwapParams) {
       }
 
       setLoading(true)
+
+      try {
+        const fee = await swapService.getBraveFeeForAsset(overriddenParams.toToken)
+        setBraveFee(fee)
+      } catch (e) {
+        console.log(`Error getting Brave fee (Jupiter): ${overriddenParams.toToken.symbol}`)
+      }
+
       let response
       try {
         response = await swapService.getZeroExPriceQuote({
@@ -275,7 +285,8 @@ export function useZeroEx (params: SwapParams) {
         routing: 'split', // 0x supports split routing only
         networkFee: networkFee.isUndefined()
           ? ''
-          : networkFee.times(spotPrices.nativeAsset).formatAsFiat(defaultBaseCurrency)
+          : networkFee.times(spotPrices.nativeAsset).formatAsFiat(defaultBaseCurrency),
+        braveFee
       }
     ]
   }, [
@@ -284,7 +295,8 @@ export function useZeroEx (params: SwapParams) {
     quote,
     defaultBaseCurrency,
     networkFee,
-    spotPrices.nativeAsset
+    spotPrices.nativeAsset,
+    braveFee
   ])
 
   return {

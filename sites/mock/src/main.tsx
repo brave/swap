@@ -16,7 +16,7 @@ import {
   solWalletAdapter,
   swapService
 } from '../mock-data/mock-apis'
-import { mockEthereumTokens } from '../mock-data/mock-tokens'
+import { mockTokens } from '../mock-data/mock-tokens'
 import { mockEthereumNetwork, mockNetworks } from '../mock-data/mock-networks'
 import { mockAccount1, mockAccounts } from '../mock-data/mock-accounts'
 import { mockExchanges } from '../mock-data/mock-exchanges'
@@ -41,7 +41,7 @@ function SwapContainer() {
 
   return (
     <Swap
-      assetsList={mockEthereumTokens}
+      assetsList={mockTokens}
       account={account}
       network={network}
       supportedNetworks={mockNetworks}
