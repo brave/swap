@@ -29,9 +29,9 @@ import {
   SelectTokenModal,
   QuoteOptions,
   QuoteInfo,
-  SwapAndSend,
   SwapSettingsModal,
-  SwapSkeleton
+  SwapSkeleton,
+  PrivacyModal
 } from '~/components/swap'
 import { SwapSectionBox } from '~/components/boxes'
 
@@ -83,13 +83,15 @@ export const Swap = () => {
 
   // State
   const [showSwapSettings, setShowSwapSettings] = React.useState<boolean>(false)
+  const [showPrivacyModal, setShowPrivacyModal] = React.useState<boolean>(false)
 
   // Refs
   const selectTokenModalRef = React.useRef<HTMLDivElement>(null)
   const swapSettingsModalRef = React.useRef<HTMLDivElement>(null)
+  const privacyModalRef = React.useRef<HTMLDivElement>(null)
 
   const onToggleShowSwapSettings = React.useCallback(() => {
-    setShowSwapSettings(prev => !prev)
+    setShowSwapSettings((prev) => !prev)
     if (slippageTolerance === '') {
       setSlippageTolerance('0.5')
     }
@@ -101,7 +103,16 @@ export const Swap = () => {
     () => setSelectingFromOrTo(undefined),
     selectingFromOrTo !== undefined
   )
-  useOnClickOutside(swapSettingsModalRef, onToggleShowSwapSettings, showSwapSettings)
+  useOnClickOutside(
+    swapSettingsModalRef,
+    onToggleShowSwapSettings,
+    showSwapSettings
+  )
+  useOnClickOutside(
+    privacyModalRef,
+    () => setShowPrivacyModal(false),
+    showPrivacyModal
+  )
 
   React.useEffect(() => {
     const userTheme = window.localStorage.getItem(BRAVE_SWAP_DATA_THEME_KEY)
@@ -118,7 +129,10 @@ export const Swap = () => {
   // render
   return (
     <>
-      <SwapContainer refreshBlockchainState={refreshBlockchainState} >
+      <SwapContainer
+        showPrivacyModal={() => setShowPrivacyModal(true)}
+        refreshBlockchainState={refreshBlockchainState}
+      >
         <Row
           rowWidth='full'
           horizontalPadding={16}
@@ -220,6 +234,12 @@ export const Swap = () => {
           selectingFromOrTo={selectingFromOrTo}
           refreshBlockchainState={refreshBlockchainState}
           getNetworkAssetsList={getNetworkAssetsList}
+        />
+      )}
+      {showPrivacyModal && (
+        <PrivacyModal
+          ref={privacyModalRef}
+          onClose={() => setShowPrivacyModal(false)}
         />
       )}
     </>
