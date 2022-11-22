@@ -61,5 +61,9 @@ export const locale: Registry = {
   braveSwapMyPortfolio: 'My portfolio',
   braveSwapWallet: 'Wallet',
   braveSwapBest: 'Best',
-  braveSwapHelpCenter: 'Help Center'
+  braveSwapHelpCenter: 'Help Center',
+  braveSwapPrivacy: 'Privacy',
+  braveSwapPrivacyDescription: 'This app uses the folowwing third-party APIs:',
+  braveSwapZeroXDisclaimer: 'Brave Swap uses 0x as a DEX aggregator for supported EVM networks. 0x will process the Ethereum address and IP address to fulfill a transaction (including getting quotes). 0x will ONLY use this data for the purposes of processing transactions.',
+  braveSwapJupiterDisclaimer: 'Brave Swap uses Jupiter as a DEX aggregator for Solana network. Jupiter will process the Solana address and IP address to fulfill a transaction (including getting quotes). Jupiter will ONLY use this data for the purposes of processing transactions.',
 }

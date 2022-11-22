@@ -35,11 +35,14 @@ import {
 
 interface Props {
   onHideModal: () => void
-  refreshBlockchainState: (overrides: Partial<RefreshBlockchainStateParams>) => Promise<void>
+  refreshBlockchainState: (
+    overrides: Partial<RefreshBlockchainStateParams>
+  ) => Promise<void>
+  showPrivacyModal: () => void
 }
 
 export const AccountModal = (props: Props) => {
-  const { onHideModal, refreshBlockchainState } = props
+  const { onHideModal, refreshBlockchainState, showPrivacyModal } = props
 
   // Context
   const { getLocale, routeBackToWallet, walletAccounts, network, switchAccount, disconnectWallet } =
@@ -143,6 +146,12 @@ export const AccountModal = (props: Props) => {
             onClick={routeBackToWallet}
           />
         )}
+
+        <AccountModalButton
+          text={getLocale('braveSwapPrivacy')}
+          icon={HelpIcon}
+          onClick={showPrivacyModal}
+        />
 
         <AccountModalButton
           text={getLocale('braveSwapHelpCenter')}

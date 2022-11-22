@@ -11,15 +11,20 @@ import { StyledDiv } from '~/components/shared.styles'
 
 interface Props {
   children?: React.ReactNode
-  modalHeight?: 'standard' | 'full'
+  modalHeight?: 'standard' | 'full' | 'dynamic'
+  modalBackground?: 'background01' | 'background02'
 }
 
 export const StandardModal = React.forwardRef<HTMLDivElement, Props>(
   (props: Props, forwardedRef) => {
-    const { children, modalHeight } = props
+    const { children, modalHeight, modalBackground } = props
     return (
       <Wrapper>
-        <Modal ref={forwardedRef} modalHeight={modalHeight}>
+        <Modal
+          ref={forwardedRef}
+          modalHeight={modalHeight}
+          modalBackground={modalBackground}
+        >
           {children}
         </Modal>
       </Wrapper>
@@ -38,14 +43,23 @@ const Wrapper = styled(StyledDiv)`
 `
 
 const Modal = styled(StyledDiv)<{
-  modalHeight?: 'standard' | 'full'
+  modalHeight?: 'standard' | 'full' | 'dynamic'
+  modalBackground?: 'background01' | 'background02'
 }>`
-  background-color: ${(p) => p.theme.color.legacy.background01};
+  background-color: ${(p) =>
+    p.modalBackground === 'background02'
+      ? p.theme.color.legacy.background02
+      : p.theme.color.legacy.background01};
   border-radius: 22px;
   box-shadow: var(--standard-modal-box-shadow);
   box-sizing: border-box;
   flex-direction: column;
-  height: ${(p) => (p.modalHeight === 'full' ? '85%' : `520px`)};
+  height: ${(p) =>
+    p.modalHeight === 'full'
+      ? '85%'
+      : p.modalHeight === 'dynamic'
+      ? 'unset'
+      : `520px`};
   justify-content: flex-start;
   overflow: hidden;
   position: absolute;

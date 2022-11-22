@@ -29,11 +29,14 @@ import { useOnClickOutside } from '~/hooks/useOnClickOutside'
 import { Row, HorizontalSpacer, StyledDiv } from '~/components/shared.styles'
 
 interface Props {
-  refreshBlockchainState: (overrides: Partial<RefreshBlockchainStateParams>) => Promise<void>
+  refreshBlockchainState: (
+    overrides: Partial<RefreshBlockchainStateParams>
+  ) => Promise<void>
+  showPrivacyModal: () => void
 }
 
 export const Header = (props: Props) => {
-  const { refreshBlockchainState } = props
+  const { refreshBlockchainState, showPrivacyModal } = props
 
   // Wallet State
   const { network, supportedNetworks, isWalletConnected, connectWallet, switchNetwork } =
@@ -114,6 +117,11 @@ export const Header = (props: Props) => {
     setShowAccountModal(prev => !prev)
   }, [isWalletConnected, connectWallet])
 
+  const onClickShowPrivacyModal = React.useCallback(() => {
+    setShowAccountModal(false)
+    showPrivacyModal()
+  }, [showPrivacyModal])
+
   return (
     <Wrapper>
       <BraveLogo />
@@ -137,10 +145,14 @@ export const Header = (props: Props) => {
         </SelectorWrapper>
         <HorizontalSpacer size={15} />
         <SelectorWrapper ref={accountModalRef}>
-          <ConnectWalletButton
-            onClick={onClickConnectWalletButton}
-          />
-          {showAccountModal && <AccountModal refreshBlockchainState={refreshBlockchainState} onHideModal={() => setShowAccountModal(false)} />}
+          <ConnectWalletButton onClick={onClickConnectWalletButton} />
+          {showAccountModal && (
+            <AccountModal
+              showPrivacyModal={onClickShowPrivacyModal}
+              refreshBlockchainState={refreshBlockchainState}
+              onHideModal={() => setShowAccountModal(false)}
+            />
+          )}
         </SelectorWrapper>
       </Row>
     </Wrapper>

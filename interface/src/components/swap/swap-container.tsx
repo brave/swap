@@ -20,11 +20,14 @@ import { RefreshBlockchainStateParams } from '~/constants/types'
 
 interface Props {
   children?: React.ReactNode
-  refreshBlockchainState: (overrides: Partial<RefreshBlockchainStateParams>) => Promise<void>
+  refreshBlockchainState: (
+    overrides: Partial<RefreshBlockchainStateParams>
+  ) => Promise<void>
+  showPrivacyModal: () => void
 }
 
 export const SwapContainer = (props: Props) => {
-  const { children, refreshBlockchainState } = props
+  const { children, refreshBlockchainState, showPrivacyModal } = props
 
   const { network } = useSwapContext()
 
@@ -51,7 +54,10 @@ export const SwapContainer = (props: Props) => {
 
   return (
     <Wrapper>
-      <Header refreshBlockchainState={refreshBlockchainState} />
+      <Header
+        showPrivacyModal={showPrivacyModal}
+        refreshBlockchainState={refreshBlockchainState}
+      />
       <Container ref={ref}>{children}</Container>
       <Background
         height={backgroundHeight}
