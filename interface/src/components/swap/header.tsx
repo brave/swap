@@ -32,11 +32,10 @@ interface Props {
   refreshBlockchainState: (
     overrides: Partial<RefreshBlockchainStateParams>
   ) => Promise<void>
-  showPrivacyModal: () => void
 }
 
 export const Header = (props: Props) => {
-  const { refreshBlockchainState, showPrivacyModal } = props
+  const { refreshBlockchainState } = props
 
   // Wallet State
   const { network, supportedNetworks, isWalletConnected, connectWallet, switchNetwork } =
@@ -117,11 +116,6 @@ export const Header = (props: Props) => {
     setShowAccountModal(prev => !prev)
   }, [isWalletConnected, connectWallet])
 
-  const onClickShowPrivacyModal = React.useCallback(() => {
-    setShowAccountModal(false)
-    showPrivacyModal()
-  }, [showPrivacyModal])
-
   return (
     <Wrapper>
       <BraveLogo />
@@ -148,7 +142,6 @@ export const Header = (props: Props) => {
           <ConnectWalletButton onClick={onClickConnectWalletButton} />
           {showAccountModal && (
             <AccountModal
-              showPrivacyModal={onClickShowPrivacyModal}
               refreshBlockchainState={refreshBlockchainState}
               onHideModal={() => setShowAccountModal(false)}
             />

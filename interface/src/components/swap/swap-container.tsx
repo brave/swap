@@ -13,7 +13,7 @@ import { useSwapContext } from '~/context/swap.context'
 import { Header } from './header'
 
 // Styled Components
-import { StyledDiv } from '~/components/shared.styles'
+import { StyledDiv, StyledButton } from '~/components/shared.styles'
 
 // Types
 import { RefreshBlockchainStateParams } from '~/constants/types'
@@ -29,7 +29,7 @@ interface Props {
 export const SwapContainer = (props: Props) => {
   const { children, refreshBlockchainState, showPrivacyModal } = props
 
-  const { network } = useSwapContext()
+  const { network, getLocale } = useSwapContext()
 
   // State
   const [backgroundHeight, setBackgroundHeight] = React.useState<number>(0)
@@ -55,10 +55,10 @@ export const SwapContainer = (props: Props) => {
   return (
     <Wrapper>
       <Header
-        showPrivacyModal={showPrivacyModal}
         refreshBlockchainState={refreshBlockchainState}
       />
       <Container ref={ref}>{children}</Container>
+      <PrivacyButton onClick={showPrivacyModal}>{getLocale('braveSwapPrivacyPolicy')}</PrivacyButton>
       <Background
         height={backgroundHeight}
         network={network.chainId ?? ''}
@@ -86,7 +86,7 @@ const Wrapper = styled(StyledDiv)`
 }
 `
 
-const Background = styled(StyledDiv)<{
+const Background = styled(StyledDiv) <{
   height: number
   network: string
   backgroundOpacity: number
@@ -164,7 +164,20 @@ const Container = styled(StyledDiv)`
   width: 512px;
   position: relative;
   z-index: 9;
+  margin-bottom: 10px;
   @media screen and (max-width: 570px) {
     width: 90%;
+  }
+`
+
+export const PrivacyButton = styled(StyledButton)`
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: ${(p) => p.theme.color.legacy.interactive05};
+  @media (prefers-color-scheme: dark) {
+    color: ${(p) => p.theme.color.legacy.interactive06};
   }
 `

@@ -38,11 +38,10 @@ interface Props {
   refreshBlockchainState: (
     overrides: Partial<RefreshBlockchainStateParams>
   ) => Promise<void>
-  showPrivacyModal: () => void
 }
 
 export const AccountModal = (props: Props) => {
-  const { onHideModal, refreshBlockchainState, showPrivacyModal } = props
+  const { onHideModal, refreshBlockchainState } = props
 
   // Context
   const { getLocale, routeBackToWallet, walletAccounts, network, switchAccount, disconnectWallet } =
@@ -50,7 +49,7 @@ export const AccountModal = (props: Props) => {
 
   // Memos
   const networkAccounts = React.useMemo(() => {
-      return walletAccounts.filter(account => account.coin === network.coin)
+    return walletAccounts.filter(account => account.coin === network.coin)
   }, [walletAccounts, network])
 
   // Methods
@@ -146,12 +145,6 @@ export const AccountModal = (props: Props) => {
             onClick={routeBackToWallet}
           />
         )}
-
-        <AccountModalButton
-          text={getLocale('braveSwapPrivacy')}
-          icon={HelpIcon}
-          onClick={showPrivacyModal}
-        />
 
         <AccountModalButton
           text={getLocale('braveSwapHelpCenter')}

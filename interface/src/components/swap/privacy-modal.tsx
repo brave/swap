@@ -43,7 +43,7 @@ export const PrivacyModal = React.forwardRef<HTMLDivElement, Props>(
       >
         <Row rowWidth='full' horizontalPadding={24} verticalPadding={20}>
           <Text textSize='18px' isBold={true}>
-            {getLocale('braveSwapPrivacy')}
+            {getLocale('braveSwapPrivacyPolicy')}
           </Text>
           <IconButton icon={CloseIcon} onClick={onClose} size={20} />
         </Row>
@@ -83,6 +83,13 @@ export const PrivacyModal = React.forwardRef<HTMLDivElement, Props>(
             >
               {getLocale('braveSwapZeroXDisclaimer')}
             </Text>
+            <Link
+              rel='noopener noreferrer'
+              target='_blank'
+              href='https://www.0x.org/privacy'
+            >
+              {getLocale('braveSwapZeroXPrivacy')}
+            </Link>
           </Section>
           <VerticalSpacer size={20} />
           <Section
@@ -106,6 +113,13 @@ export const PrivacyModal = React.forwardRef<HTMLDivElement, Props>(
             >
               {getLocale('braveSwapJupiterDisclaimer')}
             </Text>
+            <Link
+              rel='noopener noreferrer'
+              target='_blank'
+              href='https://docs.jup.ag/legal/privacy-policy'
+            >
+              {getLocale('braveSwapJupiterPrivacy')}
+            </Link>
           </Section>
           <VerticalSpacer size={20} />
         </Column>
