@@ -83,9 +83,9 @@ export function useZeroEx (params: SwapParams) {
         console.log(`Error getting Brave fee (Jupiter): ${overriddenParams.toToken.symbol}`)
       }
 
-      let response
+      let priceQuoteResponse
       try {
-        response = await swapService.getZeroExPriceQuote({
+        priceQuoteResponse = await swapService.getZeroExPriceQuote({
           takerAddress: overriddenParams.takerAddress,
           sellAmount:
             overriddenParams.fromAmount &&
@@ -102,15 +102,16 @@ export function useZeroEx (params: SwapParams) {
           slippagePercentage: overriddenParams.slippagePercentage,
           gasPrice: ''
         })
-        setQuote(response)
       } catch (e) {
         console.log(`Error getting 0x quote: ${e}`)
-        try {
-          const err = JSON.parse((e as Error).message) as ZeroExErrorResponse
-          setError(err)
-        } catch (e) {
-          console.error(`Error parsing 0x response: ${e}`)
-        }
+      }
+
+      if (priceQuoteResponse?.response) {
+        setQuote(priceQuoteResponse.response)
+      }
+
+      if (priceQuoteResponse?.errorResponse) {
+        setError(priceQuoteResponse.errorResponse)
       }
 
       let hasAllowanceResult = false
@@ -121,14 +122,14 @@ export function useZeroEx (params: SwapParams) {
         hasAllowanceResult = true
       }
 
-      if (response && overriddenParams.fromToken.isToken) {
+      if (priceQuoteResponse?.response && overriddenParams.fromToken.isToken) {
         try {
           const allowance = await ethWalletAdapter.getERC20Allowance(
-            response.sellTokenAddress,
+            priceQuoteResponse.response.sellTokenAddress,
             account.address,
-            response.allowanceTarget
+            priceQuoteResponse.response.allowanceTarget
           )
-          hasAllowanceResult = new Amount(allowance).gte(response.sellAmount)
+          hasAllowanceResult = new Amount(allowance).gte(priceQuoteResponse.response.sellAmount)
         } catch (e) {
           // bubble up error
           console.log(`Error getting ERC20 allowance: ${e}`)
@@ -137,7 +138,7 @@ export function useZeroEx (params: SwapParams) {
 
       setHasAllowance(hasAllowanceResult)
       setLoading(false)
-      return response
+      return priceQuoteResponse?.response
     },
     [network, account, params]
   )
@@ -173,9 +174,9 @@ export function useZeroEx (params: SwapParams) {
       }
 
       setLoading(true)
-      let response
+      let transactionPayloadResponse
       try {
-        response = await swapService.getZeroExTransactionPayload({
+        transactionPayloadResponse = await swapService.getZeroExTransactionPayload({
           takerAddress: overriddenParams.takerAddress,
           sellAmount: new Amount(overriddenParams.fromAmount)
             .multiplyByDecimals(overriddenParams.fromToken.decimals)
@@ -190,20 +191,18 @@ export function useZeroEx (params: SwapParams) {
         })
       } catch (e) {
         console.log(`Error getting 0x swap quote: ${e}`)
-        try {
-          const err = JSON.parse((e as Error).message) as ZeroExErrorResponse
-          setError(err)
-        } catch (e) {
-          console.error(`Error parsing 0x response: ${e}`)
-        }
       }
 
-      if (!response) {
+      if (transactionPayloadResponse?.errorResponse) {
+        setError(transactionPayloadResponse?.errorResponse)
+      }
+
+      if (!transactionPayloadResponse?.response) {
         setLoading(false)
         return
       }
 
-      const { data, to, value, estimatedGas } = response
+      const { data, to, value, estimatedGas } = transactionPayloadResponse.response
 
       try {
         await ethWalletAdapter.sendTransaction({

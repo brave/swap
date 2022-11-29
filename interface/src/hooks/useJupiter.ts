@@ -83,9 +83,9 @@ export function useJupiter (params: SwapParams) {
         console.log(`Error getting Brave fee (Jupiter): ${overriddenParams.toToken.symbol}`)
       }
 
-      let response
+      let jupiterQuoteResponse
       try {
-        response = await swapService.getJupiterQuote({
+        jupiterQuoteResponse = await swapService.getJupiterQuote({
           inputMint: overriddenParams.fromToken.contractAddress || WRAPPED_SOL_CONTRACT_ADDRESS,
           outputMint: overriddenParams.toToken.contractAddress || WRAPPED_SOL_CONTRACT_ADDRESS,
           amount: new Amount(overriddenParams.fromAmount)
@@ -93,19 +93,20 @@ export function useJupiter (params: SwapParams) {
             .format(),
           slippagePercentage: overriddenParams.slippagePercentage
         })
-        setQuote(response)
       } catch (e) {
         console.log(`Error getting Jupiter quote: ${e}`)
-        try {
-          const err = JSON.parse((e as Error).message) as JupiterErrorResponse
-          setError(err)
-        } catch (e) {
-          console.error(`Error parsing Jupiter response: ${e}`)
-        }
+      }
+
+      if (jupiterQuoteResponse?.response) {
+        setQuote(jupiterQuoteResponse.response)
+      }
+
+      if (jupiterQuoteResponse?.errorResponse) {
+        setError(jupiterQuoteResponse.errorResponse)
       }
 
       setLoading(false)
-      return response
+      return jupiterQuoteResponse?.response
     },
     [network, params]
   )
@@ -124,30 +125,29 @@ export function useJupiter (params: SwapParams) {
       }
 
       setLoading(true)
-      let response
+      let jupiterTransactionsPayloadResponse
       try {
-        response = await swapService.getJupiterTransactionsPayload({
+        jupiterTransactionsPayloadResponse = await swapService.getJupiterTransactionsPayload({
           userPublicKey: account.address,
           route: selectedRoute || quote.routes[0],
           outputMint: params.toToken.contractAddress || WRAPPED_SOL_CONTRACT_ADDRESS
         })
       } catch (e) {
         console.log(`Error getting Jupiter swap transactions: ${e}`)
-        try {
-          const err = JSON.parse((e as Error).message) as JupiterErrorResponse
-          setError(err)
-        } catch (e) {
-          console.error(`Error parsing Jupiter response: ${e}`)
-        }
       }
 
-      if (!response) {
+      if (jupiterTransactionsPayloadResponse?.errorResponse) {
+        setError(jupiterTransactionsPayloadResponse.errorResponse)
+      }
+
+      if (!jupiterTransactionsPayloadResponse?.response) {
         setLoading(false)
         return
       }
 
       // Ignore setupTransaction and cleanupTransaction
-      const { setupTransaction, swapTransaction, cleanupTransaction } = response
+      const { setupTransaction, swapTransaction, cleanupTransaction } =
+        jupiterTransactionsPayloadResponse.response
 
       try {
         await solWalletAdapter.sendTransaction({

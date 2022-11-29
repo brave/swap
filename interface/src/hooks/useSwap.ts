@@ -585,17 +585,11 @@ export const useSwap = () => {
         return
       }
 
-      const { code, validationErrors } = zeroEx.error
-      switch (code) {
-        case ZERO_EX_VALIDATION_ERROR_CODE:
-          if (validationErrors?.find(err => err.reason === 'INSUFFICIENT_ASSET_LIQUIDITY')) {
-            return 'insufficientLiquidity'
-          }
-          break
-
-        default:
-          return 'unknownError'
+      if (zeroEx.error.isInsufficientLiquidity){
+        return 'insufficientLiquidity'
       }
+
+      return 'unknownError'
     }
 
     // Jupiter specific validations

@@ -84,7 +84,7 @@ export type RefreshBlockchainStateParams = {
 }
 
 export type RefreshPricesParams = {
-  nativeAsset: BlockchainToken,
+  nativeAsset: BlockchainToken
   fromAsset: BlockchainToken | undefined
   toAsset: BlockchainToken | undefined
 }
@@ -124,7 +124,7 @@ export type GasEstimate = {
 }
 
 export type SwapFee = {
-  fee: string,
+  fee: string
   discount: string
 }
 
@@ -191,6 +191,17 @@ export interface ZeroExErrorResponse {
   code: number
   reason: string
   validationErrors?: Array<{ field: string; code: number; reason: string }>
+  isInsufficientLiquidity: boolean
+}
+
+export interface ZeroExQuoteResponseWithError {
+  response?: ZeroExQuoteResponse
+  errorResponse?: ZeroExErrorResponse
+}
+
+export interface ZeroExSwapResponseWithError {
+  response?: ZeroExSwapResponse
+  errorResponse?: ZeroExErrorResponse
 }
 
 export type JupiterQuoteParams = {
@@ -249,6 +260,17 @@ export interface JupiterErrorResponse {
   statusCode: string
   error: string
   message: string
+  isInsufficientLiquidity: boolean
+}
+
+export interface JupiterSwapResponseWithError {
+  response?: JupiterSwapResponse
+  errorResponse?: JupiterErrorResponse
+}
+
+export interface JupiterQuoteResponseWithError {
+  response?: JupiterQuoteResponse
+  errorResponse?: JupiterErrorResponse
 }
 
 // ETH Wallet Adapter
