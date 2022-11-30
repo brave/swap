@@ -7,23 +7,23 @@ import React, { createContext } from 'react'
 
 // Types
 import {
+  ApproveERC20Params,
   BlockchainToken,
-  NetworkInfo,
-  WalletAccount,
+  ETHSendTransactionParams,
   Exchange,
   GasEstimate,
-  ZeroExSwapParams,
-  ZeroExSwapResponse,
-  JupiterSwapParams,
-  JupiterQuoteResponse,
-  JupiterQuoteParams,
-  JupiterSwapResponse,
-  ZeroExQuoteResponse,
   GasPrice1559,
-  ETHSendTransactionParams,
-  ApproveERC20Params,
+  JupiterQuoteParams,
+  JupiterQuoteResponseWithError,
+  JupiterSwapParams,
+  JupiterSwapResponseWithError,
+  NetworkInfo,
   SOLSendTransactionParams,
-  SwapFee
+  SwapFee,
+  WalletAccount,
+  ZeroExQuoteResponseWithError,
+  ZeroExSwapParams,
+  ZeroExSwapResponseWithError
 } from '~/constants/types'
 
 interface SwapContextInterface {
@@ -47,10 +47,12 @@ interface SwapContextInterface {
   disconnectWallet?: () => Promise<void>
   getTokenPrice: (token: BlockchainToken) => Promise<string>
   swapService: {
-    getZeroExPriceQuote: (params: ZeroExSwapParams) => Promise<ZeroExQuoteResponse>
-    getZeroExTransactionPayload: (params: ZeroExSwapParams) => Promise<ZeroExSwapResponse>
-    getJupiterQuote: (params: JupiterQuoteParams) => Promise<JupiterQuoteResponse>
-    getJupiterTransactionsPayload: (params: JupiterSwapParams) => Promise<JupiterSwapResponse>
+    getZeroExPriceQuote: (params: ZeroExSwapParams) => Promise<ZeroExQuoteResponseWithError>
+    getZeroExTransactionPayload: (params: ZeroExSwapParams) => Promise<ZeroExSwapResponseWithError>
+    getJupiterQuote: (params: JupiterQuoteParams) => Promise<JupiterQuoteResponseWithError>
+    getJupiterTransactionsPayload: (
+      params: JupiterSwapParams
+    ) => Promise<JupiterSwapResponseWithError>
     isSwapSupported: (chainId: string) => Promise<boolean>
     getBraveFeeForAsset: (asset: BlockchainToken) => Promise<SwapFee>
   }
