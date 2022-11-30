@@ -10,6 +10,7 @@ export const locale: Registry = {
   braveSwapReviewOrder: 'Review order',
   braveSwapApproveToken: 'Approve $1',
   braveSwapInsufficientBalance: 'Insufficient $1 balance',
+  braveSwapInsufficientLiquidity: 'Insufficient liquidity',
   braveSwapSelectToken: 'Select token',
   braveSwapHalf: 'Half',
   braveSwapMax: 'Max',
