@@ -314,7 +314,7 @@ export const useSwap = () => {
       }
 
       const token = overrides.toToken || toToken
-      if (token) {
+      if (token && quote.routes.length > 0) {
         setToAmount(
           new Amount(quote.routes[0].outAmount.toString())
             .divideByDecimals(token.decimals)
@@ -585,7 +585,7 @@ export const useSwap = () => {
         return
       }
 
-      if (zeroEx.error.isInsufficientLiquidity){
+      if (zeroEx.error.isInsufficientLiquidity) {
         return 'insufficientLiquidity'
       }
 
@@ -594,12 +594,12 @@ export const useSwap = () => {
 
     // Jupiter specific validations
     if (network.coin === CoinType.Solana) {
-      if (jupiter.error === undefined) {
-        return
+      if (jupiter.error?.isInsufficientLiquidity || jupiter.quote?.routes?.length === 0) {
+        return 'insufficientLiquidity'
       }
 
-      if (jupiter.error.message.includes('No routes found for the input and output mints')) {
-        return 'insufficientLiquidity'
+      if (jupiter.error === undefined) {
+        return
       }
 
       return 'unknownError'
@@ -650,10 +650,9 @@ export const useSwap = () => {
       }
     }
 
-    // TODO: enable this block after adding locale
-    // if (swapValidationError === 'insufficientLiquidity') {
-    //   return getLocale('braveSwapInsufficientLiquidity')
-    // }
+    if (swapValidationError === 'insufficientLiquidity') {
+      return getLocale('braveSwapInsufficientLiquidity')
+    }
 
     return getLocale('braveSwapReviewOrder')
   }, [fromToken, network.coin, swapValidationError])
