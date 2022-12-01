@@ -13,7 +13,7 @@ type AmountLike = Amount | BigNumberIsh
 export default class Amount {
   public readonly value?: BigNumber
 
-  public constructor (value: BigNumberIsh) {
+  public constructor(value: BigNumberIsh) {
     this.value = value === '' ? undefined : new BigNumber(value)
   }
 
@@ -292,6 +292,14 @@ export default class Amount {
 
   isNegative (): boolean {
     return this.value !== undefined && this.value.isNegative()
+  }
+
+  parseInteger (): Amount {
+    if (this.value === undefined) {
+      return Amount.empty()
+    }
+
+    return new Amount(this.value.integerValue(BigNumber.ROUND_DOWN))
   }
 
   // Abbreviate number in units of 1000 e.g., 100000 becomes 100k
