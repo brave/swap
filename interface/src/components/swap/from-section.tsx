@@ -49,7 +49,7 @@ export const FromSection = (props: Props) => {
     if (!token) {
       return
     }
-    onInputChange(tokenBalance.divideByDecimals(token.decimals).div(2).format())
+    onInputChange(tokenBalance.div(2).parseInteger().divideByDecimals(token.decimals).format(6))
   }
 
   const onClickMaxPreset = () => {
