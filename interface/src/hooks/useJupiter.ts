@@ -123,6 +123,9 @@ export function useJupiter (params: SwapParams) {
       if (!params.toToken) {
         return
       }
+      if (!account) {
+          return
+      }
 
       setLoading(true)
       let jupiterTransactionsPayloadResponse

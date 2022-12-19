@@ -36,11 +36,11 @@ interface SwapContextInterface {
     chainId: string
   ) => Promise<string>
   assetsList: BlockchainToken[]
-  account: WalletAccount
+  account?: WalletAccount
   network: NetworkInfo
   supportedNetworks: NetworkInfo[]
   switchAccount: (account: WalletAccount) => Promise<void>
-  switchNetwork: (network: NetworkInfo) => Promise<void>
+  switchNetwork: (network: NetworkInfo) => Promise<WalletAccount | undefined>
   isWalletConnected: boolean
   isReady: boolean
   connectWallet?: () => Promise<void>

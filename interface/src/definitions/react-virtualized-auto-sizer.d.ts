@@ -3,7 +3,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
-declare module '@brave/react-virtualized-auto-sizer' {
+declare module 'react-virtualized-auto-sizer' {
   import * as React from 'react'
   export interface Size {
     height: number

@@ -84,7 +84,7 @@ export const AccountSelector = (props: Props) => {
       {showAccountSelector && (
         <SelectorBox>
           {networkAccounts.map(account => (
-            <AccountListButton account={account} onClick={onClickSelectAccount} key={account.id} />
+            <AccountListButton account={account} onClick={onClickSelectAccount} key={account.address} />
           ))}
         </SelectorBox>
       )}

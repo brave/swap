@@ -56,6 +56,7 @@ function SwapContainer() {
       }}
       switchNetwork={async (network: NetworkInfo) => {
         setNetwork(network)
+        return account
       }}
       getLocale={getLocale}
       getBalance={getBalance}

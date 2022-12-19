@@ -67,7 +67,6 @@ export type SpotPrices = {
 }
 
 export type WalletAccount = {
-  id: string
   name: string
   address: string
   coin: number

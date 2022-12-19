@@ -109,7 +109,7 @@ export const AccountModal = (props: Props) => {
         </Row>
         {networkAccounts.map((account) => (
           <AccountListItemButton
-            key={account.id}
+            key={account.address}
             address={account.address}
             name={account.name}
             onClick={() => onSelectAccount(account)}

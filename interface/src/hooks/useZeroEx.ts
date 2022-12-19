@@ -122,7 +122,13 @@ export function useZeroEx (params: SwapParams) {
         hasAllowanceResult = true
       }
 
-      if (priceQuoteResponse?.response && overriddenParams.fromToken.isToken) {
+      // Simulate that the token has enough allowance if the wallet is not
+      // connected yet.
+      if (!account) {
+          hasAllowanceResult = true
+      }
+
+      if (account && priceQuoteResponse?.response && overriddenParams.fromToken.isToken) {
         try {
           const allowance = await ethWalletAdapter.getERC20Allowance(
             priceQuoteResponse.response.sellTokenAddress,
@@ -153,6 +159,10 @@ export function useZeroEx (params: SwapParams) {
       // Perform data validation and early-exit
       if (network.coin !== CoinType.Ethereum) {
         return
+      }
+      if (!account) {
+          // Wallet is not connected
+          return
       }
       if (!overriddenParams.fromToken || !overriddenParams.toToken) {
         return
@@ -225,6 +235,11 @@ export function useZeroEx (params: SwapParams) {
   const approve = React.useCallback(async () => {
     if (!quote || hasAllowance) {
       return
+    }
+
+    // Typically when wallet has not been connected yet
+    if (!account) {
+        return
     }
 
     const { allowanceTarget, sellTokenAddress } = quote
