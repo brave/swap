@@ -9,15 +9,16 @@
   },
   "dependencies": {
     "@brave/swap-interface": "file:../../interface",
-    "react": "16.14.0",
-    "react-dom": "16.14.0",
-    "styled-components": "^5.3.5"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "styled-components": "^5.3.6"
   },
   "devDependencies": {
-    "@types/react": "17.0.2",
-    "@types/react-dom": "17.0.1",
+    "@types/node": "18.11.12",
+    "@types/react": "18.0.26",
+    "@types/react-dom": "18.0.9",
     "@vitejs/plugin-react": "^2.1.0",
-    "typescript": "^4.6.4",
+    "typescript": "4.9.4",
     "vite": "^3.1.0"
   }
 }
