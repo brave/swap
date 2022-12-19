@@ -66,7 +66,6 @@ export const useSwap = () => {
     network,
     account,
     defaultBaseCurrency,
-    isWalletConnected,
     walletAccounts
   } = useSwapContext()
   const { dispatch } = useWalletDispatch()
@@ -117,9 +116,9 @@ export const useSwap = () => {
   const zeroEx = useZeroEx({
     takerAddress: swapAndSendSelected
       ? selectedSwapAndSendOption === 'to-account'
-        ? selectedSwapSendAccount?.address || account.address
+        ? selectedSwapSendAccount?.address || account?.address
         : toAnotherAddress
-      : account.address,
+      : account?.address,
     fromAmount,
     toAmount: '',
     fromToken,
@@ -235,13 +234,17 @@ export const useSwap = () => {
         ...overrides
       }
 
-      if (overriddenParams.account.coin !== overriddenParams.network.coin) {
+      if (overriddenParams.account?.coin !== overriddenParams.network.coin) {
         overriddenParams = {
           ...overriddenParams,
           account:
             walletAccounts.find(account => account.coin === overriddenParams.network.coin) ||
             overriddenParams.account
         }
+      }
+
+      if (!overriddenParams.account) {
+        return
       }
 
       const networkAssets = getNetworkAssetsList(overriddenParams.network)
@@ -402,7 +405,7 @@ export const useSwap = () => {
     setFromToken(toToken)
     setToToken(fromToken)
 
-    if (toToken) {
+    if (toToken && account) {
       const balance = await getAssetBalanceFactory(account, network)(toToken)
       dispatch({
         type: 'updateTokenBalances',
@@ -449,13 +452,15 @@ export const useSwap = () => {
       setFromToken(token)
       setSelectingFromOrTo(undefined)
 
-      const balance = await getAssetBalanceFactory(account, network)(token)
-      dispatch({
-        type: 'updateTokenBalances',
-        payload: {
-          [balance.key]: balance.value
-        }
-      })
+      if (account) {
+        const balance = await getAssetBalanceFactory(account, network)(token)
+        dispatch({
+          type: 'updateTokenBalances',
+          payload: {
+            [balance.key]: balance.value
+          }
+        })
+      }
 
       await refreshSpotPrices({ fromAsset: token })
 
@@ -632,6 +637,10 @@ export const useSwap = () => {
   }, [network.coin, zeroEx, jupiter])
 
   const submitButtonText = React.useMemo(() => {
+    if (!account) {
+      return getLocale('braveSwapConnectWallet')
+    }
+
     if (!fromToken) {
       return getLocale('braveSwapReviewOrder')
     }
@@ -655,7 +664,7 @@ export const useSwap = () => {
     }
 
     return getLocale('braveSwapReviewOrder')
-  }, [fromToken, network.coin, swapValidationError])
+  }, [fromToken, network.coin, swapValidationError, account])
 
   const isSubmitButtonDisabled = React.useMemo(() => {
     return (

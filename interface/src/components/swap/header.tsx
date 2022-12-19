@@ -50,10 +50,10 @@ export const Header = (props: Props) => {
   const accountModalRef = React.useRef<HTMLDivElement>(null)
 
   // Methods
-  const onSelectNetwork = React.useCallback(async (network: NetworkInfo) => {
-    await switchNetwork(network)
+  const onSelectNetwork = React.useCallback(async (payload: NetworkInfo) => {
+    const account = await switchNetwork(payload)
     setShowNetworkSelector(false)
-    await refreshBlockchainState({ network })
+    await refreshBlockchainState({ network: payload, account })
   }, [switchNetwork, refreshBlockchainState])
 
   const toggleTheme = React.useCallback(() => {

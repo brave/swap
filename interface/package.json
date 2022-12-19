@@ -1,6 +1,6 @@
 {
   "name": "@brave/swap-interface",
-  "version": "0.12.7",
+  "version": "0.13.0",
   "description": "Brave Swap - an open-source swap interface by Brave, focussed on usability and multi-chain support.",
   "type": "module",
   "license": "MPL-2.0",
@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@brave/leo": "github:brave/leo",
-    "@brave/react-virtualized-auto-sizer": "^1.0.4",
+    "react-virtualized-auto-sizer": "^1.0.7",
     "@types/react-window": "^1.8.2",
     "@types/styled-components": "^5.1.9",
     "async": "^3.2.4",

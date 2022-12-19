@@ -4,7 +4,7 @@
 // you can obtain one at http://mozilla.org/MPL/2.0/.
 
 import { VariableSizeList as List } from 'react-window'
-import AutoSizer from '@brave/react-virtualized-auto-sizer'
+import AutoSizer from 'react-virtualized-auto-sizer'
 
 // Types
 import { BlockchainToken } from '~/constants/types'

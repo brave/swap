@@ -25,10 +25,14 @@ export const ConnectWalletButton = (props: Props) => {
   const { onClick } = props
 
   // context
-  const { getLocale, account, isWalletConnected } = useSwapContext()
+  const { getLocale, account } = useSwapContext()
 
   // Memos
-  const accountOrb: string = React.useMemo(() => {
+  const accountOrb: string | undefined = React.useMemo(() => {
+    if (!account) {
+      return
+    }
+
     return create({
       seed: account.address.toLowerCase() || '',
       size: 8,
@@ -37,10 +41,10 @@ export const ConnectWalletButton = (props: Props) => {
   }, [account])
 
   return (
-    <Button onClick={onClick} isConnected={isWalletConnected}>
-      {isWalletConnected ? (
+    <Button onClick={onClick} isConnected={account !== undefined}>
+      {account ? (
         <>
-          <AccountCircle orb={accountOrb} />{' '}
+          {accountOrb && <AccountCircle orb={accountOrb} />}{' '}
           <HiddenResponsiveRow>
             <Text textSize='14px' textColor='text01' isBold={true}>
               {account.name}

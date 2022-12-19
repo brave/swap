@@ -40,10 +40,10 @@ export const SearchWithNetworkSelector = (props: Props) => {
   const [showNetworkSelector, setShowNetworkSelector] = React.useState<boolean>(false)
 
   const onSelectNetwork = React.useCallback(
-    async (network: NetworkInfo) => {
-      await switchNetwork(network)
+    async (payload: NetworkInfo) => {
+      const account = await switchNetwork(payload)
       setShowNetworkSelector(false)
-      await refreshBlockchainState({ network })
+      await refreshBlockchainState({ network: payload, account })
     },
     [switchNetwork, refreshBlockchainState]
   )
