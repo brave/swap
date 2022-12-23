@@ -129,12 +129,12 @@ export const evmChainIDBaseAPIURLMapping: Record<string, string> = {
 }
 
 export const networks: NetworkInfo[] = [
-  solana,
   ethereum,
-  bsc,
   polygon,
+  bsc,
+  optimism,
   avalanche,
-  celo,
   fantom,
-  optimism
+  celo,
+  solana
 ]

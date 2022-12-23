@@ -6,6 +6,7 @@ import React from 'react'
 require('@solana/wallet-adapter-react-ui/styles.css')
 require('@rainbow-me/rainbowkit/styles.css')
 require('../styles/globals.css')
+require('@brave/swap-interface/style.css')
 
 import SolanaWalletProviderContext from '../contexts/solana'
 import EthereumWalletProviderContext from '../contexts/ethereum'

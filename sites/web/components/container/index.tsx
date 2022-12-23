@@ -9,10 +9,8 @@ import {
   WalletAccount,
   NetworkInfo,
   CoinType,
-  BlockchainToken,
-  ChainID
+  BlockchainToken
 } from '@brave/swap-interface'
-import '@brave/swap-interface/style.css'
 
 import { getLocale } from '../../utils/locale'
 import { networks, ethereum, solana } from '../../constants/networks'
@@ -111,9 +109,7 @@ export default function SwapContainer (props: StaticProps) {
   React.useEffect(() => {
     if (ethChain) {
       const result = getCurrentEthNetwork(ethChain)
-      if (result) {
-        setNetwork(result)
-      }
+      setNetwork(result)
     }
   }, [ethChain])
 
