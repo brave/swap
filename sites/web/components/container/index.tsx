@@ -4,11 +4,17 @@ import { useDisconnect, useAccount, useNetwork, useSwitchNetwork, Chain } from '
 import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 
-import { Swap, WalletAccount, NetworkInfo, CoinType } from '@brave/swap-interface'
+import {
+  Swap,
+  WalletAccount,
+  NetworkInfo,
+  CoinType,
+  BlockchainToken,
+  ChainID
+} from '@brave/swap-interface'
 import '@brave/swap-interface/style.css'
 
 import { getLocale } from '../../utils/locale'
-import { mockTokens } from '../../mock-data/mock-tokens'
 import { networks, ethereum, solana } from '../../constants/networks'
 
 // Runtime dependencies
@@ -23,10 +29,27 @@ import {
 import { mockNetworkFeeEstimates } from '../../mock-data/mock-network-fee-estimates'
 
 function getCurrentEthNetwork (chain: Chain) {
-  return networks.find(network => Number(network.chainId) === chain.id)
+  return (
+    networks.find(network => Number(network.chainId) === chain.id) ||
+    ({
+      chainId: chain.id.toString(16).toLowerCase(),
+      chainName: chain.name,
+      blockExplorerUrl: '',
+      logo: '',
+      symbol: chain.nativeCurrency.symbol,
+      symbolName: chain.nativeCurrency.name,
+      decimals: chain.nativeCurrency.decimals,
+      coin: CoinType.Ethereum,
+      isEIP1559: false
+    } as NetworkInfo)
+  )
 }
 
-export default function SwapContainer () {
+interface StaticProps {
+  assetsList: BlockchainToken[]
+}
+
+export default function SwapContainer (props: StaticProps) {
   const { openConnectModal: ethOpenConnectModal } = useConnectModal()
   const { disconnectAsync: ethDisconnectAsync } = useDisconnect()
   const { isConnected: ethIsConnected, address: ethAddress } = useAccount()
@@ -40,7 +63,6 @@ export default function SwapContainer () {
     publicKey: solPublicKey,
     disconnect: solDisconnectAsync,
     connected: solIsConnected,
-    signAllTransactions: solSignAllTransactions,
     sendTransaction: solSendTransaction
   } = useSolanaWallet()
 
@@ -97,7 +119,7 @@ export default function SwapContainer () {
 
   return (
     <Swap
-      assetsList={mockTokens}
+      assetsList={props.assetsList}
       account={account}
       network={network}
       supportedNetworks={networks}
