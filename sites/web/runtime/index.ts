@@ -114,13 +114,18 @@ export const getTokenBalance = async (
 
     const mintAccount = new web3.PublicKey(contract)
     const account = new web3.PublicKey(address)
-    const tokenAccount = await provider.getTokenAccountsByOwner(account, { mint: mintAccount })
-    if (tokenAccount.value.length === 0) {
+
+    try {
+      const tokenAccount = await provider.getTokenAccountsByOwner(account, { mint: mintAccount })
+      if (tokenAccount.value.length === 0) {
+        return '0'
+      }
+
+      const balanceResponse = await provider.getTokenAccountBalance(tokenAccount.value[0].pubkey)
+      return balanceResponse.value.amount
+    } catch (e) {
       return '0'
     }
-
-    const balanceResponse = await provider.getTokenAccountBalance(tokenAccount.value[0].pubkey)
-    return balanceResponse.value.amount
   }
 
   throw new Error(`Coin type ${coin} is not supported`)
