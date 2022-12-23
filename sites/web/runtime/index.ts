@@ -26,6 +26,7 @@ import {
 
 // Constants
 import erc20ABI from '../constants/abis/erc20.json'
+import proxy from '../constants/abis/proxy.json'
 import { ethereum, evmChainIDBaseAPIURLMapping, solana } from '../constants/networks'
 
 import {
@@ -89,9 +90,20 @@ export const getTokenBalance = async (
       throw new Error('Ethereum Provider not ready')
     }
 
-    const contractObj = new ethers.Contract(contract, erc20ABI, provider)
-    const balance = await contractObj.balanceOf(address)
-    return balance.toString()
+    try {
+      const contractObj = new ethers.Contract(contract, erc20ABI, provider)
+      const balance = await contractObj.balanceOf(address)
+      return balance.toString()
+    } catch (e) {
+      // Try using EIP-897 DelegateProxy.
+      const contractObj = new ethers.Contract(contract, proxy, provider)
+      try {
+        const balance = await contractObj.balanceOf(address)
+        return balance.toString()
+      } catch (ie) {
+        return '0'
+      }
+    }
   }
 
   if (coin === solana.coin) {
