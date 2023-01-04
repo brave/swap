@@ -67,7 +67,7 @@ export const useSwap = () => {
     account,
     defaultBaseCurrency,
     walletAccounts,
-    isWalletConnected
+    connectWallet
   } = useSwapContext()
   const { dispatch } = useWalletDispatch()
 
@@ -652,6 +652,11 @@ export const useSwap = () => {
   ])
 
   const onSubmit = React.useCallback(async () => {
+    if (!account && connectWallet) {
+      await connectWallet()
+      return
+    }
+
     if (network.coin === CoinType.Ethereum) {
       if (zeroEx.hasAllowance) {
         await zeroEx.exchange()
@@ -661,7 +666,7 @@ export const useSwap = () => {
     } else if (network.coin === CoinType.Solana) {
       await jupiter.exchange()
     }
-  }, [network.coin, zeroEx, jupiter])
+  }, [network.coin, zeroEx, jupiter, account, connectWallet])
 
   const submitButtonText = React.useMemo(() => {
     if (!account) {
