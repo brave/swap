@@ -50,7 +50,7 @@ async function getEthProvider () {
 }
 
 async function getSolProvider () {
-  return new web3.Connection(`${window.location.href}api/solana/rpc`, 'confirmed')
+  return new web3.Connection(`${window.location.href}api/rpc/solana`, 'confirmed')
 }
 
 export const getBalance = async (address: string, coin: number, chainId: string) => {
@@ -160,17 +160,9 @@ export const getTokenPrice = async (token: BlockchainToken) => {
 
 export const swapService = {
   getZeroExPriceQuote: async (params: ZeroExSwapParams) => {
-    const provider = await getEthProvider()
-    if (!provider) {
-      throw new Error('Ethereum Provider not ready')
-    }
-
-    const { chainId: chainIdInt } = await provider.getNetwork()
-    const chainId = `0x${chainIdInt.toString(16).toLowerCase()}`
-
-    const swapBaseAPIURL: string | undefined = evmChainIDBaseAPIURLMapping[chainId]
+    const swapBaseAPIURL: string | undefined = evmChainIDBaseAPIURLMapping[params.chainId]
     if (!swapBaseAPIURL) {
-      throw new Error(`Unsupported chainId: ${chainId}`)
+      throw new Error(`Unsupported chainId: ${params.chainId}`)
     }
 
     const response = await axios.get(`${swapBaseAPIURL}/swap/v1/price`, {
@@ -192,17 +184,9 @@ export const swapService = {
   },
 
   getZeroExTransactionPayload: async (params: ZeroExSwapParams) => {
-    const provider = await getEthProvider()
-    if (!provider) {
-      throw new Error('Ethereum Provider not ready')
-    }
-
-    const { chainId: chainIdInt } = await provider.getNetwork()
-    const chainId = `0x${chainIdInt.toString(16).toLowerCase()}`
-
-    const swapBaseAPIURL: string | undefined = evmChainIDBaseAPIURLMapping[chainId]
+    const swapBaseAPIURL: string | undefined = evmChainIDBaseAPIURLMapping[params.chainId]
     if (!swapBaseAPIURL) {
-      throw new Error(`Unsupported chainId: ${chainId}`)
+      throw new Error(`Unsupported chainId: ${params.chainId}`)
     }
 
     const response = await axios.get(`${swapBaseAPIURL}/swap/v1/quote`, {

@@ -124,7 +124,7 @@ export function useJupiter (params: SwapParams) {
         return
       }
       if (!account) {
-          return
+        return
       }
 
       setLoading(true)

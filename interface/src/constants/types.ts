@@ -147,6 +147,7 @@ export type SwapParams = {
 }
 
 export type ZeroExSwapParams = {
+  chainId: string
   takerAddress: string
   sellAmount: string
   buyAmount: string

@@ -66,7 +66,8 @@ export const useSwap = () => {
     network,
     account,
     defaultBaseCurrency,
-    walletAccounts
+    walletAccounts,
+    isWalletConnected
   } = useSwapContext()
   const { dispatch } = useWalletDispatch()
 
@@ -295,7 +296,13 @@ export const useSwap = () => {
   )
 
   React.useEffect(() => {
+    let mounted = true
+
     ;(async () => {
+      if (!mounted) {
+        return
+      }
+
       // Do not trigger refresh functions if assetsList is still not available.
       if (assetsList.length === 0) {
         return
@@ -306,8 +313,28 @@ export const useSwap = () => {
         await refreshSpotPrices({})
         setInitialized(true)
       }
+
+      return function cleanup () {
+        mounted = false
+      }
     })()
   }, [refreshBlockchainState, refreshSpotPrices, initialized, assetsList])
+
+  React.useEffect(() => {
+    let mounted = true
+
+    ;(async () => {
+      if (!mounted) {
+        return
+      }
+
+      await refreshBlockchainState({ account })
+    })()
+
+    return function cleanup () {
+      mounted = false
+    }
+  }, [account, refreshBlockchainState])
 
   const handleJupiterQuoteRefresh = React.useCallback(
     async (overrides: Partial<SwapParams>) => {
@@ -667,6 +694,10 @@ export const useSwap = () => {
   }, [fromToken, network.coin, swapValidationError, account])
 
   const isSubmitButtonDisabled = React.useMemo(() => {
+    if (!account) {
+      return false
+    }
+
     return (
       // Prevent creating a swap transaction with stale parameters if fetching
       // of a new quote is in progress.

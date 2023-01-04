@@ -60,6 +60,7 @@ export function useZeroEx (params: SwapParams) {
       }
       const fromAmountWrapped = new Amount(overriddenParams.fromAmount)
       const toAmountWrapped = new Amount(overriddenParams.toAmount)
+
       if (
         (fromAmountWrapped.isZero() ||
           fromAmountWrapped.isNaN() ||
@@ -70,9 +71,6 @@ export function useZeroEx (params: SwapParams) {
         setError(undefined)
         return
       }
-      if (!overriddenParams.takerAddress) {
-        return
-      }
 
       setLoading(true)
 
@@ -80,13 +78,14 @@ export function useZeroEx (params: SwapParams) {
         const fee = await swapService.getBraveFeeForAsset(overriddenParams.toToken)
         setBraveFee(fee)
       } catch (e) {
-        console.log(`Error getting Brave fee (Jupiter): ${overriddenParams.toToken.symbol}`)
+        console.log(`Error getting Brave fee (0x): ${overriddenParams.toToken.symbol}`)
       }
 
       let priceQuoteResponse
       try {
         priceQuoteResponse = await swapService.getZeroExPriceQuote({
-          takerAddress: overriddenParams.takerAddress,
+          chainId: network.chainId,
+          takerAddress: overriddenParams.takerAddress || '',
           sellAmount:
             overriddenParams.fromAmount &&
             new Amount(overriddenParams.fromAmount)
@@ -125,7 +124,7 @@ export function useZeroEx (params: SwapParams) {
       // Simulate that the token has enough allowance if the wallet is not
       // connected yet.
       if (!account) {
-          hasAllowanceResult = true
+        hasAllowanceResult = true
       }
 
       if (account && priceQuoteResponse?.response && overriddenParams.fromToken.isToken) {
@@ -161,8 +160,8 @@ export function useZeroEx (params: SwapParams) {
         return
       }
       if (!account) {
-          // Wallet is not connected
-          return
+        // Wallet is not connected
+        return
       }
       if (!overriddenParams.fromToken || !overriddenParams.toToken) {
         return
@@ -187,7 +186,8 @@ export function useZeroEx (params: SwapParams) {
       let transactionPayloadResponse
       try {
         transactionPayloadResponse = await swapService.getZeroExTransactionPayload({
-          takerAddress: overriddenParams.takerAddress,
+          chainId: network.chainId,
+          takerAddress: overriddenParams.takerAddress || '',
           sellAmount: new Amount(overriddenParams.fromAmount)
             .multiplyByDecimals(overriddenParams.fromToken.decimals)
             .format(),
@@ -239,7 +239,7 @@ export function useZeroEx (params: SwapParams) {
 
     // Typically when wallet has not been connected yet
     if (!account) {
-        return
+      return
     }
 
     const { allowanceTarget, sellTokenAddress } = quote
