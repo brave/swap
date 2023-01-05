@@ -4,13 +4,7 @@ import { useDisconnect, useAccount, useNetwork, useSwitchNetwork, Chain } from '
 import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 
-import {
-  Swap,
-  WalletAccount,
-  NetworkInfo,
-  CoinType,
-  BlockchainToken
-} from '@brave/swap-interface'
+import { Swap, WalletAccount, NetworkInfo, CoinType, BlockchainToken } from '@brave/swap-interface'
 
 import { getLocale } from '../../utils/locale'
 import { networks, ethereum, solana } from '../../constants/networks'
@@ -19,6 +13,7 @@ import { networks, ethereum, solana } from '../../constants/networks'
 import {
   getBalance,
   getTokenBalance,
+  discoverTokens,
   getTokenPrice,
   ethWalletAdapter,
   swapService,
@@ -163,6 +158,7 @@ export default function SwapContainer (props: StaticProps) {
       getLocale={getLocale}
       getBalance={getBalance}
       getTokenBalance={getTokenBalance}
+      discoverTokens={discoverTokens}
       getTokenPrice={getTokenPrice}
       getNetworkFeeEstimate={async (chainId: string) => mockNetworkFeeEstimates[chainId]}
       routeBackToWallet={() => {}}

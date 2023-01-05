@@ -62,6 +62,7 @@ export const useSwap = () => {
     getTokenPrice,
     getTokenBalance,
     getBalance,
+    discoverTokens,
     assetsList,
     network,
     account,
@@ -277,9 +278,26 @@ export const useSwap = () => {
         })
       }
 
+      let assets: BlockchainToken[]
+      if (overriddenParams.account.coin === CoinType.Solana) {
+        const tokenAccounts = await discoverTokens(
+          overriddenParams.account.address,
+          overriddenParams.account.coin,
+          overriddenParams.network.chainId
+        )
+
+        assets = networkAssets.filter(
+          asset =>
+            asset.contractAddress === '' ||
+            tokenAccounts.some(each => each.toLowerCase() === asset.contractAddress.toLowerCase())
+        )
+      } else {
+        assets = networkAssets
+      }
+
       const chunkSize = 10
-      for (let i = 0; i < networkAssets.length; i += chunkSize) {
-        const chunk = networkAssets.slice(i, i + chunkSize)
+      for (let i = 0; i < assets.length; i += chunkSize) {
+        const chunk = assets.slice(i, i + chunkSize)
         await drainChunk(chunk)
       }
     },
@@ -287,6 +305,7 @@ export const useSwap = () => {
       getTokenPrice,
       getBalance,
       getTokenBalance,
+      discoverTokens,
       dispatch,
       getNetworkAssetsList,
       walletAccounts,

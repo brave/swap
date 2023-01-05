@@ -39,6 +39,7 @@ const App = (props: AppProps) => {
     switchNetwork,
     getBalance,
     getTokenBalance,
+    discoverTokens,
     getLocale,
     getTokenPrice,
     getNetworkFeeEstimate,
@@ -66,6 +67,7 @@ const App = (props: AppProps) => {
         switchNetwork={switchNetwork}
         getBalance={getBalance}
         getTokenBalance={getTokenBalance}
+        discoverTokens={discoverTokens}
         getLocale={getLocale}
         getTokenPrice={getTokenPrice}
         getNetworkFeeEstimate={getNetworkFeeEstimate}

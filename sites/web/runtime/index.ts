@@ -50,7 +50,7 @@ async function getEthProvider () {
 }
 
 async function getSolProvider () {
-  return new web3.Connection(`${window.location.href}api/rpc/solana`, 'confirmed')
+  return new web3.Connection(`${window.location.href}api/solana/rpc`, 'confirmed')
 }
 
 export const getBalance = async (address: string, coin: number, chainId: string) => {
@@ -115,13 +115,19 @@ export const getTokenBalance = async (
     const mintAccount = new web3.PublicKey(contract)
     const account = new web3.PublicKey(address)
 
-    try {
-      const tokenAccount = await provider.getTokenAccountsByOwner(account, { mint: mintAccount })
-      if (tokenAccount.value.length === 0) {
-        return '0'
-      }
+    const tokenAccount = web3.PublicKey.findProgramAddressSync(
+      [
+        account.toBuffer(),
+        new web3.PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA').toBuffer(), // SPL Token ProgramId
+        mintAccount.toBuffer()
+      ],
+      new web3.PublicKey(
+        'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL' // SPL ATA ProgramId
+      )
+    )[0]
 
-      const balanceResponse = await provider.getTokenAccountBalance(tokenAccount.value[0].pubkey)
+    try {
+      const balanceResponse = await provider.getTokenAccountBalance(tokenAccount)
       return balanceResponse.value.amount
     } catch (e) {
       return '0'
@@ -129,6 +135,15 @@ export const getTokenBalance = async (
   }
 
   throw new Error(`Coin type ${coin} is not supported`)
+}
+
+export const discoverTokens = async (address: string, coin: number, chainId: string) => {
+  if (coin === solana.coin) {
+    const response = await axios.get(`${window.location.href}api/solana/${address}/discover`)
+    return response.data as string[]
+  }
+
+  throw new Error('not implemented')
 }
 
 function getTokenParam (token: BlockchainToken) {

@@ -35,6 +35,7 @@ interface SwapContextInterface {
     coin: number,
     chainId: string
   ) => Promise<string>
+  discoverTokens: (address: string, coin: number, chainId: string) => Promise<string[]>
   assetsList: BlockchainToken[]
   account?: WalletAccount
   network: NetworkInfo
@@ -104,6 +105,7 @@ const SwapProvider = (props: SwapProviderInterface) => {
     getLocale,
     getBalance,
     getTokenBalance,
+    discoverTokens,
     getTokenPrice,
     getNetworkFeeEstimate,
     routeBackToWallet,
@@ -131,6 +133,7 @@ const SwapProvider = (props: SwapProviderInterface) => {
         getLocale,
         getBalance,
         getTokenBalance,
+        discoverTokens,
         getTokenPrice,
         getNetworkFeeEstimate,
         routeBackToWallet,
