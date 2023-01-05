@@ -1,9 +1,24 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import * as web3 from '@solana/web3.js'
 
 interface TypedNextApiRequest extends NextApiRequest {
   query: {
     address: string
+  }
+}
+
+interface GetTokenAccountsByOwnerResponse {
+  result: {
+    value: {
+      account: {
+        data: {
+          parsed: {
+            info: {
+              mint: string
+            }
+          }
+        }
+      }
+    }[]
   }
 }
 
@@ -33,7 +48,7 @@ export default async function handler (req: TypedNextApiRequest, res: NextApiRes
     body: JSON.stringify(payload)
   })
 
-  const tokenMintsResponse = await response.json()
+  const tokenMintsResponse: GetTokenAccountsByOwnerResponse = await response.json()
   const tokenMints = tokenMintsResponse.result.value.map(e => e.account.data.parsed.info.mint)
   res.status(200).json(tokenMints)
 }
