@@ -126,7 +126,3 @@ export const solWalletAdapter = {
     await delay(2000)
   }
 }
-
-export const routeBackToWallet = () => {
-  alert('Will Route back to brave://wallet')
-}
