@@ -61,7 +61,6 @@ interface SwapContextInterface {
   exchanges: Exchange[]
   getNetworkFeeEstimate: (chainId: string) => Promise<GasEstimate>
   defaultBaseCurrency: string
-  routeBackToWallet?: () => void
   ethWalletAdapter: {
     getGasPrice: (chainId: string) => Promise<string>
     getGasPrice1559: (chainId: string) => Promise<GasPrice1559>
@@ -108,7 +107,6 @@ const SwapProvider = (props: SwapProviderInterface) => {
     discoverTokens,
     getTokenPrice,
     getNetworkFeeEstimate,
-    routeBackToWallet,
     ethWalletAdapter,
     solWalletAdapter,
     swapService
@@ -136,7 +134,6 @@ const SwapProvider = (props: SwapProviderInterface) => {
         discoverTokens,
         getTokenPrice,
         getNetworkFeeEstimate,
-        routeBackToWallet,
         ethWalletAdapter,
         solWalletAdapter,
         swapService

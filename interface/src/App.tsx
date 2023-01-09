@@ -43,7 +43,6 @@ const App = (props: AppProps) => {
     getLocale,
     getTokenPrice,
     getNetworkFeeEstimate,
-    routeBackToWallet,
     ethWalletAdapter,
     solWalletAdapter,
     swapService
@@ -71,7 +70,6 @@ const App = (props: AppProps) => {
         getLocale={getLocale}
         getTokenPrice={getTokenPrice}
         getNetworkFeeEstimate={getNetworkFeeEstimate}
-        routeBackToWallet={routeBackToWallet}
         ethWalletAdapter={ethWalletAdapter}
         solWalletAdapter={solWalletAdapter}
         swapService={swapService}
