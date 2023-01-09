@@ -12,7 +12,6 @@ import {
   getTokenBalance,
   getNetworkFeeEstimate,
   getTokenPrice,
-  routeBackToWallet,
   solWalletAdapter,
   swapService
 } from '../mock-data/mock-apis'
@@ -63,7 +62,6 @@ function SwapContainer() {
       getTokenBalance={getTokenBalance}
       getTokenPrice={getTokenPrice}
       getNetworkFeeEstimate={getNetworkFeeEstimate}
-      routeBackToWallet={routeBackToWallet}
       ethWalletAdapter={ethWalletAdapter}
       solWalletAdapter={solWalletAdapter}
       swapService={swapService}

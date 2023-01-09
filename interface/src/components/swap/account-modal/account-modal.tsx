@@ -44,7 +44,7 @@ export const AccountModal = (props: Props) => {
   const { onHideModal, refreshBlockchainState } = props
 
   // Context
-  const { getLocale, routeBackToWallet, walletAccounts, network, switchAccount, disconnectWallet } =
+  const { getLocale, walletAccounts, network, switchAccount, disconnectWallet } =
     useSwapContext()
 
   // Memos
@@ -137,15 +137,6 @@ export const AccountModal = (props: Props) => {
             onClick={onDisconnect}
           />
         )}
-
-        {routeBackToWallet && (
-          <AccountModalButton
-            text={getLocale('braveSwapWallet')}
-            icon={DisconnectIcon} // FIXME - change icon
-            onClick={routeBackToWallet}
-          />
-        )}
-
         <AccountModalButton
           text={getLocale('braveSwapHelpCenter')}
           icon={HelpIcon}
