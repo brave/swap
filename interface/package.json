@@ -43,11 +43,11 @@
   "scripts": {
     "dev": "tsc && vite build -w",
     "build": "tsc && vite build",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "prepare": "npm install vite typescript"
   },
   "dependencies": {
     "@brave/leo": "github:brave/leo",
-    "react-virtualized-auto-sizer": "^1.0.7",
     "@types/react-window": "^1.8.5",
     "@types/styled-components": "^5.1.26",
     "@vitejs/plugin-react": "2.1.0",
@@ -56,10 +56,11 @@
     "ethereum-blockies": "github:brave/blockies",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-virtualized-auto-sizer": "^1.0.7",
     "react-window": "^1.8.8",
     "styled-components": "^5.3.6",
-    "typescript": "4.9.4",
-    "vite": "^3.0.0",
+    "typescript": "^4.9.4",
+    "vite": "^3.2.5",
     "vite-plugin-dts": "1.6.6"
   },
   "devDependencies": {
