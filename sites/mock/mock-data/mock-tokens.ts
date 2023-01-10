@@ -170,3 +170,11 @@ const mockSolanaTokens: BlockchainToken[] = [
 ]
 
 export const mockTokens = [...mockEthereumTokens, ...mockSolanaTokens]
+
+export const discoverTokens = async (address: string, coin: number, chainId: string) => {
+  if (coin === CoinType.Solana) {
+    return mockSolanaTokens.map(e => e.contractAddress)
+  }
+
+  throw new Error(`Unsupported chainId: ${chainId}`)
+}

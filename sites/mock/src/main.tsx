@@ -15,7 +15,7 @@ import {
   solWalletAdapter,
   swapService
 } from '../mock-data/mock-apis'
-import { mockTokens } from '../mock-data/mock-tokens'
+import { mockTokens, discoverTokens } from '../mock-data/mock-tokens'
 import { mockEthereumNetwork, mockNetworks } from '../mock-data/mock-networks'
 import { mockAccount1, mockAccounts } from '../mock-data/mock-accounts'
 import { mockExchanges } from '../mock-data/mock-exchanges'
@@ -27,12 +27,11 @@ ReactDOM.render(
   document.getElementById('root') as HTMLElement
 )
 
-function SwapContainer() {
+function SwapContainer () {
   const [account, setAccount] = React.useState<WalletAccount>(mockAccount1)
   const [network, setNetwork] = React.useState<NetworkInfo>(mockEthereumNetwork)
   const [isReady, setIsReady] = React.useState<boolean>(false)
-  const [isWalletConnected, setIsWalletConnected] =
-    React.useState<boolean>(false)
+  const [isWalletConnected, setIsWalletConnected] = React.useState<boolean>(false)
 
   React.useEffect(() => {
     setTimeout(() => setIsReady(true), 2000)
@@ -61,6 +60,7 @@ function SwapContainer() {
       getBalance={getBalance}
       getTokenBalance={getTokenBalance}
       getTokenPrice={getTokenPrice}
+      discoverTokens={discoverTokens}
       getNetworkFeeEstimate={getNetworkFeeEstimate}
       ethWalletAdapter={ethWalletAdapter}
       solWalletAdapter={solWalletAdapter}
