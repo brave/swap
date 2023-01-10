@@ -3,7 +3,7 @@ import React, { FC, ReactNode } from 'react'
 import { configureChains, createClient, WagmiConfig } from 'wagmi'
 import { mainnet, optimism, polygon, bsc, avalanche, fantom, Chain } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
-import {getDefaultWallets, RainbowKitProvider, darkTheme, lightTheme} from '@rainbow-me/rainbowkit'
+import {getDefaultWallets, RainbowKitProvider, darkTheme, lightTheme, cssStringFromTheme} from '@rainbow-me/rainbowkit'
 
 const celo: Chain = {
   id: 42220,
@@ -46,10 +46,29 @@ const wagmiClient = createClient({
 const Context: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider chains={chains} modalSize='compact' theme={{
-        lightMode: lightTheme(),
-        darkMode: darkTheme()
-      }}>{children}</RainbowKitProvider>
+      <RainbowKitProvider chains={chains} modalSize='compact' theme={null}>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            :root {
+              ${cssStringFromTheme(lightTheme)}
+            }
+            @media (prefers-color-scheme: dark) {
+              :root {
+                ${cssStringFromTheme(darkTheme)}
+              }
+            }
+            html[data-theme='light'] {
+              ${cssStringFromTheme(lightTheme)}
+            }
+            html[data-theme='dark'] {
+              ${cssStringFromTheme(darkTheme)}
+            }
+          `
+        }}
+      />
+        {children}
+        </RainbowKitProvider>
     </WagmiConfig>
   )
 }

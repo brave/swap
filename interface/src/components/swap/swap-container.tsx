@@ -79,7 +79,7 @@ const Wrapper = styled(StyledDiv)`
   right: 0;
   bottom: 0;
   overflow-y: scroll;
-  position: absolute;
+  position: fixed;
   background-color: ${p => p.theme.color.legacy.background01};
   @media (prefers-color-scheme: dark) {
     background-color: ${p => p.theme.color.legacy.background02};
