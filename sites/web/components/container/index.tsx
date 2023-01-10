@@ -161,7 +161,6 @@ export default function SwapContainer (props: StaticProps) {
       discoverTokens={discoverTokens}
       getTokenPrice={getTokenPrice}
       getNetworkFeeEstimate={async (chainId: string) => mockNetworkFeeEstimates[chainId]}
-      routeBackToWallet={() => {}}
       ethWalletAdapter={ethWalletAdapter}
       solWalletAdapter={makeSolWalletAdapter(solSendTransaction)}
       swapService={swapService}
