@@ -35,14 +35,14 @@ export const TokenListButton = (props: Props) => {
     <Button onClick={onSelectToken} disabled={disabled}>
       <Row>
         <CreateIconWithPlaceholder asset={token} size={40} marginRight={12} />
-        <Column horizontalAlign='flex-start'>
-          <Text isBold={true} textColor='text01' textSize='14px'>
+        <NameAndSymbol horizontalAlign='flex-start'>
+          <Text isBold={true} textColor='text01' textSize='14px' textAlign='left'>
             {token.name}
           </Text>
-          <Text textColor='text03' textSize='14px'>
+          <Text textColor='text03' textSize='14px' textAlign='left'>
             {token.symbol}
           </Text>
-        </Column>
+        </NameAndSymbol>
       </Row>
       {isWalletConnected && (
         <Text isBold={true} textColor='text01' textSize='14px'>
@@ -67,5 +67,13 @@ const Button = styled(StyledButton)`
   &:hover:not([disabled]) {
     box-shadow: var(--token-list-button-shadow);
     background-color: ${(p) => p.theme.color.legacy.background01};
+  }
+`
+
+const NameAndSymbol = styled(Column)`
+  @media screen and (max-width: 570px) {
+    width: 40vw;
+    overflow: hidden;
+    white-space: pre-line;
   }
 `

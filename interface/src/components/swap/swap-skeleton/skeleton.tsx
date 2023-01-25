@@ -26,15 +26,17 @@ export const Skeleton = (props: Props) => {
 
 const Wrapper = styled.div<Props>`
   display: block;
-  box-sizing: border-box;
+  box-sizing: content-box;
   width: ${(p) => (p.width ? `${p.width}px` : '100%')};
   height: ${(p) => (p.height ? `${p.height}px` : '100%')};
   border-radius: ${(p) => (p.borderRadius ? `${p.borderRadius}px` : 'none')};
   background-color: var(--token-or-network-button-background-hover-${(p) => p.background ? p.background : 'primary'});
+  position: sticky;
   overflow: hidden;
 `
 
 const SkeletonBox = styled.div<{ width?: number }>`
+  display: block;
   height: 100%;
   transform: translate(400%);
   --start-distance: ${(p) =>

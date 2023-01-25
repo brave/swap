@@ -8,6 +8,9 @@ import styled from 'styled-components'
 // Context
 import { useSwapContext } from '~/context/swap.context'
 
+// Assets
+import CloseIcon from '~/assets/close-icon.svg'
+
 // Hooks
 // import { useNetworkFees } from '~/hooks/useNetworkFees'
 
@@ -19,27 +22,29 @@ import { NetworkListButton } from '~/components/buttons'
 
 // Styled Components
 import {
-  // Text,
-  // Row,
+  Text,
+  Row,
   // VerticalDivider,
   VerticalSpacer,
-  StyledDiv
+  StyledDiv,
+  IconButton
 } from '~/components/shared.styles'
 
 interface Props {
   onSelectNetwork: (network: NetworkInfo) => Promise<void>
+  onClose?: () => void
   isHeader?: boolean
 }
 
 export const NetworkSelector = (props: Props) => {
-  const { onSelectNetwork, isHeader } = props
+  const { onSelectNetwork, onClose, isHeader } = props
 
   // Hooks
   // const { getNetworkFeeFiatEstimate } = useNetworkFees()
 
   // Context
   const {
-    // getLocale,
+    getLocale,
     supportedNetworks
   } = useSwapContext()
 
@@ -59,17 +64,29 @@ export const NetworkSelector = (props: Props) => {
       </Row>
       <VerticalSpacer size={8} />
       <VerticalDivider /> */}
+      <HeaderRow isHeader={isHeader} rowWidth='full' horizontalPadding={20} verticalPadding={12}>
+        <Text textSize='20px' textColor='text01' isBold={true}>
+          {getLocale('braveSwapChangeNetwork')}
+        </Text>
+        <IconButton icon={CloseIcon} onClick={onClose} size={20} />
+      </HeaderRow>
       <VerticalSpacer size={4} />
       {supportedNetworks.map(network => (
-        <NetworkListButton key={network.chainId} onClick={onSelectNetwork} network={network} />
+        <NetworkListButton
+          key={network.chainId}
+          onClick={onSelectNetwork}
+          network={network}
+          isHeader={isHeader}
+        />
       ))}
     </SelectorBox>
   )
 }
 
-const SelectorBox = styled(StyledDiv)<{
+const SelectorBox = styled(StyledDiv) <{
   isHeader?: boolean
 }>`
+  justify-content: flex-start;
   background-color: ${p => p.theme.color.legacy.background01};
   min-width: 222px;
   position: absolute;
@@ -81,5 +98,24 @@ const SelectorBox = styled(StyledDiv)<{
   border-radius: ${p => (p.isHeader ? 16 : 4)}px;
   @media screen and (max-width: 800px) {
     right: ${p => (p.isHeader ? '0px' : 'unset')};
+  }
+  @media screen and (max-width: 570px) {
+    position: ${p => (p.isHeader ? 'fixed' : 'absolute')};
+    right: ${p => (p.isHeader ? '0px' : '-20px')};
+    left: ${p => (p.isHeader ? '0px' : 'unset')};
+    top: ${p => (p.isHeader ? '72px' : '40px')};
+    bottom: ${p => (p.isHeader ? '0px' : 'unset')};
+    width: ${p => (p.isHeader ? 'auto' : '90vw')};
+    border-radius: ${p => (p.isHeader ? '16px 16px 0px 0px' : '4px')};
+  }
+`
+
+const HeaderRow = styled(Row) <{
+  isHeader?: boolean
+}>`
+  display: none;
+  padding-top: 24px;
+  @media screen and (max-width: 570px) {
+    display: ${p => (p.isHeader ? 'flex' : 'none')};
   }
 `

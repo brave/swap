@@ -62,13 +62,18 @@ const Button = styled(StyledButton)`
   }
 `
 
-const AccountCircle = styled(StyledDiv)<{ orb: string }>`
+const AccountCircle = styled(StyledDiv) <{ orb: string }>`
   width: 24px;
   height: 24px;
   border-radius: 100%;
   background-image: url(${(p) => p.orb});
   background-size: cover;
   margin-right: 8px;
+  @media screen and (max-width: 570px) {
+    width: 40px;
+    height: 40px;
+    margin-right: 16px;
+  }
 `
 
 const AccountText = styled(Text)`

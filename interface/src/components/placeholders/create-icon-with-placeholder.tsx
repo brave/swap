@@ -21,10 +21,11 @@ interface Props {
   network?: NetworkInfo
   size: number
   marginRight?: number
+  isHeader?: boolean
 }
 
 export const CreateIconWithPlaceholder = (props: Props) => {
-  const { size, marginRight, asset, network } = props
+  const { size, marginRight, asset, network, isHeader } = props
 
   const needsPlaceholder = React.useMemo(() => {
     if (asset !== undefined) {
@@ -86,10 +87,10 @@ export const CreateIconWithPlaceholder = (props: Props) => {
     )
   }
 
-  return <Icon size={size} src={logo} marginRight={marginRight} />
+  return <Icon isHeader={isHeader} size={size} src={logo} marginRight={marginRight} />
 }
 
-const IconWrapper = styled(StyledDiv)<{
+const IconWrapper = styled(StyledDiv) <{
   size: number
   panelBackground?: string
   marginRight?: number
@@ -109,8 +110,12 @@ const PlaceholderText = styled(Text)`
   color: ${(p) => p.theme.color.white};
 `
 
-const Icon = styled.img<{ size: number; marginRight?: number }>`
+const Icon = styled.img<{ size: number; marginRight?: number, isHeader?: boolean }>`
   height: ${(p) => p.size}px;
   width: ${(p) => p.size}px;
   margin-right: ${(p) => (p.marginRight ? p.marginRight : 0)}px;
+  @media screen and (max-width: 570px) {
+    height: ${(p) => p.isHeader ? 40 : p.size}px;
+    width: ${(p) => p.isHeader ? 40 : p.size}px;
+  }
 `

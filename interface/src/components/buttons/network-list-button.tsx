@@ -21,10 +21,11 @@ import { Text, Row, StyledButton } from '~/components/shared.styles'
 interface Props {
   onClick: (network: NetworkInfo) => void
   network: NetworkInfo
+  isHeader?: boolean
 }
 
 export const NetworkListButton = (props: Props) => {
-  const { network, onClick } = props
+  const { network, isHeader, onClick } = props
 
   // Hooks
   const { getNetworkFeeFiatEstimate } = useNetworkFees()
@@ -35,12 +36,13 @@ export const NetworkListButton = (props: Props) => {
   }, [network, onClick])
 
   return (
-    <Button onClick={onSelectNetwork}>
+    <Button onClick={onSelectNetwork} isHeader={isHeader}>
       <Row>
         <CreateIconWithPlaceholder
           size={24}
           marginRight={8}
           network={network}
+          isHeader={isHeader}
         />
         <Text isBold={true} textSize='14px'>
           {network.chainName}
@@ -51,7 +53,9 @@ export const NetworkListButton = (props: Props) => {
   )
 }
 
-const Button = styled(StyledButton)`
+const Button = styled(StyledButton) <{
+  isHeader?: boolean
+}>`
   justify-content: space-between;
   padding: 8px 12px;
   white-space: nowrap;
@@ -59,5 +63,8 @@ const Button = styled(StyledButton)`
   color: ${(p) => p.theme.color.legacy.text03};
   &:hover {
     color: ${(p) => p.theme.color.legacy.text01};
+  }
+  @media screen and (max-width: 570px) {
+    padding: ${p => (p.isHeader ? '8px 20px' : '8px 12px')};
   }
 `

@@ -9,6 +9,7 @@ import styled from 'styled-components'
 // Assets
 import DisconnectIcon from '~/assets/disconnect-icon.svg'
 import HelpIcon from '~/assets/info-icon.svg'
+import CloseIcon from '~/assets/close-icon.svg'
 
 // Hiding Portfolio Section until we support it.
 // import PortfolioIcon from '~/assets/portfolio-icon.svg'
@@ -30,7 +31,9 @@ import {
   Column,
   VerticalDivider,
   HorizontalSpacer,
-  StyledDiv
+  StyledDiv,
+  IconButton,
+  ShownResponsiveRow
 } from '~/components/shared.styles'
 
 interface Props {
@@ -101,11 +104,15 @@ export const AccountModal = (props: Props) => {
         horizontalAlign='flex-start'
         verticalAlign='flex-start'
       >
-        <Row rowWidth='full' horizontalAlign='flex-start' marginBottom={4}>
-          <HorizontalSpacer size={10} />
-          <Text textSize='12px' textColor='text02' isBold={false}>
-            {getLocale('braveSwapAccounts')}
-          </Text>
+        <Row verticalPaddingResponsive={8} horizontalPadding={10} rowWidth='full' marginBottom={4}>
+          <Row>
+            <Title textSize='12px' responsiveTextSize='16px' textColor='text02' isBold={false}>
+              {getLocale('braveSwapAccounts')}
+            </Title>
+          </Row>
+          <ShownResponsiveRow maxWidth={570}>
+            <IconButton icon={CloseIcon} onClick={onHideModal} size={20} />
+          </ShownResponsiveRow>
         </Row>
         {networkAccounts.map((account) => (
           <AccountListItemButton
@@ -158,4 +165,20 @@ const ModalBox = styled(StyledDiv)`
   right: 0px;
   border-radius: 16px;
   white-space: nowrap;
+  @media screen and (max-width: 570px) {
+    position: fixed;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+    top: unset;
+    width: auto;
+    height: auto;
+    border-radius: 16px 16px 0px 0px;
+  }
+`
+
+const Title = styled(Text)`
+  @media screen and (max-width: 570px) {
+    font-weight: 600;
+  }
 `

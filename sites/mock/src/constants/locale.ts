@@ -69,4 +69,5 @@ export const locale: Registry = {
   braveSwapJupiterDisclaimer: 'Brave Swap uses Jupiter as a DEX aggregator for Solana network. Jupiter will process the Solana wallet address and IP address to fulfill a transaction (including getting quotes). Jupiter will ONLY use this data for the purposes of processing transactions.',
   braveSwapZeroXPrivacy: 'Click here for 0x Privacy Policy.',
   braveSwapJupiterPrivacy: 'Click here for Jupiter Privacy Policy.',
+  braveSwapChangeNetwork: 'Change network'
 }

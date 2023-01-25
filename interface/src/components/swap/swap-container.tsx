@@ -83,6 +83,9 @@ const Wrapper = styled(StyledDiv)`
   background-color: ${p => p.theme.color.legacy.background01};
   @media (prefers-color-scheme: dark) {
     background-color: ${p => p.theme.color.legacy.background02};
+  @media screen and (max-width: 570px) {
+    padding: 80px 0px;
+  }
 }
 `
 
@@ -152,6 +155,9 @@ const Background = styled(StyledDiv) <{
   position: absolute;
   z-index: 8;
   background-image: var(--${p => p.network});
+  @media screen and (max-width: 570px) {
+    width: 100%;
+  }
 `
 
 const Container = styled(StyledDiv)`
@@ -166,7 +172,8 @@ const Container = styled(StyledDiv)`
   z-index: 9;
   margin-bottom: 10px;
   @media screen and (max-width: 570px) {
-    width: 90%;
+    width: 92%;
+    padding: 16px 8px;
   }
 `
 

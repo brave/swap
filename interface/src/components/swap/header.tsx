@@ -120,7 +120,9 @@ export const Header = (props: Props) => {
     <Wrapper>
       <BraveLogo />
       <Row>
-        <ThemeButton onClick={toggleTheme} />
+        <ThemeButtonWrapper>
+          <ThemeButton onClick={toggleTheme} />
+        </ThemeButtonWrapper>
         <SelectorWrapper ref={networkSelectorRef}>
           <SelectTokenOrNetworkButton
             onClick={() => setShowNetworkSelector(prev => !prev)}
@@ -134,7 +136,10 @@ export const Header = (props: Props) => {
             networkNotSupported={!isNetworkSupported}
           />
           {showNetworkSelector && (
-            <NetworkSelector isHeader={true} onSelectNetwork={onSelectNetwork} />
+            <NetworkSelector
+              isHeader={true}
+              onSelectNetwork={onSelectNetwork}
+              onClose={() => setShowNetworkSelector(false)} />
           )}
         </SelectorWrapper>
         <HorizontalSpacer size={15} />
@@ -164,6 +169,10 @@ const Wrapper = styled(StyledDiv)`
   box-sizing: border-box;
   position: fixed;
   z-index: 10;
+  @media screen and (max-width: 570px) {
+    padding: 20px 16px 0px 16px;
+    position: absolute;
+  }
 `
 
 const BraveLogo = styled(StyledDiv)`
@@ -176,4 +185,10 @@ const BraveLogo = styled(StyledDiv)`
 const SelectorWrapper = styled(StyledDiv)`
   display: flex;
   position: relative;
+`
+
+const ThemeButtonWrapper = styled(StyledDiv)`
+  @media screen and (max-width: 570px) {
+    display: none;
+  }
 `

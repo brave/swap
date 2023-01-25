@@ -23,7 +23,7 @@ import { StandardModal } from '~/components/modals'
 import { VirtualizedTokenList } from './virtualized-tokens-list'
 
 // Styled Components
-import { Column, Row, Text, VerticalDivider, IconButton } from '~/components/shared.styles'
+import { Column, Row, Text, VerticalDivider, IconButton, HiddenResponsiveRow } from '~/components/shared.styles'
 
 interface Props {
   onClose: () => void
@@ -109,7 +109,7 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
     return (
       <StandardModal ref={forwardedRef} modalHeight={hideTokensWithZeroBalances ? 'standard' : 'full'}>
         <Row rowWidth='full' horizontalPadding={24} verticalPadding={20}>
-          <Text textSize='18px' isBold={true}>
+          <Text textSize='18px' responsiveTextSize='20px' isBold={true}>
             {getLocale('braveSwapSelectAToken')}
           </Text>
           <IconButton icon={CloseIcon} onClick={onClose} size={20} />
@@ -122,7 +122,9 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
             refreshBlockchainState={refreshBlockchainState}
           />
         </Row>
+        <HiddenResponsiveRow maxWidth={570}>
         <VerticalDivider />
+        </HiddenResponsiveRow>
         <ScrollContainer
           columnWidth='full'
           verticalAlign='flex-start'
@@ -161,4 +163,7 @@ const Button = styled(StandardButton)`
 const ScrollContainer = styled(Column)`
   flex: 1;
   overflow: hidden;
+  @media screen and (max-width: 570px) {
+    padding: 0px;
+  }
 `
