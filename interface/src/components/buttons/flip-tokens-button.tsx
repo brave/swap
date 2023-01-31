@@ -41,6 +41,7 @@ const Button = styled(StyledButton)`
   position: absolute;
   width: 40px;
   z-index: 10;
+  padding: 0px;
   &:hover {
     --icon-color: var(--flip-tokens-button-icon-color-hover);
     background-color: var(--flip-tokens-button-background-hover);

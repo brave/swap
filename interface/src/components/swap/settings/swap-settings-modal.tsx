@@ -25,7 +25,7 @@ import { gasFeeOptions } from '~/options/gas-fee-options'
 import { ExpandSection } from './expand-section'
 import { GasPresetButton } from './gas-preset-button'
 import { StandardButton } from '~/components/buttons'
-import { StandardCheckbox } from '~/components/form-controls'
+import { StandardCheckbox, ThemeSwitch } from '~/components/form-controls'
 import { SlippageInput } from '~/components/inputs'
 
 // Styled Components
@@ -36,7 +36,9 @@ import {
   VerticalDivider,
   IconButton,
   VerticalSpacer,
-  StyledDiv
+  StyledDiv,
+  HiddenResponsiveRow,
+  ShownResponsiveRow
 } from '~/components/shared.styles'
 
 const slippagePresets = ['0.1', '0.5', '1.0']
@@ -49,6 +51,7 @@ interface Props {
   setUseDirectRoute: (value: boolean) => void
   setSlippageTolerance: (value: string) => void
   setSelectedGasFeeOption: (value: GasFeeOption) => void
+  onClose: () => void
 }
 
 export const SwapSettingsModal = (props: Props) => {
@@ -59,7 +62,8 @@ export const SwapSettingsModal = (props: Props) => {
     // setUseDirectRoute,
     slippageTolerance,
     // useDirectRoute,
-    gasEstimates
+    gasEstimates,
+    onClose
   } = props
 
   // Context
@@ -111,7 +115,16 @@ export const SwapSettingsModal = (props: Props) => {
         {showExchanges && (
           <IconButton icon={CloseIcon} onClick={() => setShowExchanges(false)} size={20} />
         )}
+        {!showExchanges &&
+          <ShownResponsiveRow maxWidth={570}>
+            <IconButton icon={CloseIcon} onClick={onClose} size={20} />
+          </ShownResponsiveRow>
+        }
       </Row>
+
+      <ShownResponsiveRow maxWidth={570}>
+        <VerticalSpacer size={18} />
+      </ShownResponsiveRow>
 
       {/* Exchanges List */}
       {showExchanges && (
@@ -159,7 +172,10 @@ export const SwapSettingsModal = (props: Props) => {
               <SlippageInput onChange={setSlippageTolerance} value={customSlippageInputValue} />
             </Row>
           </ExpandSection>
-          <VerticalDivider />
+
+          <HiddenResponsiveRow maxWidth={570}>
+            <VerticalDivider />
+          </HiddenResponsiveRow>
 
           {/* Ethereum Only Settings */}
           {network.coin === CoinType.Ethereum && (
@@ -208,6 +224,9 @@ export const SwapSettingsModal = (props: Props) => {
           )}
         </>
       )}
+      <ShownResponsiveRow maxWidth={570}>
+        <ThemeSwitch />
+      </ShownResponsiveRow>
     </Modal>
   )
 }
@@ -228,6 +247,16 @@ const Modal = styled(StyledDiv)`
   z-index: 20;
   right: -16px;
   top: 28px;
+  @media screen and (max-width: 570px) {
+    position: fixed;
+    right: 0px;
+    left: 0px;
+    top: 72px;
+    bottom: 0px;
+    width: auto;
+    border: none;
+    border-radius: 16px 16px 0px 0px;
+  }
 `
 
 const ExchangesColumn = styled(StyledDiv)`

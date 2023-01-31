@@ -154,6 +154,7 @@ export const Swap = () => {
                 setSlippageTolerance={setSlippageTolerance}
                 setUseDirectRoute={setUseDirectRoute}
                 gasEstimates={gasEstimates}
+                onClose={() => setShowSwapSettings(false)}
               />
             )}
           </SettingsWrapper>

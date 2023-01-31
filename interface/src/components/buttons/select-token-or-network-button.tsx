@@ -146,11 +146,17 @@ export const SelectTokenOrNetworkButton = (props: Props) => {
   )
 }
 
-const Button = styled(StyledButton)<SelectTokenButtonStyleProps>`
+const Button = styled(StyledButton) <SelectTokenButtonStyleProps>`
   /* Variables */
   --big-padding: 10px ${(p) => (p.moreRightPadding ? 12 : 10)}px 10px 12px;
   --medium-padding: 8px 16px;
   --small-padding: 4px 12px 4px 4px;
+
+  @media screen and (max-width: 570px) {
+    --big-padding: 10px ${(p) => (p.moreRightPadding ? 10 : 8)}px 10px 8px;
+    --medium-padding: 4px 16px 4px 8px;
+    --small-padding: 4px 16px 4px 8px;
+  }
 
   /* Styles */
   background-color: ${(p) =>
@@ -168,8 +174,8 @@ const Button = styled(StyledButton)<SelectTokenButtonStyleProps>`
     p.buttonSize === 'small'
       ? 'var(--small-padding)'
       : p.buttonSize === 'medium'
-      ? 'var(--medium-padding)'
-      : 'var(--big-padding)'};
+        ? 'var(--medium-padding)'
+        : 'var(--big-padding)'};
   white-space: nowrap;
   width: ${(p) => (p.buttonSize === 'small' ? '140px' : 'unset')};
   :disabled {
@@ -177,15 +183,15 @@ const Button = styled(StyledButton)<SelectTokenButtonStyleProps>`
   }
   &:hover:not([disabled]) {
     background-color: ${(p) =>
-      p.networkNotSupported
-        ? p.theme.color.red40
-        : p.buttonType === 'secondary' || p.buttonSize === 'small'
+    p.networkNotSupported
+      ? p.theme.color.red40
+      : p.buttonType === 'secondary' || p.buttonSize === 'small'
         ? 'var(--token-or-network-button-background-hover-secondary)'
         : 'var(--token-or-network-button-background-hover-primary)'};
   }
 `
 
-const ButtonIcon = styled(Icon)<{ networkNotSupported?: boolean }>`
+const ButtonIcon = styled(Icon) <{ networkNotSupported?: boolean }>`
   background-color: ${(p) =>
     p.networkNotSupported ? p.theme.color.white : p.theme.color.legacy.text01};
 `

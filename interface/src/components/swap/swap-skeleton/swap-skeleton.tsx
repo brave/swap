@@ -18,7 +18,9 @@ import {
   Row,
   HorizontalDivider,
   HorizontalSpacer,
-  Text
+  Text,
+  HiddenResponsiveRow,
+  ShownResponsiveRow
 } from '~/components/shared.styles'
 
 export const SwapSkeleton = () => {
@@ -30,11 +32,18 @@ export const SwapSkeleton = () => {
       <Header>
         <BraveLogo />
         <Row>
-          <Skeleton width={40} height={40} borderRadius={100} />
-          <HorizontalSpacer size={16} />
-          <Skeleton width={154} height={40} borderRadius={48} />
-          <HorizontalSpacer size={16} />
-          <Skeleton width={154} height={40} borderRadius={48} />
+          <HiddenResponsiveRow maxWidth={570}>
+            <Skeleton width={40} height={40} borderRadius={100} />
+            <HorizontalSpacer size={16} />
+            <Skeleton width={154} height={40} borderRadius={48} />
+            <HorizontalSpacer size={16} />
+            <Skeleton width={154} height={40} borderRadius={48} />
+          </HiddenResponsiveRow>
+          <ShownResponsiveRow>
+            <Skeleton width={68} height={32} borderRadius={100} />
+            <HorizontalSpacer size={16} />
+            <Skeleton width={135} height={32} borderRadius={48} />
+          </ShownResponsiveRow>
         </Row>
       </Header>
       <Container>
@@ -51,7 +60,9 @@ export const SwapSkeleton = () => {
             <Row>
               <Skeleton width={124} height={60} borderRadius={100} />
               <HorizontalDivider height={28} marginLeft={8} marginRight={8} />
-              <Skeleton width={46} height={24} borderRadius={4} />
+              <HiddenResponsiveRow maxWidth={570}>
+                <Skeleton width={46} height={24} borderRadius={4} />
+              </HiddenResponsiveRow>
               <HorizontalSpacer size={8} />
               <Skeleton width={46} height={24} borderRadius={4} />
             </Row>
@@ -60,7 +71,7 @@ export const SwapSkeleton = () => {
         </SwapSectionBox>
         <FlipWrapper>
           <FlipBox>
-            <Skeleton width={40} height={40} borderRadius={100} background='secondary'/>
+            <Skeleton width={40} height={40} borderRadius={100} background='secondary' />
           </FlipBox>
         </FlipWrapper>
         <SwapSectionBox boxType='secondary'>
@@ -92,6 +103,7 @@ const Wrapper = styled(StyledDiv)`
   background-color: ${(p) => p.theme.color.legacy.background01};
   @media (prefers-color-scheme: dark) {
     background-color: ${(p) => p.theme.color.legacy.background02};
+    padding: 80px 0px;
   }
 `
 
@@ -106,7 +118,8 @@ const Container = styled(StyledDiv)`
   position: relative;
   z-index: 9;
   @media screen and (max-width: 570px) {
-    width: 90%;
+    width: 92%;
+    padding: 16px 8px;
   }
 `
 
@@ -122,6 +135,9 @@ const Header = styled(StyledDiv)`
   box-sizing: border-box;
   position: fixed;
   z-index: 10;
+  @media screen and (max-width: 570px) {
+    padding: 21px 16px 0px 16px;
+  }
 `
 
 const BraveLogo = styled(StyledDiv)`

@@ -66,6 +66,13 @@ const Modal = styled(StyledDiv)<{
   width: 440px;
   z-index: 20;
   @media screen and (max-width: 570px) {
-    width: 90%;
+    position: fixed;
+    right: 0px;
+    left: 0px;
+    top: 72px;
+    bottom: 0px;
+    width: auto;
+    height: auto;
+    border-radius: 16px 16px 0px 0px;
   }
 `

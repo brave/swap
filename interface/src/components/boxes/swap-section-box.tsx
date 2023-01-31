@@ -23,7 +23,7 @@ export const SwapSectionBox = (props: Props) => {
   return <Wrapper boxType={boxType}>{children}</Wrapper>
 }
 
-const Wrapper = styled(StyledDiv)<BoxStyleProps>`
+const Wrapper = styled(StyledDiv) <BoxStyleProps>`
   background-color: ${(p) =>
     p.boxType === 'primary'
       ? 'var(--box-background-primary)'
@@ -34,9 +34,12 @@ const Wrapper = styled(StyledDiv)<BoxStyleProps>`
     p.boxType === 'secondary'
       ? `1px solid ${p.theme.color.legacy.divider01}`
       : 'none'};
-  height: ${(p) => (p.boxType === 'primary' ? '114px' : 'unset')};
+  height: ${(p) => (p.boxType === 'primary' ? '122px' : 'unset')};
   min-height: ${(p) => (p.boxType === 'secondary' ? '88px' : '114px')};
-  padding: 14px 24px 14px 12px;
+  padding: 14px 16px 14px 8px;
   width: 100%;
   position: relative;
+  @media screen and (max-width: 570px) {
+    min-height: ${(p) => (p.boxType === 'secondary' ? '114px' : '122px')};
+  }
 `

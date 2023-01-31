@@ -21,7 +21,7 @@ import { SearchInput } from '~/components/inputs'
 import { NetworkSelector } from './network-selector'
 
 // Styled Components
-import { HorizontalDivider, StyledDiv } from '~/components/shared.styles'
+import { HorizontalDivider, StyledDiv, HiddenResponsiveRow } from '~/components/shared.styles'
 
 interface Props {
   onSearchChanged: (value: string) => void
@@ -52,10 +52,11 @@ export const SearchWithNetworkSelector = (props: Props) => {
     <Wrapper>
       <SearchInput
         placeholder={getLocale('braveSwapSearchToken')}
-        autoFocus={true}
+        autoFocus={false}
         onChange={onSearchChanged}
         value={searchValue}
       />
+      <HiddenResponsiveRow maxWidth={570}>
       <HorizontalDivider marginRight={8} height={24} />
       <SelectorWrapper>
         <SelectTokenOrNetworkButton
@@ -67,6 +68,7 @@ export const SearchWithNetworkSelector = (props: Props) => {
         />
         {showNetworkSelector && <NetworkSelector onSelectNetwork={onSelectNetwork} />}
       </SelectorWrapper>
+      </HiddenResponsiveRow>
     </Wrapper>
   )
 }
@@ -80,6 +82,7 @@ const Wrapper = styled(StyledDiv)`
   justify-content: center;
   padding: 4px 8px 4px 12px;
   width: 100%;
+  min-height: 40px;
 `
 
 const SelectorWrapper = styled(StyledDiv)`

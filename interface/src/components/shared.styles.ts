@@ -7,6 +7,7 @@ import styled from 'styled-components'
 
 export const Text = styled.span<{
   textSize?: '20px' | '18px' | '16px' | '14px' | '12px'
+  responsiveTextSize?: '20px' | '18px' | '16px' | '14px' | '12px'
   isBold?: boolean
   textColor?: 'text01' | 'text02' | 'text03' | 'error' | 'success' | 'warning'
   maintainHeight?: boolean
@@ -27,6 +28,9 @@ export const Text = styled.span<{
   line-height: ${(p) => (p.textSize === '12px' ? '18px' : '20px')};
   letter-spacing: 0.02em;
   text-align: ${(p) => (p.textAlign ? p.textAlign : 'center')};
+  @media screen and (max-width: 570px) {
+    font-size: ${(p) => (p.responsiveTextSize ? p.responsiveTextSize : p.textSize ? p.textSize : '18px')};
+  }
 `
 
 export const StyledDiv = styled.div`
@@ -42,17 +46,21 @@ export const StyledDiv = styled.div`
   letter-spacing: 0.02em;
 `
 
-export const Row = styled(StyledDiv)<{
+export const Row = styled(StyledDiv) <{
   rowWidth?: 'dynamic' | 'full'
   rowHeight?: 'dynamic' | 'full'
   marginBottom?: number
   horizontalPadding?: number
   verticalPadding?: number
+  verticalPaddingResponsive?: number
   horizontalAlign?: 'flex-start' | 'center' | 'flex-end'
   verticalAlign?: 'flex-start' | 'center' | 'flex-end'
 }>`
   --vertical-padding: ${(p) => p.verticalPadding ?? 0}px;
   --horizontal-padding: ${(p) => p.horizontalPadding ?? 0}px;
+  @media screen and (max-width: 570px) {
+    --vertical-padding: ${(p) => p.verticalPaddingResponsive ?? p.verticalPadding ?? 0}px;
+  }
   box-sizing: border-box;
   flex-direction: row;
   align-items: ${(p) => p.verticalAlign ?? 'center'};
@@ -63,7 +71,7 @@ export const Row = styled(StyledDiv)<{
   height: ${(p) => (p.rowHeight === 'full' ? '100%' : 'unset')};
 `
 
-export const Column = styled(StyledDiv)<{
+export const Column = styled(StyledDiv) <{
   columnWidth?: 'dynamic' | 'full'
   columnHeight?: 'dynamic' | 'full'
   horizontalAlign?: 'flex-start' | 'center' | 'flex-end'
@@ -83,23 +91,24 @@ export const Column = styled(StyledDiv)<{
   width: ${(p) => (p.columnWidth === 'full' ? '100%' : 'unset')};
 `
 
-export const HorizontalSpacer = styled(StyledDiv)<{
+export const HorizontalSpacer = styled(StyledDiv) <{
   size: number
 }>`
   height: 100%;
   width: ${(p) => p.size}px;
 `
 
-export const VerticalSpacer = styled(StyledDiv)<{
+export const VerticalSpacer = styled(StyledDiv) <{
   size: number
 }>`
   height: ${(p) => p.size}px;
   width: 100%;
 `
 
-export const HorizontalDivider = styled(StyledDiv)<{
+export const HorizontalDivider = styled(StyledDiv) <{
   height?: number
   marginLeft?: number
+  marginLeftResponsive?: number
   marginRight?: number
 }>`
   background-color: ${(p) => p.theme.color.legacy.divider01};
@@ -107,9 +116,12 @@ export const HorizontalDivider = styled(StyledDiv)<{
   margin-left: ${(p) => p.marginLeft ?? 0}px;
   margin-right: ${(p) => p.marginRight ?? 0}px;
   width: 2px;
+  @media screen and (max-width: 570px) {
+    margin-left: ${(p) => p.marginLeftResponsive ?? p.marginLeft ?? 0}px;
+  }
 `
 
-export const VerticalDivider = styled(StyledDiv)<{
+export const VerticalDivider = styled(StyledDiv) <{
   width?: number
   marginTop?: number
   marginBottom?: number
@@ -121,15 +133,18 @@ export const VerticalDivider = styled(StyledDiv)<{
   width: ${(p) => (p.width ? `${p.width}px` : '100%')};
 `
 
-export const Icon = styled(StyledDiv)<{
+export const Icon = styled.div <{
   size: number
   icon: string
 }>`
-  -webkit-mask-image: url(${(p) => p.icon});
   height: ${(p) => p.size}px;
+  width: ${(p) => p.size}px;
   mask-image: url(${(p) => p.icon});
   mask-size: contain;
-  width: ${(p) => p.size}px;
+  mask-repeat: no-repeat;
+  -webkit-mask-image: url(${(p) => p.icon});
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
 `
 
 export const Loader = styled(StyledDiv)`
@@ -170,22 +185,33 @@ export const StyledButton = styled.button`
   }
 `
 
-export const IconButton = styled(StyledButton)<{
+export const IconButton = styled(StyledButton) <{
   size?: number
   icon: string
 }>`
+  padding: 0px;
   background-color: ${(p) => p.theme.color.legacy.text02};
   height: ${(p) => (p.size ? p.size : 16)}px;
+  width: ${(p) => (p.size ? p.size : 16)}px;
   mask-image: url(${(p) => p.icon});
   mask-size: contain;
-  width: ${(p) => (p.size ? p.size : 16)}px;
+  mask-repeat: no-repeat;
   -webkit-mask-image: url(${(p) => p.icon});
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
 `
 
-export const HiddenResponsiveRow = styled(Row)<{ dontHide?: boolean }>`
+export const HiddenResponsiveRow = styled(Row) <{ dontHide?: boolean, maxWidth?: number }>`
   display: flex;
-  @media screen and (max-width: 800px) {
+  @media screen and (max-width: ${(p) => p.maxWidth ? p.maxWidth : 800}px) {
     display: ${(p) => (p.dontHide ? 'flex' : 'none')};
+  }
+`
+
+export const ShownResponsiveRow = styled(Row) <{ maxWidth?: number }>`
+  display: none;
+  @media screen and (max-width: ${(p) => p.maxWidth ? p.maxWidth : 800}px) {
+    display: flex;
   }
 `
 

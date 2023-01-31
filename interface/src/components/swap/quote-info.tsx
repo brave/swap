@@ -22,6 +22,7 @@ import Amount from '~/utils/amount'
 // Assets
 import HorizontalArrowsIcon from '~/assets/horizontal-arrows-icon.svg'
 import FuelTankIcon from '~/assets/fuel-tank-icon.svg'
+import CaratDownIcon from '~/assets/carat-down-icon.svg'
 
 // Styled Components
 import {
@@ -31,7 +32,8 @@ import {
   VerticalSpacer,
   HorizontalSpacer,
   Icon,
-  StyledDiv
+  StyledDiv,
+  IconButton
 } from '~/components/shared.styles'
 
 interface Props {
@@ -47,6 +49,9 @@ export const QuoteInfo = (props: Props) => {
   // Context
   const { getLocale } = useSwapContext()
 
+  // State
+  const [showProviders, setShowProviders] = React.useState<boolean>(false)
+
   // Wallet State
   const { state } = useWalletState()
   const { spotPrices } = state
@@ -57,9 +62,8 @@ export const QuoteInfo = (props: Props) => {
       return ''
     }
 
-    return `1 ${selectedQuoteOption.fromToken.symbol} ≈ ${selectedQuoteOption.rate.format(6)} ${
-      selectedQuoteOption.toToken.symbol
-    }`
+    return `1 ${selectedQuoteOption.fromToken.symbol} ≈ ${selectedQuoteOption.rate.format(6)} ${selectedQuoteOption.toToken.symbol
+      }`
   }, [selectedQuoteOption])
 
   const coinGeckoDelta: Amount = React.useMemo(() => {
@@ -180,29 +184,45 @@ export const QuoteInfo = (props: Props) => {
         </Row>
       )}
       {selectedQuoteOption && selectedQuoteOption.sources.length > 0 && (
-        <Row rowWidth='full' marginBottom={8} horizontalPadding={16}>
-          <Text textSize='14px' textAlign='left'>
-            {getLocale('braveSwapLiquidityProvider')}
-          </Text>
-          <Row>
-            {selectedQuoteOption.sources.map((source, idx) => (
-              <div key={idx}>
-                <Bubble>
-                  <Text textSize='14px'>{source.name.split('_').join(' ')}</Text>
-                  {LPMetadata[source.name] ? (
-                    <LPIcon icon={LPMetadata[source.name]} size={16} />
-                  ) : null}
-                </Bubble>
-
-                {idx !== selectedQuoteOption.sources.length - 1 && (
-                  <LPSeparator textSize='14px'>
-                    {selectedQuoteOption.routing === 'split' ? '+' : '×'}
-                  </LPSeparator>
-                )}
-              </div>
-            ))}
+        <Column columnWidth='full' marginBottom={8} horizontalPadding={16}>
+          <Row rowWidth='full' marginBottom={8}>
+            <Text textSize='14px' textAlign='left'>
+              {getLocale('braveSwapLiquidityProvider')}
+            </Text>
+            <Row>
+              <Text textSize='14px'>
+                {selectedQuoteOption.sources.length}
+              </Text>
+              <HorizontalSpacer size={8} />
+              <ExpandButton
+                size={10}
+                icon={CaratDownIcon}
+                isExpanded={showProviders}
+                onClick={() => setShowProviders(prev => !prev)}
+              />
+            </Row>
           </Row>
-        </Row>
+          {showProviders &&
+            <Row rowWidth='full' horizontalAlign='flex-start' verticalPadding={6}>
+              {selectedQuoteOption.sources.map((source, idx) => (
+                <Row key={idx}>
+                  <Bubble>
+                    <Text textSize='12px'>{source.name.split('_').join(' ')}</Text>
+                    {LPMetadata[source.name] ? (
+                      <LPIcon icon={LPMetadata[source.name]} size={12} />
+                    ) : null}
+                  </Bubble>
+
+                  {idx !== selectedQuoteOption.sources.length - 1 && (
+                    <LPSeparator textSize='14px'>
+                      {selectedQuoteOption.routing === 'split' ? '+' : '×'}
+                    </LPSeparator>
+                  )}
+                </Row>
+              ))}
+            </Row>
+          }
+        </Column>
       )}
       {selectedQuoteOption && (
         <Row rowWidth='full' marginBottom={8} horizontalPadding={16}>
@@ -254,7 +274,7 @@ const Bubble = styled(Row)`
   background-color: var(--token-or-network-bubble-background);
 `
 
-const LPIcon = styled(StyledDiv)<{ icon: string; size: number }>`
+const LPIcon = styled(StyledDiv) <{ icon: string; size: number }>`
   background-image: url(${p => p.icon});
   background-size: cover;
   background-position: center;
@@ -275,4 +295,11 @@ const BraveFeeContainer = styled(Row)`
 
 const BraveFeeDiscounted = styled(Text)`
   text-decoration: line-through;
+`
+
+const ExpandButton = styled(IconButton) <{
+  isExpanded: boolean
+}>`
+  transform: ${(p) => p.isExpanded ? 'rotate(180deg)' : 'unset'};
+  transition: transform 300ms ease;
 `

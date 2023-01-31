@@ -18,7 +18,7 @@ import { SelectTokenOrNetworkButton, PresetButton } from '~/components/buttons'
 import { SwapInput } from '~/components/inputs'
 
 // Styled Components
-import { Row, Column, HorizontalDivider, Text } from '~/components/shared.styles'
+import { Row, Column, HorizontalDivider, Text, HiddenResponsiveRow } from '~/components/shared.styles'
 
 interface Props {
   onClickSelectToken: () => void
@@ -42,7 +42,7 @@ export const FromSection = (props: Props) => {
   } = props
 
   // context
-  const { getLocale, isWalletConnected } = useSwapContext()
+  const { getLocale, isWalletConnected, account } = useSwapContext()
 
   // methods
   const onClickHalfPreset = () => {
@@ -62,23 +62,8 @@ export const FromSection = (props: Props) => {
   // render
   return (
     <SwapSectionBox boxType='primary'>
-      <Row rowWidth='full'>
-        <Row>
-          <SelectTokenOrNetworkButton
-            onClick={onClickSelectToken}
-            asset={token}
-            text={token?.symbol}
-            buttonType='primary'
-          />
-          {token && (
-            <Row>
-              <HorizontalDivider height={28} marginLeft={8} marginRight={8} />
-              <PresetButton buttonText={getLocale('braveSwapHalf')} onClick={onClickHalfPreset} />
-              <PresetButton buttonText={getLocale('braveSwapMax')} onClick={onClickMaxPreset} />
-            </Row>
-          )}
-        </Row>
-        <Column horizontalAlign='flex-end'>
+      <Column columnWidth='full' columnHeight='full'>
+        <Row rowWidth='full' horizontalAlign='flex-end'>
           {token && (
             <Text
               textSize='14px'
@@ -92,20 +77,41 @@ export const FromSection = (props: Props) => {
                 : ''}
             </Text>
           )}
+        </Row>
+        <Row rowWidth='full' verticalAlign='center'>
+          <Row>
+            <SelectTokenOrNetworkButton
+              onClick={onClickSelectToken}
+              asset={token}
+              text={token?.symbol}
+              buttonType='primary'
+            />
+            {token && account !== undefined && (
+              <Row>
+                <HorizontalDivider height={28} marginLeft={8} marginLeftResponsive={6} marginRight={8} />
+                <HiddenResponsiveRow maxWidth={570}>
+                  <PresetButton buttonText={getLocale('braveSwapHalf')} onClick={onClickHalfPreset} />
+                </HiddenResponsiveRow>
+                <PresetButton buttonText={getLocale('braveSwapMax')} onClick={onClickMaxPreset} />
+              </Row>
+            )}
+          </Row>
           <SwapInput
             onChange={onInputChange}
             value={inputValue}
             hasError={hasInputError}
             autoFocus={true}
           />
+        </Row>
+        <Row rowWidth='full' horizontalAlign='flex-end'>
           {/* Todo: Setup locale for currency symbol */}
           {token && (
             <Text textSize='14px' textColor='text03' maintainHeight={true}>
               {fiatValue}
             </Text>
           )}
-        </Column>
-      </Row>
+        </Row>
+      </Column>
     </SwapSectionBox>
   )
 }
