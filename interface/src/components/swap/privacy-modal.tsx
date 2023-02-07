@@ -81,14 +81,14 @@ export const PrivacyModal = React.forwardRef<HTMLDivElement, Props>(
               textAlign='left'
               isBold={true}
             >
-              {getLocale('braveSwapZeroXDisclaimer')}
+              {getLocale('braveSwapV2Disclaimer').replaceAll('$1', '0x').replace('$2', 'EVM').replace('$3', 'Ethereum')}
             </Text>
             <Link
               rel='noopener noreferrer'
               target='_blank'
               href='https://www.0x.org/privacy'
             >
-              {getLocale('braveSwapZeroXPrivacy')}
+              {getLocale('braveSwapV2Privacy').replace('$1', '0x')}
             </Link>
           </Section>
           <VerticalSpacer size={20} />
@@ -111,14 +111,14 @@ export const PrivacyModal = React.forwardRef<HTMLDivElement, Props>(
               textAlign='left'
               isBold={true}
             >
-              {getLocale('braveSwapJupiterDisclaimer')}
+              {getLocale('braveSwapV2Disclaimer').replaceAll('$1', 'Jupiter').replace('$2', 'Solana').replace('$3', 'Solana')}
             </Text>
             <Link
               rel='noopener noreferrer'
               target='_blank'
               href='https://docs.jup.ag/legal/privacy-policy'
             >
-              {getLocale('braveSwapJupiterPrivacy')}
+              {getLocale('braveSwapV2Privacy').replace('$1', 'Jupiter')}
             </Link>
           </Section>
           <VerticalSpacer size={20} />
