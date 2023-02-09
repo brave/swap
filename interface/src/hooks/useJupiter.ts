@@ -41,6 +41,17 @@ export function useJupiter (params: SwapParams) {
     state: { spotPrices }
   } = useWalletState()
 
+  const reset = React.useCallback(async (callback?: () => Promise<void>) => {
+    setQuote(undefined)
+    setError(undefined)
+    setLoading(false)
+    setSelectedRoute(undefined)
+    setBraveFee(undefined)
+    if (callback) {
+      await callback()
+    }
+  }, [])
+
   const refresh = React.useCallback(
     async function (
       overrides: Partial<SwapParams> = {}
@@ -58,8 +69,7 @@ export function useJupiter (params: SwapParams) {
         return
       }
       if (!overriddenParams.fromAmount) {
-        setQuote(undefined)
-        setError(undefined)
+        await reset()
         return
       }
 
@@ -69,8 +79,7 @@ export function useJupiter (params: SwapParams) {
         fromAmountWrapped.isZero() ||
         fromAmountWrapped.isUndefined()
       ) {
-        setQuote(undefined)
-        setError(undefined)
+        await reset()
         return
       }
 
@@ -112,7 +121,7 @@ export function useJupiter (params: SwapParams) {
   )
 
   const exchange = React.useCallback(
-    async function () {
+    async function (callback?: () => Promise<void>) {
       // Perform data validation and early-exit
       if (!quote || quote?.routes.length === 0) {
         return
@@ -124,7 +133,7 @@ export function useJupiter (params: SwapParams) {
         return
       }
       if (!account) {
-          return
+        return
       }
 
       setLoading(true)
@@ -160,14 +169,15 @@ export function useJupiter (params: SwapParams) {
             skipPreflight: true
           }
         })
+
+        await reset(callback)
       } catch (e) {
         // Bubble up error
         console.error(`Error creating Solana transaction: ${e}`)
+        setLoading(false)
       }
-
-      setLoading(false)
     },
-    [quote, selectedRoute, account, network, params]
+    [quote, selectedRoute, account, network, params, reset]
   )
 
   const networkFee = new Amount('0.000005')
@@ -244,6 +254,7 @@ export function useJupiter (params: SwapParams) {
     loading,
     exchange,
     refresh,
+    reset,
     selectedRoute,
     setSelectedRoute,
     quoteOptions,

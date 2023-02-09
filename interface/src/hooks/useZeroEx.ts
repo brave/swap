@@ -39,6 +39,17 @@ export function useZeroEx (params: SwapParams) {
     state: { spotPrices }
   } = useWalletState()
 
+  const reset = React.useCallback(async (callback?: () => Promise<void>) => {
+    setQuote(undefined)
+    setError(undefined)
+    setLoading(false)
+    setBraveFee(undefined)
+
+    if (callback) {
+      await callback()
+    }
+  }, [])
+
   const refresh = React.useCallback(
     async function (overrides: Partial<SwapParams> = {}): Promise<ZeroExQuoteResponse | undefined> {
       const overriddenParams: SwapParams = {
@@ -54,8 +65,7 @@ export function useZeroEx (params: SwapParams) {
         return
       }
       if (!overriddenParams.fromAmount && !overriddenParams.toAmount) {
-        setQuote(undefined)
-        setError(undefined)
+        await reset()
         return
       }
       const fromAmountWrapped = new Amount(overriddenParams.fromAmount)
@@ -66,8 +76,7 @@ export function useZeroEx (params: SwapParams) {
           fromAmountWrapped.isUndefined()) &&
         (toAmountWrapped.isZero() || toAmountWrapped.isNaN() || toAmountWrapped.isUndefined())
       ) {
-        setQuote(undefined)
-        setError(undefined)
+        await reset()
         return
       }
       if (!overriddenParams.takerAddress) {
@@ -125,7 +134,7 @@ export function useZeroEx (params: SwapParams) {
       // Simulate that the token has enough allowance if the wallet is not
       // connected yet.
       if (!account) {
-          hasAllowanceResult = true
+        hasAllowanceResult = true
       }
 
       if (account && priceQuoteResponse?.response && overriddenParams.fromToken.isToken) {
@@ -146,11 +155,11 @@ export function useZeroEx (params: SwapParams) {
       setLoading(false)
       return priceQuoteResponse?.response
     },
-    [network, account, params]
+    [network, account, params, reset]
   )
 
   const exchange = React.useCallback(
-    async function (overrides: Partial<SwapParams> = {}): Promise<void> {
+    async function (overrides: Partial<SwapParams> = {}, callback?: () => Promise<void>) {
       const overriddenParams: SwapParams = {
         ...params,
         ...overrides
@@ -161,8 +170,8 @@ export function useZeroEx (params: SwapParams) {
         return
       }
       if (!account) {
-          // Wallet is not connected
-          return
+        // Wallet is not connected
+        return
       }
       if (!overriddenParams.fromToken || !overriddenParams.toToken) {
         return
@@ -223,13 +232,14 @@ export function useZeroEx (params: SwapParams) {
           data: hexStrToNumberArray(data)
         })
 
-        setQuote(undefined)
+        await reset(callback)
       } catch (e) {
         // bubble up error
         console.error(`Error creating 0x transaction: ${e}`)
+        setLoading(false)
       }
     },
-    [network, account, params]
+    [network, account, params, reset]
   )
 
   const approve = React.useCallback(async () => {
@@ -239,7 +249,7 @@ export function useZeroEx (params: SwapParams) {
 
     // Typically when wallet has not been connected yet
     if (!account) {
-        return
+      return
     }
 
     const { allowanceTarget, sellTokenAddress } = quote
@@ -320,6 +330,7 @@ export function useZeroEx (params: SwapParams) {
     loading,
     exchange,
     refresh,
+    reset,
     approve,
     quoteOptions,
     networkFee
