@@ -76,7 +76,7 @@ const Button = styled(StyledButton)<StandardButtonStyleProps>`
   border: ${(p) =>
     p.buttonType === 'secondary'
       ? p.isSelected
-        ? `1px solid var(--standard-button-border-secondary-selected)`
+        ? '1px solid var(--standard-button-border-secondary-selected)'
         : `1px solid ${p.theme.color.legacy.interactive08}`
       : 'none'};
   color: ${(p) =>
@@ -105,7 +105,7 @@ const Button = styled(StyledButton)<StandardButtonStyleProps>`
         : 'var(--button-background-hover)'};
     border: ${(p) =>
       p.buttonType === 'secondary'
-        ? `1px solid var(--standard-button-border-secondary-selected)`
+        ? '1px solid var(--standard-button-border-secondary-selected)'
         : 'none'};
     color: ${(p) =>
       p.buttonType === 'secondary'

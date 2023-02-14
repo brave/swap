@@ -6,7 +6,6 @@ import React from 'react'
 
 // Context
 import { useSwapContext } from '~/context/swap.context'
-import { useWalletState } from '~/state/wallet'
 
 // Types
 import { BlockchainToken } from '~/constants/types'

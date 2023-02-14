@@ -110,7 +110,7 @@ const PlaceholderText = styled(Text)`
   color: ${(p) => p.theme.color.white};
 `
 
-const Icon = styled.img<{ size: number; marginRight?: number, isHeader?: boolean }>`
+const Icon = styled.img<{ size: number, marginRight?: number, isHeader?: boolean }>`
   height: ${(p) => p.size}px;
   width: ${(p) => p.size}px;
   margin-right: ${(p) => (p.marginRight ? p.marginRight : 0)}px;

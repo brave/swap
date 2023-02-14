@@ -83,7 +83,6 @@ export const Header = (props: Props) => {
     // Default to light
     document.documentElement.setAttribute('data-theme', 'light')
     window.localStorage.setItem(BRAVE_SWAP_DATA_THEME_KEY, 'light')
-    return
   }, [])
 
   // Hooks

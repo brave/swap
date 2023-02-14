@@ -155,7 +155,7 @@ export function useZeroEx (params: SwapParams) {
       setLoading(false)
       return priceQuoteResponse?.response
     },
-    [network, account, params, reset]
+    [params, network.coin, account, reset, swapService, ethWalletAdapter]
   )
 
   const exchange = React.useCallback(
@@ -239,7 +239,7 @@ export function useZeroEx (params: SwapParams) {
         setLoading(false)
       }
     },
-    [network, account, params, reset]
+    [params, network.coin, account, swapService, ethWalletAdapter, reset]
   )
 
   const approve = React.useCallback(async () => {
@@ -269,7 +269,7 @@ export function useZeroEx (params: SwapParams) {
       // bubble up error
       console.error(`Error creating ERC20 approve transaction: ${e}`)
     }
-  }, [account, quote, hasAllowance])
+  }, [quote, hasAllowance, account, ethWalletAdapter])
 
   const networkFee = React.useMemo(() => {
     if (!quote) {

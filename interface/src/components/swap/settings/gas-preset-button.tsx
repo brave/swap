@@ -10,7 +10,6 @@ import { GasFeeOption, GasEstimate } from '~/constants/types'
 
 // Context
 import { useSwapContext } from '~/context/swap.context'
-import { useWalletState } from '~/state/wallet'
 
 // Styled Components
 import { Column, Row, Text, Icon, StyledDiv, StyledButton } from '~/components/shared.styles'
@@ -39,7 +38,7 @@ export const GasPresetButton = (props: Props) => {
             {getLocale(option.name)}
           </Text>
           <Text textColor='text03' textSize='12px' isBold={false}>
-            {`<`} {gasEstimates.time}
+            {'<'} {gasEstimates.time}
           </Text>
         </Column>
       </Row>

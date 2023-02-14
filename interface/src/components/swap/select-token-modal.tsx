@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import { useSwapContext } from '~/context/swap.context'
 
 // Types
-import {BlockchainToken, NetworkInfo, RefreshBlockchainStateParams} from '~/constants/types'
+import { BlockchainToken, NetworkInfo, RefreshBlockchainStateParams } from '~/constants/types'
 import Amount from '~/utils/amount'
 
 // Assets
@@ -65,7 +65,7 @@ export const SelectTokenModal = React.forwardRef<HTMLDivElement, Props>(
       return hideTokensWithZeroBalances
         ? getLocale('braveSwapShowTokensWithZeroBalances')
         : getLocale('braveSwapHideTokensWithZeroBalances')
-    }, [hideTokensWithZeroBalances])
+    }, [getLocale, hideTokensWithZeroBalances])
 
     const filteredTokenListBySearch: BlockchainToken[] = React.useMemo(() => {
       if (searchValue === '') {
@@ -164,6 +164,6 @@ const ScrollContainer = styled(Column)`
   flex: 1;
   overflow: hidden;
   @media screen and (max-width: 570px) {
-    padding: 0px;
+    padding: 0;
   }
 `

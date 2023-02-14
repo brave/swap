@@ -7,7 +7,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 // Types
-import { BlockchainToken, QuoteOption, SwapFee } from '~/constants/types'
+import { BlockchainToken, QuoteOption } from '~/constants/types'
 
 // Constants
 import LPMetadata from '~/constants/lpMetadata'
@@ -109,7 +109,7 @@ export const QuoteInfo = (props: Props) => {
       '$1',
       coinGeckoDelta.times(-1).format(2)
     )
-  }, [coinGeckoDelta])
+  }, [coinGeckoDelta, getLocale])
 
   const coinGeckoDeltaColor = React.useMemo(() => {
     if (coinGeckoDelta.gte(-1)) {
@@ -274,7 +274,7 @@ const Bubble = styled(Row)`
   background-color: var(--token-or-network-bubble-background);
 `
 
-const LPIcon = styled(StyledDiv) <{ icon: string; size: number }>`
+const LPIcon = styled(StyledDiv) <{ icon: string, size: number }>`
   background-image: url(${p => p.icon});
   background-size: cover;
   background-position: center;

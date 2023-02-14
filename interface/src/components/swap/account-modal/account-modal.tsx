@@ -30,7 +30,6 @@ import {
   Row,
   Column,
   VerticalDivider,
-  HorizontalSpacer,
   StyledDiv,
   IconButton,
   ShownResponsiveRow

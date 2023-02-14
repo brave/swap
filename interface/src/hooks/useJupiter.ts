@@ -26,6 +26,8 @@ import { WRAPPED_SOL_CONTRACT_ADDRESS } from '~/constants/magics'
 // Utils
 import Amount from '~/utils/amount'
 
+const networkFee = new Amount('0.000005')
+
 export function useJupiter (params: SwapParams) {
   const [quote, setQuote] = React.useState<JupiterQuoteResponse | undefined>(undefined)
   const [error, setError] = React.useState<JupiterErrorResponse | undefined>(undefined)
@@ -117,7 +119,7 @@ export function useJupiter (params: SwapParams) {
       setLoading(false)
       return jupiterQuoteResponse?.response
     },
-    [network, params]
+    [network.coin, params, reset, swapService]
   )
 
   const exchange = React.useCallback(
@@ -158,7 +160,7 @@ export function useJupiter (params: SwapParams) {
       }
 
       // Ignore setupTransaction and cleanupTransaction
-      const { setupTransaction, swapTransaction, cleanupTransaction } =
+      const { swapTransaction } =
         jupiterTransactionsPayloadResponse.response
 
       try {
@@ -177,10 +179,17 @@ export function useJupiter (params: SwapParams) {
         setLoading(false)
       }
     },
-    [quote, selectedRoute, account, network, params, reset]
+    [
+        quote,
+        network.coin,
+        params.toToken,
+        account,
+        swapService,
+        selectedRoute,
+        solWalletAdapter,
+        reset
+    ]
   )
-
-  const networkFee = new Amount('0.000005')
 
   const quoteOptions: QuoteOption[] = React.useMemo(() => {
     if (!params.fromToken || !params.toToken) {
@@ -196,23 +205,23 @@ export function useJupiter (params: SwapParams) {
         ({
           label: route.marketInfos.map(marketInfo => marketInfo.label).join(' x '),
           fromAmount: new Amount(route.inAmount.toString()).divideByDecimals(
-            // @ts-ignore
+            // @ts-expect-error
             params.fromToken.decimals
           ),
           toAmount: new Amount(route.outAmount.toString()).divideByDecimals(
-            // @ts-ignore
+            // @ts-expect-error
             params.toToken.decimals
           ),
           minimumToAmount: new Amount(route.otherAmountThreshold.toString()).divideByDecimals(
-            // @ts-ignore
+            // @ts-expect-error
             params.toToken.decimals
           ),
           fromToken: params.fromToken,
           toToken: params.toToken,
           rate: new Amount(route.otherAmountThreshold.toString())
-            // @ts-ignore
+            // @ts-expect-error
             .divideByDecimals(params.toToken.decimals)
-            // @ts-ignore
+            // @ts-expect-error
             .div(new Amount(route.inAmount.toString()).divideByDecimals(params.fromToken.decimals)),
           impact: new Amount(route.priceImpactPct),
           sources: route.marketInfos.flatMap(marketInfo =>
@@ -242,7 +251,6 @@ export function useJupiter (params: SwapParams) {
     quote,
     params.fromToken,
     params.toToken,
-    networkFee,
     defaultBaseCurrency,
     spotPrices.nativeAsset,
     braveFee
