@@ -13,7 +13,7 @@ type AmountLike = Amount | BigNumberIsh
 export default class Amount {
   public readonly value?: BigNumber
 
-  public constructor(value: BigNumberIsh) {
+  public constructor (value: BigNumberIsh) {
     this.value = value === '' ? undefined : new BigNumber(value)
   }
 
@@ -225,7 +225,7 @@ export default class Amount {
     if (this.value === undefined || this.value.isNaN()) {
       return ''
     } else if (
-      // @ts-ignore
+      // @ts-expect-error
       this.value.decimalPlaces() < 2 ||
       this.value.isGreaterThanOrEqualTo(10)
     ) {
@@ -244,7 +244,7 @@ export default class Amount {
       maximumFractionDigits: decimals || 20
     }
 
-    // @ts-ignore
+    // @ts-expect-error
     if (currency && CurrencySymbols[currency]) {
       options.style = 'currency'
       options.currency = currency

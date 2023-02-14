@@ -42,11 +42,11 @@
   },
   "scripts": {
     "dev": "tsc && vite build -w",
-    "build": "tsc && vite build"
+    "build": "tsc && vite build",
+    "lint": "eslint ./src"
   },
   "dependencies": {
     "@brave/leo": "github:brave/leo",
-    "react-virtualized-auto-sizer": "^1.0.7",
     "@types/react-window": "^1.8.2",
     "@types/styled-components": "^5.1.9",
     "async": "^3.2.4",
@@ -55,6 +55,7 @@
     "postcss-js": "^4.0.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
+    "react-virtualized-auto-sizer": "^1.0.7",
     "react-window": "^1.8.5",
     "styled-components": "^5.3.0",
     "svelte2tsx": "^0.5.20"
@@ -64,7 +65,13 @@
     "@types/node": "^18.7.20",
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@vitejs/plugin-react": "2.1.0",
+    "eslint": "^8.34.0",
+    "eslint-config-standard-with-typescript": "^34.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "typescript": "^4.6.4",
     "vite": "^3.0.0",
     "vite-plugin-dts": "1.6.6"

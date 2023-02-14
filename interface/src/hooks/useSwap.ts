@@ -29,13 +29,11 @@ import {
   SwapValidationErrorType,
   NetworkInfo,
   RefreshBlockchainStateParams,
-  RefreshPricesParams,
-  SwapFee
+  RefreshPricesParams
 } from '~/constants/types'
 
 // Utils
 import Amount from '~/utils/amount'
-import { ZERO_EX_VALIDATION_ERROR_CODE } from '~/constants/magics'
 import { getBalanceRegistryKey, makeNetworkAsset } from '~/utils/assets'
 
 const hasDecimalsOverflow = (amount: string, asset?: BlockchainToken) => {
@@ -151,7 +149,7 @@ export const useSwap = () => {
 
       setSelectedQuoteOptionIndex(index)
     },
-    [quoteOptions, jupiter.quote, zeroEx.quote, network.coin]
+    [quoteOptions, network.coin, jupiter, toToken, zeroEx.quote]
   )
 
   const refreshSpotPrices = React.useCallback(
@@ -183,7 +181,7 @@ export const useSwap = () => {
         })
       })()
     },
-    [network, fromToken, toToken, getTokenPrice]
+    [network, fromToken, toToken, getTokenPrice, dispatch]
   )
 
   // Methods
@@ -268,6 +266,7 @@ export const useSwap = () => {
         // fetched.
         const payload = balances
           .filter(item => item.value !== '')
+          // eslint-disable-next-line no-sequences
           .reduce((obj, item) => (((obj as any)[item.key] = item.value), obj), {})
 
         dispatch({
@@ -283,14 +282,12 @@ export const useSwap = () => {
       }
     },
     [
-      getTokenPrice,
-      getBalance,
-      getTokenBalance,
       dispatch,
       getNetworkAssetsList,
       walletAccounts,
       network,
-      account
+      account,
+      getAssetBalanceFactory
     ]
   )
 
@@ -325,18 +322,11 @@ export const useSwap = () => {
         )
       }
     },
-    [jupiter.refresh, jupiter.reset, toToken]
+    [jupiter, toToken]
   )
 
   const handleZeroExQuoteRefresh = React.useCallback(
     async (overrides: Partial<SwapParams>) => {
-      if (overrides.fromAmount === '') {
-        setFromAmount('')
-      }
-      if (overrides.toAmount === '') {
-        setToAmount('')
-      }
-
       const quote = await zeroEx.refresh(overrides)
       if (!quote) {
         return
@@ -356,7 +346,7 @@ export const useSwap = () => {
         }
       }
     },
-    [zeroEx.refresh, toToken, fromToken]
+    [zeroEx, toToken, fromToken]
   )
 
   const handleOnSetFromAmount = React.useCallback(
@@ -431,15 +421,16 @@ export const useSwap = () => {
     await refreshSpotPrices({ fromAsset: toToken, toAsset: fromToken })
     await handleOnSetFromAmount('')
   }, [
-    fromToken,
     toToken,
-    handleOnSetFromAmount,
-    refreshSpotPrices,
-    getAssetBalanceFactory,
-    account,
+    fromToken,
     network,
-    jupiter.reset,
-    zeroEx.reset
+    account,
+    refreshSpotPrices,
+    handleOnSetFromAmount,
+    jupiter,
+    zeroEx,
+    getAssetBalanceFactory,
+    dispatch
   ])
 
   const onSelectToToken = React.useCallback(
@@ -466,8 +457,8 @@ export const useSwap = () => {
       handleJupiterQuoteRefresh,
       handleZeroExQuoteRefresh,
       refreshSpotPrices,
-      jupiter.reset,
-      zeroEx.reset
+      jupiter,
+      zeroEx
     ]
   )
 
@@ -502,15 +493,15 @@ export const useSwap = () => {
       }
     },
     [
-      network.coin,
+      dispatch,
       handleZeroExQuoteRefresh,
       handleJupiterQuoteRefresh,
       refreshSpotPrices,
       getAssetBalanceFactory,
       account,
       network,
-      jupiter.reset,
-      zeroEx.reset
+      jupiter,
+      zeroEx
     ]
   )
 
@@ -529,7 +520,7 @@ export const useSwap = () => {
     (id: string, checked: boolean) => {
       setUserConfirmedAddress(checked)
     },
-    [userConfirmedAddress]
+    []
   )
 
   // Memos
@@ -644,7 +635,7 @@ export const useSwap = () => {
     fromAmount,
     toToken,
     toAmount,
-    network.coin,
+    network,
     feesWrapped,
     zeroEx,
     jupiter,
@@ -698,7 +689,13 @@ export const useSwap = () => {
     }
 
     return getLocale('braveSwapReviewOrder')
-  }, [fromToken, network.coin, swapValidationError, account])
+  }, [
+    account,
+    fromToken,
+    swapValidationError,
+    network,
+    getLocale
+  ])
 
   const isSubmitButtonDisabled = React.useMemo(() => {
     return (
@@ -734,7 +731,20 @@ export const useSwap = () => {
         network.coin === CoinType.Ethereum &&
         swapValidationError !== 'insufficientAllowance')
     )
-  }, [network.coin, zeroEx, jupiter, fromToken, toToken, fromAmount, toAmount, swapValidationError])
+  }, [
+    zeroEx.loading,
+    jupiter.loading,
+    zeroEx.quote,
+    jupiter.quote,
+    network.coin,
+    fromToken,
+    toToken,
+    fromAmount,
+    toAmount,
+    nativeAssetBalance,
+    fromAssetBalance,
+    swapValidationError
+  ])
 
   React.useEffect(() => {
     const interval = setInterval(async () => {

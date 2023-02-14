@@ -8,7 +8,6 @@ import styled from 'styled-components'
 
 // Types
 import { CoinType } from '~/constants/types'
-import Amount from '~/utils/amount'
 
 // Constants
 import { BRAVE_SWAP_DATA_THEME_KEY } from '~/constants/magics'
@@ -95,7 +94,7 @@ export const Swap = () => {
     if (slippageTolerance === '') {
       setSlippageTolerance('0.5')
     }
-  }, [slippageTolerance])
+  }, [slippageTolerance, setSlippageTolerance])
 
   // Hooks
   useOnClickOutside(

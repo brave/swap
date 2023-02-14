@@ -189,7 +189,7 @@ export interface ZeroExSwapResponse extends ZeroExQuoteResponse {
 export interface ZeroExErrorResponse {
   code: number
   reason: string
-  validationErrors?: Array<{ field: string; code: number; reason: string }>
+  validationErrors?: Array<{ field: string, code: number, reason: string }>
   isInsufficientLiquidity: boolean
 }
 

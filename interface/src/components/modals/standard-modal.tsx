@@ -59,7 +59,7 @@ const Modal = styled(StyledDiv)<{
       ? '85%'
       : p.modalHeight === 'dynamic'
       ? 'unset'
-      : `520px`};
+      : '520px'};
   justify-content: flex-start;
   overflow: hidden;
   position: absolute;

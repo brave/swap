@@ -13,5 +13,4 @@ export const MAX_UINT256 = '0xffffffffffffffffffffffffffffffffffffffffffffffffff
 
 export const ZERO_EX_VALIDATION_ERROR_CODE = 100
 
-
 export const BRAVE_SWAP_DATA_THEME_KEY = 'brave-swap-data-theme'

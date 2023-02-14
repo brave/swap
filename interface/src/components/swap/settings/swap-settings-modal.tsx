@@ -102,7 +102,7 @@ export const SwapSettingsModal = (props: Props) => {
 
   const modalTitle: string = React.useMemo(() => {
     return showExchanges ? getLocale('braveSwapExchanges') : getLocale('braveSwapSettings')
-  }, [showExchanges])
+  }, [getLocale, showExchanges])
 
   // render
   return (
@@ -249,13 +249,13 @@ const Modal = styled(StyledDiv)`
   top: 28px;
   @media screen and (max-width: 570px) {
     position: fixed;
-    right: 0px;
-    left: 0px;
+    right: 0;
+    left: 0;
     top: 72px;
-    bottom: 0px;
+    bottom: 0;
     width: auto;
     border: none;
-    border-radius: 16px 16px 0px 0px;
+    border-radius: 16px 16px 0 0;
   }
 `
 

@@ -12,7 +12,6 @@ import { BRAVE_SWAP_DATA_THEME_KEY } from '~/constants/magics'
 // Styled Components
 import { StyledDiv, StyledInput, StyledLabel } from '~/components/shared.styles'
 
-
 export const ThemeSwitch = () => {
   // State
   const [isLightTheme, setIsLightTheme] = React.useState<boolean>(false)
