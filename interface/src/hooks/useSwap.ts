@@ -281,14 +281,7 @@ export const useSwap = () => {
         await drainChunk(chunk)
       }
     },
-    [
-      dispatch,
-      getNetworkAssetsList,
-      walletAccounts,
-      network,
-      account,
-      getAssetBalanceFactory
-    ]
+    [dispatch, getNetworkAssetsList, walletAccounts, network, account, getAssetBalanceFactory]
   )
 
   React.useEffect(() => {
@@ -401,6 +394,8 @@ export const useSwap = () => {
   const onClickFlipSwapTokens = React.useCallback(async () => {
     setFromToken(toToken)
     setToToken(fromToken)
+    setFromAmount('')
+    setToAmount('')
 
     if (network.coin === CoinType.Solana) {
       await jupiter.reset()
@@ -437,6 +432,7 @@ export const useSwap = () => {
     async (token: BlockchainToken) => {
       setToToken(token)
       setSelectingFromOrTo(undefined)
+      setToAmount('')
       await refreshSpotPrices({ toAsset: token })
 
       if (network.coin === CoinType.Solana) {
@@ -466,6 +462,7 @@ export const useSwap = () => {
     async (token: BlockchainToken) => {
       setFromToken(token)
       setSelectingFromOrTo(undefined)
+      setFromAmount('')
 
       if (account) {
         const balance = await getAssetBalanceFactory(account, network)(token)
@@ -516,12 +513,9 @@ export const useSwap = () => {
     setToAnotherAddress(value)
   }, [])
 
-  const onCheckUserConfirmedAddress = React.useCallback(
-    (id: string, checked: boolean) => {
-      setUserConfirmedAddress(checked)
-    },
-    []
-  )
+  const onCheckUserConfirmedAddress = React.useCallback((id: string, checked: boolean) => {
+    setUserConfirmedAddress(checked)
+  }, [])
 
   // Memos
   const fiatValue: string | undefined = React.useMemo(() => {
@@ -689,13 +683,7 @@ export const useSwap = () => {
     }
 
     return getLocale('braveSwapReviewOrder')
-  }, [
-    account,
-    fromToken,
-    swapValidationError,
-    network,
-    getLocale
-  ])
+  }, [account, fromToken, swapValidationError, network, getLocale])
 
   const isSubmitButtonDisabled = React.useMemo(() => {
     return (

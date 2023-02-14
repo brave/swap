@@ -160,8 +160,7 @@ export function useJupiter (params: SwapParams) {
       }
 
       // Ignore setupTransaction and cleanupTransaction
-      const { swapTransaction } =
-        jupiterTransactionsPayloadResponse.response
+      const { swapTransaction } = jupiterTransactionsPayloadResponse.response
 
       try {
         await solWalletAdapter.sendTransaction({
@@ -180,14 +179,14 @@ export function useJupiter (params: SwapParams) {
       }
     },
     [
-        quote,
-        network.coin,
-        params.toToken,
-        account,
-        swapService,
-        selectedRoute,
-        solWalletAdapter,
-        reset
+      quote,
+      network.coin,
+      params.toToken,
+      account,
+      swapService,
+      selectedRoute,
+      solWalletAdapter,
+      reset
     ]
   )
 
