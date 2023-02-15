@@ -58,8 +58,8 @@ export const AccountModal = (props: Props) => {
   const onSelectAccount = React.useCallback(
     async (account: WalletAccount) => {
       await switchAccount(account)
-      await refreshBlockchainState({ account })
       onHideModal()
+      await refreshBlockchainState({ account })
     },
     [onHideModal, switchAccount, refreshBlockchainState]
   )
