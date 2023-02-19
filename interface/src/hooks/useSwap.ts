@@ -15,6 +15,7 @@ import { useWalletDispatch, useWalletState } from '~/state/wallet'
 import { useJupiter } from './useJupiter'
 import { useZeroEx } from './useZeroEx'
 import { useNativeAsset } from './useNativeAsset'
+import { useDebouncedCallback } from './useDebouncedCallback'
 import { useSwapContext } from '~/context/swap.context'
 
 // Types and constants
@@ -299,7 +300,7 @@ export const useSwap = () => {
     })()
   }, [refreshBlockchainState, refreshSpotPrices, initialized, assetsList])
 
-  const handleJupiterQuoteRefresh = React.useCallback(
+  const handleJupiterQuoteRefreshInternal = React.useCallback(
     async (overrides: Partial<SwapParams>) => {
       const quote = await jupiter.refresh(overrides)
       if (!quote) {
@@ -317,8 +318,11 @@ export const useSwap = () => {
     },
     [jupiter, toToken]
   )
+  const handleJupiterQuoteRefresh = useDebouncedCallback(async (overrides: Partial<SwapParams>) => {
+    await handleJupiterQuoteRefreshInternal(overrides)
+  }, 700)
 
-  const handleZeroExQuoteRefresh = React.useCallback(
+  const handleZeroExQuoteRefreshInternal = React.useCallback(
     async (overrides: Partial<SwapParams>) => {
       const quote = await zeroEx.refresh(overrides)
       if (!quote) {
@@ -342,6 +346,14 @@ export const useSwap = () => {
     [zeroEx, toToken, fromToken]
   )
 
+  const handleZeroExQuoteRefresh = useDebouncedCallback(async (overrides: Partial<SwapParams>) => {
+    await handleZeroExQuoteRefreshInternal(overrides)
+  }, 700)
+
+  // Changing the From amount does the following:
+  //  - Set the fromAmount field.
+  //  - Clear the toAmount field.
+  //  - Refresh quotes based on the new fromAmount, with debouncing.
   const handleOnSetFromAmount = React.useCallback(
     async (value: string) => {
       setFromAmount(value)
@@ -363,6 +375,10 @@ export const useSwap = () => {
     [network.coin, handleJupiterQuoteRefresh, handleZeroExQuoteRefresh]
   )
 
+  // Changing the To amount does the following:
+  //  - Set the toAmount field.
+  //  - Clear the fromAmount field.
+  //  - Refresh quotes based on the new toAmount, with debouncing.
   const handleOnSetToAmount = React.useCallback(
     async (value: string) => {
       // Setting to amount is not supported on Jupiter
@@ -371,6 +387,10 @@ export const useSwap = () => {
       }
 
       setToAmount(value)
+      if (!value) {
+        setFromAmount('')
+      }
+
       await handleZeroExQuoteRefresh({
         fromAmount: '',
         toAmount: value
@@ -394,14 +414,7 @@ export const useSwap = () => {
   const onClickFlipSwapTokens = React.useCallback(async () => {
     setFromToken(toToken)
     setToToken(fromToken)
-    setFromAmount('')
-    setToAmount('')
-
-    if (network.coin === CoinType.Solana) {
-      await jupiter.reset()
-    } else {
-      await zeroEx.reset()
-    }
+    await handleOnSetFromAmount('')
 
     if (toToken && account) {
       const balance = await getAssetBalanceFactory(account, network)(toToken)
@@ -414,55 +427,72 @@ export const useSwap = () => {
     }
 
     await refreshSpotPrices({ fromAsset: toToken, toAsset: fromToken })
-    await handleOnSetFromAmount('')
   }, [
     toToken,
     fromToken,
-    network,
+    handleOnSetFromAmount,
     account,
     refreshSpotPrices,
-    handleOnSetFromAmount,
-    jupiter,
-    zeroEx,
     getAssetBalanceFactory,
+    network,
     dispatch
   ])
 
+  // Changing the To asset does the following:
+  //  1. Update toToken right away.
+  //  2. Reset toAmount.
+  //  3. Reset the previously displayed quote, if any.
+  //  4. Fetch new quotes using fromAmount and fromToken, if set. Do NOT use
+  //     debouncing.
+  //  5. Fetch spot price.
   const onSelectToToken = React.useCallback(
     async (token: BlockchainToken) => {
       setToToken(token)
       setSelectingFromOrTo(undefined)
       setToAmount('')
-      await refreshSpotPrices({ toAsset: token })
 
       if (network.coin === CoinType.Solana) {
         await jupiter.reset()
-        await handleJupiterQuoteRefresh({
+        await handleJupiterQuoteRefreshInternal({
           toToken: token
         })
       } else if (network.coin === CoinType.Ethereum) {
         await zeroEx.reset()
-        await handleZeroExQuoteRefresh({
+        await handleZeroExQuoteRefreshInternal({
           toToken: token,
           toAmount: ''
         })
       }
+
+      await refreshSpotPrices({ toAsset: token })
     },
     [
       network.coin,
-      handleJupiterQuoteRefresh,
-      handleZeroExQuoteRefresh,
       refreshSpotPrices,
       jupiter,
-      zeroEx
+      handleJupiterQuoteRefreshInternal,
+      zeroEx,
+      handleZeroExQuoteRefreshInternal
     ]
   )
 
+  // Changing the From asset does the following:
+  //  1. Reset both fromAmount and toAmount.
+  //  2. Reset the previously displayed quote, if any.
+  //  3. Refresh balance for the new fromToken.
+  //  4. Refresh spot price.
   const onSelectFromToken = React.useCallback(
     async (token: BlockchainToken) => {
       setFromToken(token)
       setSelectingFromOrTo(undefined)
       setFromAmount('')
+      setToAmount('')
+
+      if (network.coin === CoinType.Solana) {
+        await jupiter.reset()
+      } else if (network.coin === CoinType.Ethereum) {
+        await zeroEx.reset()
+      }
 
       if (account) {
         const balance = await getAssetBalanceFactory(account, network)(token)
@@ -475,31 +505,8 @@ export const useSwap = () => {
       }
 
       await refreshSpotPrices({ fromAsset: token })
-
-      if (network.coin === CoinType.Solana) {
-        await jupiter.reset()
-        await handleJupiterQuoteRefresh({
-          fromToken: token
-        })
-      } else if (network.coin === CoinType.Ethereum) {
-        await zeroEx.reset()
-        await handleZeroExQuoteRefresh({
-          fromToken: token,
-          fromAmount: ''
-        })
-      }
     },
-    [
-      dispatch,
-      handleZeroExQuoteRefresh,
-      handleJupiterQuoteRefresh,
-      refreshSpotPrices,
-      getAssetBalanceFactory,
-      account,
-      network,
-      jupiter,
-      zeroEx
-    ]
+    [dispatch, refreshSpotPrices, getAssetBalanceFactory, account, network, zeroEx, jupiter]
   )
 
   const onSetSelectedSwapAndSendOption = React.useCallback((value: string) => {
