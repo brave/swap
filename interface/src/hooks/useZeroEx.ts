@@ -30,6 +30,9 @@ export function useZeroEx (params: SwapParams) {
   const [hasAllowance, setHasAllowance] = React.useState<boolean>(false)
   const [loading, setLoading] = React.useState<boolean>(false)
   const [braveFee, setBraveFee] = React.useState<SwapFee | undefined>(undefined)
+  const [abortController, setAbortController] = React.useState<AbortController | undefined>(
+    undefined
+  )
 
   // Context
   const { swapService, ethWalletAdapter, account, network, defaultBaseCurrency } = useSwapContext()
@@ -39,16 +42,22 @@ export function useZeroEx (params: SwapParams) {
     state: { spotPrices }
   } = useWalletState()
 
-  const reset = React.useCallback(async (callback?: () => Promise<void>) => {
-    setQuote(undefined)
-    setError(undefined)
-    setLoading(false)
-    setBraveFee(undefined)
+  const reset = React.useCallback(
+    async (callback?: () => Promise<void>) => {
+      setQuote(undefined)
+      setError(undefined)
+      setLoading(false)
+      setBraveFee(undefined)
+      if (abortController) {
+        abortController.abort()
+      }
 
-    if (callback) {
-      await callback()
-    }
-  }, [])
+      if (callback) {
+        await callback()
+      }
+    },
+    [abortController]
+  )
 
   const refresh = React.useCallback(
     async function (overrides: Partial<SwapParams> = {}): Promise<ZeroExQuoteResponse | undefined> {
@@ -83,6 +92,9 @@ export function useZeroEx (params: SwapParams) {
         return
       }
 
+      const controller = new AbortController()
+      setAbortController(controller)
+
       setLoading(true)
 
       try {
@@ -115,14 +127,6 @@ export function useZeroEx (params: SwapParams) {
         console.log(`Error getting 0x quote: ${e}`)
       }
 
-      if (priceQuoteResponse?.response) {
-        setQuote(priceQuoteResponse.response)
-      }
-
-      if (priceQuoteResponse?.errorResponse) {
-        setError(priceQuoteResponse.errorResponse)
-      }
-
       let hasAllowanceResult = false
 
       // Native asset does not have allowance requirements, so we always
@@ -151,8 +155,24 @@ export function useZeroEx (params: SwapParams) {
         }
       }
 
+      if (controller.signal.aborted) {
+        setLoading(false)
+        setAbortController(undefined)
+        return
+      }
+
+      if (priceQuoteResponse?.response) {
+        setQuote(priceQuoteResponse.response)
+      }
+
+      if (priceQuoteResponse?.errorResponse) {
+        setError(priceQuoteResponse.errorResponse)
+      }
+
       setHasAllowance(hasAllowanceResult)
+
       setLoading(false)
+      setAbortController(undefined)
       return priceQuoteResponse?.response
     },
     [params, network.coin, account, reset, swapService, ethWalletAdapter]
