@@ -724,7 +724,8 @@ export const useSwap = () => {
       // the transaction is an ERC20Approve, Swap button must be disabled.
       (swapValidationError &&
         network.coin === CoinType.Ethereum &&
-        swapValidationError !== 'insufficientAllowance')
+        swapValidationError !== 'insufficientAllowance') ||
+      (swapValidationError && network.coin === CoinType.Solana)
     )
   }, [
     zeroEx.loading,
