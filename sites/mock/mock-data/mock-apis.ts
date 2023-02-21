@@ -47,6 +47,15 @@ export const getTokenBalance = async (
   return balance ?? '0'
 }
 
+export const getTokenBalances = async (
+    contract: string[],
+    address: string,
+    coin: number,
+    chainId: string
+) => {
+  return mockEVMNetworksData[address][chainId].erc20Balances
+}
+
 export const getTokenPrice = async (token: BlockchainToken) => {
   const price = mockSpotPrices[token.contractAddress]
   if (!price) {

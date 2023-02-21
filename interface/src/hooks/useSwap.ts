@@ -35,7 +35,7 @@ import {
 
 // Utils
 import Amount from '~/utils/amount'
-import { getBalanceRegistryKey, makeNetworkAsset } from '~/utils/assets'
+import { getBalanceRegistryKeyRaw, getBalanceRegistryKey, makeNetworkAsset } from '~/utils/assets'
 
 const hasDecimalsOverflow = (amount: string, asset?: BlockchainToken) => {
   if (!asset) {
@@ -60,6 +60,7 @@ export const useSwap = () => {
     getLocale,
     getTokenPrice,
     getTokenBalance,
+    getTokenBalances,
     getBalance,
     assetsList,
     network,
@@ -255,11 +256,57 @@ export const useSwap = () => {
         return
       }
 
-      const networkAssets = getNetworkAssetsList(overriddenParams.network)
-      const iterator = getAssetBalanceFactory(overriddenParams.account, overriddenParams.network)
+      // Update native asset balance first, since it's the default asset on
+      // first load.
+      const balanceFactory = getAssetBalanceFactory(
+        overriddenParams.account,
+        overriddenParams.network
+      )
+      const nativeAccountBalanceResult = await balanceFactory(
+        makeNetworkAsset(overriddenParams.network)
+      )
+      dispatch({
+        type: 'updateTokenBalances',
+        payload: {
+          [nativeAccountBalanceResult.key]: nativeAccountBalanceResult.value
+        }
+      })
 
+      const networkAssets = getNetworkAssetsList(overriddenParams.network).filter(
+        asset => asset.isToken
+      )
+
+      // Try using optimised balance scanner
+      try {
+        const tokenBalancesResult = await getTokenBalances(
+          networkAssets.filter(asset => asset.isToken).map(asset => asset.contractAddress),
+          overriddenParams.account.address,
+          overriddenParams.account.coin,
+          overriddenParams.network.chainId
+        )
+        const tokenBalancesWithRegistryKeys = Object.entries(tokenBalancesResult)
+          .map(([key, value]) => [
+            getBalanceRegistryKeyRaw(
+              overriddenParams.network.coin,
+              overriddenParams.network.chainId,
+              key
+            ),
+            value
+          ])
+          .filter(([_, value]) => new Amount(value).isPositive())
+
+        dispatch({
+          type: 'updateTokenBalances',
+          payload: Object.fromEntries(tokenBalancesWithRegistryKeys)
+        })
+        return
+      } catch (e) {
+        console.log(`Error calling getTokenBalances(): error=${e}`)
+      }
+
+      // Fallback to fetching individual balances
       async function drainChunk (chunk: BlockchainToken[]) {
-        const balances = await async.mapLimit(chunk, 10, iterator)
+        const balances = await async.mapLimit(chunk, 10, balanceFactory)
 
         // In the following code block, we're doing the following transformation:
         // {key: string, value: string}[] => { [key]: value }
@@ -275,7 +322,7 @@ export const useSwap = () => {
         // We also filter out balance results from the array that could not be
         // fetched.
         const payload = balances
-          .filter(item => item.value !== '')
+          .filter(item => new Amount(item.value).isPositive())
           // eslint-disable-next-line no-sequences
           .reduce((obj, item) => (((obj as any)[item.key] = item.value), obj), {})
 
@@ -291,7 +338,15 @@ export const useSwap = () => {
         await drainChunk(chunk)
       }
     },
-    [dispatch, getNetworkAssetsList, walletAccounts, network, account, getAssetBalanceFactory]
+    [
+      network,
+      account,
+      getNetworkAssetsList,
+      getAssetBalanceFactory,
+      walletAccounts,
+      getTokenBalances,
+      dispatch
+    ]
   )
 
   // This function is a debounced variant of refreshBlockchainState. It prevents
