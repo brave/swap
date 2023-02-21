@@ -154,7 +154,7 @@ export const useSwap = () => {
   )
 
   const refreshSpotPrices = React.useCallback(
-    (overrides: Partial<RefreshPricesParams>) => {
+    async (overrides: Partial<RefreshPricesParams>) => {
       const overriddenParams: RefreshPricesParams = {
         nativeAsset: makeNetworkAsset(network),
         fromAsset: fromToken,
@@ -162,27 +162,36 @@ export const useSwap = () => {
         ...overrides
       }
 
-      ;(async () => {
-        const fromAssetPrice =
-          overriddenParams.fromAsset && (await getTokenPrice(overriddenParams.fromAsset))
-        const toAssetPrice =
-          overriddenParams.toAsset && (await getTokenPrice(overriddenParams.toAsset))
+      const fromAssetPrice =
+        overriddenParams.fromAsset && (await getTokenPrice(overriddenParams.fromAsset))
+      const toAssetPrice =
+        overriddenParams.toAsset && (await getTokenPrice(overriddenParams.toAsset))
 
-        const nativeAssetPrice = overriddenParams.fromAsset?.isToken
-          ? await getTokenPrice(overriddenParams.nativeAsset)
-          : fromAssetPrice
+      const nativeAssetPrice = overriddenParams.fromAsset?.isToken
+        ? await getTokenPrice(overriddenParams.nativeAsset)
+        : fromAssetPrice
 
-        await dispatch({
-          type: 'updateSpotPrices',
-          payload: {
-            nativeAsset: Amount.normalize(nativeAssetPrice || ''),
-            makerAsset: Amount.normalize(fromAssetPrice || ''),
-            takerAsset: Amount.normalize(toAssetPrice || '')
-          }
-        })
-      })()
+      await dispatch({
+        type: 'updateSpotPrices',
+        payload: {
+          nativeAsset: Amount.normalize(nativeAssetPrice || ''),
+          makerAsset: Amount.normalize(fromAssetPrice || ''),
+          takerAsset: Amount.normalize(toAssetPrice || '')
+        }
+      })
     },
     [network, fromToken, toToken, getTokenPrice, dispatch]
+  )
+
+  // This function is a debounced variant of refreshSpotPrices. It prevents
+  // unnecessary triggers of the wrapped function on first load of the app.
+  //
+  // The 0ms wait time seems to do the trick, although it's not clear why.
+  const refreshSpotPricesDebounced = useDebouncedCallback(
+    async (overrides: Partial<RefreshPricesParams>) => {
+      await refreshSpotPrices(overrides)
+    },
+    0
   )
 
   // Methods
@@ -285,6 +294,17 @@ export const useSwap = () => {
     [dispatch, getNetworkAssetsList, walletAccounts, network, account, getAssetBalanceFactory]
   )
 
+  // This function is a debounced variant of refreshBlockchainState. It prevents
+  // unnecessary triggers of the wrapped function on first load of the app.
+  //
+  // The 0ms wait time seems to do the trick, although it's not clear why.
+  const refreshBlockchainStateDebounced = useDebouncedCallback(
+    async (overrides: Partial<RefreshBlockchainStateParams>) => {
+      await refreshBlockchainState(overrides)
+    },
+    0
+  )
+
   React.useEffect(() => {
     ;(async () => {
       // Do not trigger refresh functions if assetsList is still not available.
@@ -293,12 +313,12 @@ export const useSwap = () => {
       }
 
       if (!initialized) {
-        await refreshBlockchainState({})
-        await refreshSpotPrices({})
+        await refreshBlockchainStateDebounced({})
+        await refreshSpotPricesDebounced({})
         setInitialized(true)
       }
     })()
-  }, [refreshBlockchainState, refreshSpotPrices, initialized, assetsList])
+  }, [refreshBlockchainStateDebounced, refreshSpotPricesDebounced, initialized, assetsList])
 
   const handleJupiterQuoteRefreshInternal = React.useCallback(
     async (overrides: Partial<SwapParams>) => {
