@@ -10,6 +10,7 @@ import {
   ethWalletAdapter,
   getBalance,
   getTokenBalance,
+  getTokenBalances,
   getNetworkFeeEstimate,
   getTokenPrice,
   solWalletAdapter,
@@ -60,6 +61,7 @@ function SwapContainer() {
       getLocale={getLocale}
       getBalance={getBalance}
       getTokenBalance={getTokenBalance}
+      getTokenBalances={getTokenBalances}
       getTokenPrice={getTokenPrice}
       getNetworkFeeEstimate={getNetworkFeeEstimate}
       ethWalletAdapter={ethWalletAdapter}
