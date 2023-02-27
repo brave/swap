@@ -26,7 +26,7 @@ import { useNetworkFees } from '~/hooks/useNetworkFees'
 import { useOnClickOutside } from '~/hooks/useOnClickOutside'
 
 // Styled Components
-import { Row, HorizontalSpacer, StyledDiv } from '~/components/shared.styles'
+import { Row, HorizontalSpacer, StyledDiv, Text, HorizontalDivider, HiddenResponsiveRow } from '~/components/shared.styles'
 
 interface Props {
   refreshBlockchainState: (
@@ -38,7 +38,7 @@ export const Header = (props: Props) => {
   const { refreshBlockchainState } = props
 
   // Wallet State
-  const { network, supportedNetworks, isWalletConnected, connectWallet, switchNetwork } =
+  const { network, supportedNetworks, isWalletConnected, connectWallet, switchNetwork, getLocale } =
     useSwapContext()
 
   // State
@@ -117,7 +117,15 @@ export const Header = (props: Props) => {
 
   return (
     <Wrapper>
-      <BraveLogo />
+      <Row rowHeight='full' verticalAlign='center'>
+        <BraveLogo />
+        <HiddenResponsiveRow maxWidth={570}>
+          <HorizontalDivider height={22} marginRight={12} dividerTheme='darker' />
+          <Text textSize='18px' textColor='text02' isBold={true}>
+            {getLocale('braveSwap')}
+          </Text>
+        </HiddenResponsiveRow>
+      </Row>
       <Row>
         <ThemeButtonWrapper>
           <ThemeButton onClick={toggleTheme} />
@@ -159,7 +167,7 @@ export const Header = (props: Props) => {
 const Wrapper = styled(StyledDiv)`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   padding: 16px 32px 0px 32px;
   margin-bottom: 45px;
@@ -179,6 +187,10 @@ const BraveLogo = styled(StyledDiv)`
   width: 100px;
   background-image: var(--header-icon);
   background-size: cover;
+  margin: 0px 12px 4px 0px;
+  @media screen and (max-width: 570px) {
+    margin: 0px 0px 4px 0px;
+  }
 `
 
 const SelectorWrapper = styled(StyledDiv)`

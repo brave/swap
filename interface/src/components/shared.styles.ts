@@ -110,8 +110,12 @@ export const HorizontalDivider = styled(StyledDiv) <{
   marginLeft?: number
   marginLeftResponsive?: number
   marginRight?: number
+  dividerTheme?: 'lighter' | 'darker'
 }>`
-  background-color: ${(p) => p.theme.color.legacy.divider01};
+  background-color: ${(p) =>
+    p.dividerTheme === 'darker'
+      ? p.theme.color.legacy.interactive08
+      : p.theme.color.legacy.divider01};
   height: ${(p) => (p.height ? `${p.height}px` : '100%')};
   margin-left: ${(p) => p.marginLeft ?? 0}px;
   margin-right: ${(p) => p.marginRight ?? 0}px;
