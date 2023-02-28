@@ -1,6 +1,6 @@
 {
   "name": "@brave/swap-interface",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Brave Swap - an open-source swap interface by Brave, focussed on usability and multi-chain support.",
   "type": "module",
   "license": "MPL-2.0",
