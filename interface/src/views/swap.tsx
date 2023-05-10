@@ -179,7 +179,7 @@ export const Swap = () => {
             onInputChange={handleOnSetToAmount}
             hasInputError={swapValidationError === 'toAmountDecimalsOverflow'}
             isLoading={isFetchingQuote}
-            disabled={network?.coin === CoinType.Solana}
+            disabled={false}
           />
           {network.coin === CoinType.Solana && quoteOptions.length > 0 && (
             <QuoteOptions

@@ -383,16 +383,29 @@ export const useSwap = () => {
         return
       }
 
-      const token = overrides.toToken || toToken
-      if (token && quote.routes.length > 0) {
-        setToAmount(
-          new Amount(quote.routes[0].outAmount.toString())
-            .divideByDecimals(token.decimals)
-            .format(6)
-        )
+      if (overrides.fromAmount === '') {
+        const token = overrides.fromToken || fromToken
+        if (token && quote.routes.length > 0) {
+          setFromAmount(
+            new Amount(quote.routes[0].inAmount.toString())
+              .divideByDecimals(token.decimals)
+              .format(6)
+          )
+        }
+      }
+
+      if (overrides.toAmount === '') {
+        const token = overrides.toToken || toToken
+        if (token && quote.routes.length > 0) {
+          setToAmount(
+            new Amount(quote.routes[0].outAmount.toString())
+              .divideByDecimals(token.decimals)
+              .format(6)
+          )
+        }
       }
     },
-    [jupiter, toToken]
+    [jupiter, toToken, fromToken]
   )
   const handleJupiterQuoteRefresh = useDebouncedCallback(async (overrides: Partial<SwapParams>) => {
     await handleJupiterQuoteRefreshInternal(overrides)
@@ -439,7 +452,8 @@ export const useSwap = () => {
 
       if (network.coin === CoinType.Solana) {
         await handleJupiterQuoteRefresh({
-          fromAmount: value
+          fromAmount: value,
+          toAmount: ''
         })
       } else {
         await handleZeroExQuoteRefresh({
@@ -457,22 +471,24 @@ export const useSwap = () => {
   //  - Refresh quotes based on the new toAmount, with debouncing.
   const handleOnSetToAmount = React.useCallback(
     async (value: string) => {
-      // Setting to amount is not supported on Jupiter
-      if (network.coin !== CoinType.Ethereum) {
-        return
-      }
-
       setToAmount(value)
       if (!value) {
         setFromAmount('')
       }
 
-      await handleZeroExQuoteRefresh({
-        fromAmount: '',
-        toAmount: value
-      })
+      if (network.coin === CoinType.Solana) {
+        await handleJupiterQuoteRefresh({
+          fromAmount: '',
+          toAmount: value
+        })
+      } else {
+        await handleZeroExQuoteRefresh({
+          fromAmount: '',
+          toAmount: value
+        })
+      }
     },
-    [network.coin, handleZeroExQuoteRefresh]
+    [network.coin, handleZeroExQuoteRefresh, handleJupiterQuoteRefresh]
   )
 
   const getCachedAssetBalance = React.useCallback(
@@ -530,7 +546,8 @@ export const useSwap = () => {
       if (network.coin === CoinType.Solana) {
         await jupiter.reset()
         await handleJupiterQuoteRefreshInternal({
-          toToken: token
+          toToken: token,
+          toAmount: ''
         })
       } else if (network.coin === CoinType.Ethereum) {
         await zeroEx.reset()
