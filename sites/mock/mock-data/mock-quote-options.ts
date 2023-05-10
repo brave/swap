@@ -132,6 +132,7 @@ export const mockJupiterQuote: JupiterQuoteResponse = {
       otherAmountThreshold: BigInt(31765300),
       swapMode: 'ExactIn',
       priceImpactPct: 0.00017511962460359243,
+      slippageBps: 50,
       marketInfos: [
         {
           id: 'EqLZKF1bwUWUzU5F21jDQMoK4HRx8wQpLt57jhP8LbKm',
@@ -162,6 +163,7 @@ export const mockJupiterQuote: JupiterQuoteResponse = {
       otherAmountThreshold: BigInt(31764767),
       swapMode: 'ExactIn',
       priceImpactPct: 0.0001580489786574546,
+      slippageBps: 50,
       marketInfos: [
         {
           id: 'EqLZKF1bwUWUzU5F21jDQMoK4HRx8wQpLt57jhP8LbKm-amgK1WE8Cvae4mVdj4AhXSsknWsjaGgo1coYicasBnM',
@@ -192,6 +194,7 @@ export const mockJupiterQuote: JupiterQuoteResponse = {
       otherAmountThreshold: BigInt(31749741),
       swapMode: 'ExactIn',
       priceImpactPct: 0.00001841372567978894,
+      slippageBps: 50,
       marketInfos: [
         {
           id: '2x8Bmv9wj2a4LxADBWKiLyGRgAosr8yJXuZyvS8adirK',
@@ -239,7 +242,5 @@ export const mockJupiterQuote: JupiterQuoteResponse = {
 }
 
 export const mockJupiterSwapTransactions: JupiterSwapResponse = {
-  setupTransaction: 'setup',
-  swapTransaction: 'swap',
-  cleanupTransaction: 'cleanup'
+  swapTransaction: 'swap'
 }

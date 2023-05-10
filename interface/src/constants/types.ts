@@ -189,7 +189,7 @@ export interface ZeroExSwapResponse extends ZeroExQuoteResponse {
 export interface ZeroExErrorResponse {
   code: number
   reason: string
-  validationErrors?: Array<{ field: string, code: number, reason: string }>
+  validationErrors?: Array<{ field: string; code: number; reason: string }>
   isInsufficientLiquidity: boolean
 }
 
@@ -207,7 +207,9 @@ export type JupiterQuoteParams = {
   inputMint: string
   outputMint: string
   amount: string
-  slippagePercentage: number
+  swapMode: string
+  slippageBps: number
+  userPublicKey: string
 }
 
 export type JupiterFee = {
@@ -236,6 +238,7 @@ export type JupiterRoute = {
   otherAmountThreshold: bigint
   swapMode: string
   priceImpactPct: number
+  slippageBps: number
   marketInfos: JupiterMarketInfo[]
 }
 
@@ -250,9 +253,7 @@ export type JupiterSwapParams = {
 }
 
 export type JupiterSwapResponse = {
-  setupTransaction: string
   swapTransaction: string
-  cleanupTransaction: string
 }
 
 export interface JupiterErrorResponse {
