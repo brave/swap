@@ -143,7 +143,7 @@ export type SwapParams = {
   fromAmount: string
   toAmount: string
   slippagePercentage: number
-  takerAddress?: string
+  fromAddress?: string
 }
 
 export type ZeroExSwapParams = {
@@ -186,10 +186,16 @@ export interface ZeroExSwapResponse extends ZeroExQuoteResponse {
   data: string
 }
 
+interface ZeroExValidationError {
+  field: string
+  code: number
+  reason: string
+}
+
 export interface ZeroExErrorResponse {
   code: number
   reason: string
-  validationErrors?: Array<{ field: string; code: number; reason: string }>
+  validationErrors?: ZeroExValidationError[]
   isInsufficientLiquidity: boolean
 }
 
@@ -207,7 +213,6 @@ export type JupiterQuoteParams = {
   inputMint: string
   outputMint: string
   amount: string
-  swapMode: string
   slippageBps: number
   userPublicKey: string
 }

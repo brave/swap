@@ -110,21 +110,17 @@ export const useSwap = () => {
     fromToken,
     toToken,
     fromAmount,
-    toAmount,
+    toAmount: '',
     slippagePercentage: new Amount(slippageTolerance).toNumber(),
-    takerAddress: account?.address
+    fromAddress: account?.address
   })
   const zeroEx = useZeroEx({
-    takerAddress: swapAndSendSelected
-      ? selectedSwapAndSendOption === 'to-account'
-        ? selectedSwapSendAccount?.address || account?.address
-        : toAnotherAddress
-      : account?.address,
     fromAmount,
     toAmount: '',
     fromToken,
     toToken,
-    slippagePercentage: new Amount(slippageTolerance).div(100).toNumber()
+    slippagePercentage: new Amount(slippageTolerance).div(100).toNumber(),
+    fromAddress: account?.address
   })
 
   const quoteOptions: QuoteOption[] = React.useMemo(() => {

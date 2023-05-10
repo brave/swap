@@ -13,6 +13,7 @@ export const useNativeAsset = () => {
   const { network } = useSwapContext()
   return React.useMemo(
     () => makeNetworkAsset(network),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       network.chainId,
       network.coin,
