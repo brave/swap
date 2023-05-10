@@ -70,16 +70,18 @@ export function useJupiter (params: SwapParams) {
       if (!overriddenParams.fromToken || !overriddenParams.toToken) {
         return
       }
-      if (!overriddenParams.fromAmount) {
+      if (!overriddenParams.fromAmount && !overriddenParams.toAmount) {
         await reset()
         return
       }
 
       const fromAmountWrapped = new Amount(overriddenParams.fromAmount)
+      const toAmountWrapped = new Amount(overriddenParams.toAmount)
       if (
-        fromAmountWrapped.isNaN() ||
-        fromAmountWrapped.isZero() ||
-        fromAmountWrapped.isUndefined()
+        (fromAmountWrapped.isZero() ||
+          fromAmountWrapped.isNaN() ||
+          fromAmountWrapped.isUndefined()) &&
+        (toAmountWrapped.isZero() || toAmountWrapped.isNaN() || toAmountWrapped.isUndefined())
       ) {
         await reset()
         return
@@ -103,9 +105,13 @@ export function useJupiter (params: SwapParams) {
         jupiterQuoteResponse = await swapService.getJupiterQuote({
           inputMint: overriddenParams.fromToken.contractAddress || WRAPPED_SOL_CONTRACT_ADDRESS,
           outputMint: overriddenParams.toToken.contractAddress || WRAPPED_SOL_CONTRACT_ADDRESS,
-          amount: new Amount(overriddenParams.fromAmount)
-            .multiplyByDecimals(overriddenParams.fromToken.decimals)
-            .format(),
+          amount: overriddenParams.fromAmount
+            ? new Amount(overriddenParams.fromAmount)
+              .multiplyByDecimals(overriddenParams.fromToken.decimals)
+              .format()
+            : new Amount(overriddenParams.toAmount)
+              .multiplyByDecimals(overriddenParams.toToken.decimals)
+              .format(),
           swapMode: overriddenParams.fromAmount ? 'ExactIn' : 'ExactOut',
           slippageBps: new Amount(overriddenParams.slippagePercentage).times(100).toNumber(),
           userPublicKey: overriddenParams.takerAddress
@@ -222,7 +228,7 @@ export function useJupiter (params: SwapParams) {
           ),
           fromToken: params.fromToken,
           toToken: params.toToken,
-          rate: new Amount(route.otherAmountThreshold.toString())
+          rate: new Amount(route.outAmount.toString())
             // @ts-expect-error
             .divideByDecimals(params.toToken.decimals)
             // @ts-expect-error
