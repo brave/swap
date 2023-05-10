@@ -85,6 +85,10 @@ export function useJupiter (params: SwapParams) {
         return
       }
 
+      if (!overriddenParams.takerAddress) {
+        return
+      }
+
       setLoading(true)
 
       try {
@@ -102,7 +106,9 @@ export function useJupiter (params: SwapParams) {
           amount: new Amount(overriddenParams.fromAmount)
             .multiplyByDecimals(overriddenParams.fromToken.decimals)
             .format(),
-          slippagePercentage: overriddenParams.slippagePercentage
+          swapMode: overriddenParams.fromAmount ? 'ExactIn' : 'ExactOut',
+          slippageBps: new Amount(overriddenParams.slippagePercentage).times(100).toNumber(),
+          userPublicKey: overriddenParams.takerAddress
         })
       } catch (e) {
         console.log(`Error getting Jupiter quote: ${e}`)
@@ -159,7 +165,6 @@ export function useJupiter (params: SwapParams) {
         return
       }
 
-      // Ignore setupTransaction and cleanupTransaction
       const { swapTransaction } = jupiterTransactionsPayloadResponse.response
 
       try {
