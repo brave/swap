@@ -34,6 +34,9 @@ export function useJupiter (params: SwapParams) {
   const [loading, setLoading] = React.useState<boolean>(false)
   const [selectedRoute, setSelectedRoute] = React.useState<JupiterRoute | undefined>(undefined)
   const [braveFee, setBraveFee] = React.useState<SwapFee | undefined>(undefined)
+  const [abortController, setAbortController] = React.useState<AbortController | undefined>(
+    undefined
+  )
 
   // Context
   const { swapService, solWalletAdapter, account, network, defaultBaseCurrency } = useSwapContext()
@@ -43,16 +46,24 @@ export function useJupiter (params: SwapParams) {
     state: { spotPrices }
   } = useWalletState()
 
-  const reset = React.useCallback(async (callback?: () => Promise<void>) => {
-    setQuote(undefined)
-    setError(undefined)
-    setLoading(false)
-    setSelectedRoute(undefined)
-    setBraveFee(undefined)
-    if (callback) {
-      await callback()
-    }
-  }, [])
+  const reset = React.useCallback(
+    async (callback?: () => Promise<void>) => {
+      setQuote(undefined)
+      setError(undefined)
+      setLoading(false)
+      setSelectedRoute(undefined)
+      setBraveFee(undefined)
+
+      if (abortController) {
+        abortController.abort()
+      }
+
+      if (callback) {
+        await callback()
+      }
+    },
+    [abortController]
+  )
 
   const refresh = React.useCallback(
     async function (
@@ -91,6 +102,9 @@ export function useJupiter (params: SwapParams) {
         return
       }
 
+      const controller = new AbortController()
+      setAbortController(controller)
+
       setLoading(true)
 
       try {
@@ -119,6 +133,12 @@ export function useJupiter (params: SwapParams) {
         console.log(`Error getting Jupiter quote: ${e}`)
       }
 
+      if (controller.signal.aborted) {
+        setLoading(false)
+        setAbortController(undefined)
+        return
+      }
+
       if (jupiterQuoteResponse?.response) {
         setQuote(jupiterQuoteResponse.response)
       }
@@ -128,6 +148,7 @@ export function useJupiter (params: SwapParams) {
       }
 
       setLoading(false)
+      setAbortController(undefined)
       return jupiterQuoteResponse?.response
     },
     [network.coin, params, reset, swapService]
