@@ -79,16 +79,17 @@ export function useZeroEx (params: SwapParams) {
       }
       const fromAmountWrapped = new Amount(overriddenParams.fromAmount)
       const toAmountWrapped = new Amount(overriddenParams.toAmount)
-      if (
-        (fromAmountWrapped.isZero() ||
-          fromAmountWrapped.isNaN() ||
-          fromAmountWrapped.isUndefined()) &&
-        (toAmountWrapped.isZero() || toAmountWrapped.isNaN() || toAmountWrapped.isUndefined())
-      ) {
+      const isFromAmountEmpty =
+        fromAmountWrapped.isZero() || fromAmountWrapped.isNaN() || fromAmountWrapped.isUndefined()
+      const isToAmountEmpty =
+        toAmountWrapped.isZero() || toAmountWrapped.isNaN() || toAmountWrapped.isUndefined()
+
+      if (isFromAmountEmpty && isToAmountEmpty) {
         await reset()
         return
       }
-      if (!overriddenParams.takerAddress) {
+
+      if (!overriddenParams.fromAddress) {
         return
       }
 
@@ -107,7 +108,7 @@ export function useZeroEx (params: SwapParams) {
       let priceQuoteResponse
       try {
         priceQuoteResponse = await swapService.getZeroExPriceQuote({
-          takerAddress: overriddenParams.takerAddress,
+          takerAddress: overriddenParams.fromAddress,
           sellAmount:
             overriddenParams.fromAmount &&
             new Amount(overriddenParams.fromAmount)
@@ -199,16 +200,19 @@ export function useZeroEx (params: SwapParams) {
       if (!overriddenParams.fromAmount && !overriddenParams.toAmount) {
         return
       }
-      if (!overriddenParams.takerAddress) {
-        return
-      }
 
       const fromAmountWrapped = new Amount(overriddenParams.fromAmount)
       const toAmountWrapped = new Amount(overriddenParams.toAmount)
-      if (
-        (fromAmountWrapped.isZero() || fromAmountWrapped.isNaN()) &&
-        (toAmountWrapped.isZero() || toAmountWrapped.isNaN())
-      ) {
+      const isFromAmountEmpty =
+        fromAmountWrapped.isZero() || fromAmountWrapped.isNaN() || fromAmountWrapped.isUndefined()
+      const isToAmountEmpty =
+        toAmountWrapped.isZero() || toAmountWrapped.isNaN() || toAmountWrapped.isUndefined()
+
+      if (isFromAmountEmpty && isToAmountEmpty) {
+        return
+      }
+
+      if (!overriddenParams.fromAddress) {
         return
       }
 
@@ -216,7 +220,7 @@ export function useZeroEx (params: SwapParams) {
       let transactionPayloadResponse
       try {
         transactionPayloadResponse = await swapService.getZeroExTransactionPayload({
-          takerAddress: overriddenParams.takerAddress,
+          takerAddress: overriddenParams.fromAddress,
           sellAmount: new Amount(overriddenParams.fromAmount)
             .multiplyByDecimals(overriddenParams.fromToken.decimals)
             .format(),

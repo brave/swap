@@ -77,17 +77,17 @@ export function useJupiter (params: SwapParams) {
 
       const fromAmountWrapped = new Amount(overriddenParams.fromAmount)
       const toAmountWrapped = new Amount(overriddenParams.toAmount)
-      if (
-        (fromAmountWrapped.isZero() ||
-          fromAmountWrapped.isNaN() ||
-          fromAmountWrapped.isUndefined()) &&
-        (toAmountWrapped.isZero() || toAmountWrapped.isNaN() || toAmountWrapped.isUndefined())
-      ) {
+      const isFromAmountEmpty =
+        fromAmountWrapped.isZero() || fromAmountWrapped.isNaN() || fromAmountWrapped.isUndefined()
+      const isToAmountEmpty =
+        toAmountWrapped.isZero() || toAmountWrapped.isNaN() || toAmountWrapped.isUndefined()
+
+      if (isFromAmountEmpty && isToAmountEmpty) {
         await reset()
         return
       }
 
-      if (!overriddenParams.takerAddress) {
+      if (!overriddenParams.fromAddress) {
         return
       }
 
@@ -105,16 +105,15 @@ export function useJupiter (params: SwapParams) {
         jupiterQuoteResponse = await swapService.getJupiterQuote({
           inputMint: overriddenParams.fromToken.contractAddress || WRAPPED_SOL_CONTRACT_ADDRESS,
           outputMint: overriddenParams.toToken.contractAddress || WRAPPED_SOL_CONTRACT_ADDRESS,
-          amount: overriddenParams.fromAmount
+          amount: !isFromAmountEmpty
             ? new Amount(overriddenParams.fromAmount)
               .multiplyByDecimals(overriddenParams.fromToken.decimals)
               .format()
             : new Amount(overriddenParams.toAmount)
               .multiplyByDecimals(overriddenParams.toToken.decimals)
               .format(),
-          swapMode: overriddenParams.fromAmount ? 'ExactIn' : 'ExactOut',
           slippageBps: new Amount(overriddenParams.slippagePercentage).times(100).toNumber(),
-          userPublicKey: overriddenParams.takerAddress
+          userPublicKey: overriddenParams.fromAddress
         })
       } catch (e) {
         console.log(`Error getting Jupiter quote: ${e}`)
@@ -178,7 +177,8 @@ export function useJupiter (params: SwapParams) {
           encodedTransaction: swapTransaction,
           from: account.address,
           sendOptions: {
-            skipPreflight: true
+            skipPreflight: true,
+            maxRetries: 2
           }
         })
 
@@ -222,10 +222,11 @@ export function useJupiter (params: SwapParams) {
             // @ts-expect-error
             params.toToken.decimals
           ),
-          minimumToAmount: new Amount(route.otherAmountThreshold.toString()).divideByDecimals(
-            // @ts-expect-error
-            params.toToken.decimals
-          ),
+          // FIXME: disable displaying the minimumToAmount, since it is
+          // applicable only for ExactIn swapMode. In case of ExactOut,
+          // minimumToAmount is static and equal to the toAmount. The more
+          // relevant thing to display would be maximumFromAmount.
+          minimumToAmount: undefined,
           fromToken: params.fromToken,
           toToken: params.toToken,
           rate: new Amount(route.outAmount.toString())
