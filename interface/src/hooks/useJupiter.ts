@@ -222,11 +222,12 @@ export function useJupiter (params: SwapParams) {
             // @ts-expect-error
             params.toToken.decimals
           ),
-          // FIXME: disable displaying the minimumToAmount, since it is
-          // applicable only for ExactIn swapMode. In case of ExactOut,
-          // minimumToAmount is static and equal to the toAmount. The more
-          // relevant thing to display would be maximumFromAmount.
-          minimumToAmount: undefined,
+          // TODO: minimumToAmount is applicable only for ExactIn swapMode.
+          // Create a maximumFromAmount field for ExactOut swapMode if needed.
+          minimumToAmount: new Amount(route.otherAmountThreshold.toString()).divideByDecimals(
+            // @ts-expect-error
+            params.toToken.decimals
+          ),
           fromToken: params.fromToken,
           toToken: params.toToken,
           rate: new Amount(route.outAmount.toString())
