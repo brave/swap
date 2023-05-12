@@ -142,7 +142,9 @@ export type SwapParams = {
   toToken?: BlockchainToken
   fromAmount: string
   toAmount: string
-  slippagePercentage: number
+  // This is the value as seen on the UI - should be converted to appropriate
+  // format for Jupiter and 0x swap providers.
+  slippageTolerance: string
   fromAddress?: string
 }
 
