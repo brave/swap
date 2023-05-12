@@ -126,7 +126,10 @@ export function useJupiter (params: SwapParams) {
             : new Amount(overriddenParams.toAmount)
               .multiplyByDecimals(overriddenParams.toToken.decimals)
               .format(),
-          slippageBps: new Amount(overriddenParams.slippagePercentage).times(100).toNumber(),
+          slippageBps: new Amount(overriddenParams.slippageTolerance)
+            .times(100)
+            .parseInteger()
+            .toNumber(),
           userPublicKey: overriddenParams.fromAddress
         })
       } catch (e) {

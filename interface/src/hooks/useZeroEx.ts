@@ -121,7 +121,7 @@ export function useZeroEx (params: SwapParams) {
               .multiplyByDecimals(overriddenParams.toToken.decimals)
               .format(),
           buyToken: overriddenParams.toToken.contractAddress || NATIVE_ASSET_CONTRACT_ADDRESS_0X,
-          slippagePercentage: overriddenParams.slippagePercentage,
+          slippagePercentage: new Amount(overriddenParams.slippageTolerance).div(100).toNumber(),
           gasPrice: ''
         })
       } catch (e) {
@@ -229,7 +229,7 @@ export function useZeroEx (params: SwapParams) {
             .multiplyByDecimals(overriddenParams.toToken.decimals)
             .format(),
           buyToken: overriddenParams.toToken.contractAddress || NATIVE_ASSET_CONTRACT_ADDRESS_0X,
-          slippagePercentage: overriddenParams.slippagePercentage,
+          slippagePercentage: new Amount(overriddenParams.slippageTolerance).div(100).toNumber(),
           gasPrice: ''
         })
       } catch (e) {
