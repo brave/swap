@@ -38,6 +38,13 @@ export const SwapContainer = (props: Props) => {
   // Refs
   const ref = React.createRef<HTMLInputElement>()
 
+  // Methods
+  const onClickHelpCenter = React.useCallback(() => {
+    window.open(
+      'https://support.brave.com/hc/en-us/categories/360001059151-Brave-Wallet'
+    )
+  }, [])
+
   // Effects
   React.useEffect(() => {
     // Keeps track of the Swap Containers Height to update
@@ -58,7 +65,10 @@ export const SwapContainer = (props: Props) => {
         refreshBlockchainState={refreshBlockchainState}
       />
       <Container ref={ref}>{children}</Container>
-      <PrivacyButton onClick={showPrivacyModal}>{getLocale('braveSwapPrivacyPolicy')}</PrivacyButton>
+      <Row>
+        <ActionButton onClick={showPrivacyModal}>{getLocale('braveSwapPrivacyPolicy')}</ActionButton>
+        <ActionButton onClick={onClickHelpCenter}>{getLocale('braveSwapHelpCenter')}</ActionButton>
+      </Row>
       <Background
         height={backgroundHeight}
         network={network.chainId ?? ''}
@@ -177,7 +187,13 @@ const Container = styled(StyledDiv)`
   }
 `
 
-export const PrivacyButton = styled(StyledButton)`
+export const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+`
+
+export const ActionButton = styled(StyledButton)`
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 500;

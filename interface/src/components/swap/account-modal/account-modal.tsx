@@ -8,7 +8,6 @@ import styled from 'styled-components'
 
 // Assets
 import DisconnectIcon from '~/assets/disconnect-icon.svg'
-import HelpIcon from '~/assets/info-icon.svg'
 import CloseIcon from '~/assets/close-icon.svg'
 
 // Hiding Portfolio Section until we support it.
@@ -70,12 +69,6 @@ export const AccountModal = (props: Props) => {
 
     await onHideModal()
   }, [disconnectWallet, onHideModal])
-
-  const onClickHelpCenter = React.useCallback(() => {
-    window.open(
-      'https://support.brave.com/hc/en-us/articles/8155407080845-Brave-Swaps-FAQ'
-    )
-  }, [])
 
   return (
     <ModalBox>
@@ -143,11 +136,6 @@ export const AccountModal = (props: Props) => {
             onClick={onDisconnect}
           />
         )}
-        <AccountModalButton
-          text={getLocale('braveSwapHelpCenter')}
-          icon={HelpIcon}
-          onClick={onClickHelpCenter}
-        />
       </Column>
     </ModalBox>
   )
